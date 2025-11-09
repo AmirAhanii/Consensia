@@ -1,0 +1,87 @@
+import React from "react";
+import { JudgeConsensus, PersonaResponse } from "../types";
+
+type ResultsPanelProps = {
+  personas: PersonaResponse[];
+  judge: JudgeConsensus | null;
+  error: string | null;
+  isLoading: boolean;
+};
+
+export const ResultsPanel: React.FC<ResultsPanelProps> = ({ personas, judge, error, isLoading }) => {
+  return (
+    <article className="rounded-3xl border border-purple-900/40 bg-black/60 p-6 shadow-xl shadow-purple-950/30 backdrop-blur">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-purple-100">Results</h2>
+        {isLoading && (
+          <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-fuchsia-200">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-fuchsia-400" />
+            Generating…
+          </span>
+        )}
+      </div>
+
+      {error ? (
+        <p className="mt-4 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-100">
+          {error}
+        </p>
+      ) : (
+        <p className="mt-1 text-sm text-purple-300/70">
+          {judge
+            ? "Explore each persona response and review the judge’s synthesized consensus."
+            : "Run a debate to populate persona answers and the judge consensus."}
+        </p>
+      )}
+
+      {personas.length > 0 && (
+        <div className="mt-6 space-y-5">
+          <section className="space-y-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-purple-200">Persona Answers</h3>
+            <div className="grid gap-4">
+              {personas.map((persona) => (
+                <div
+                  key={persona.personaId}
+                  className="group relative overflow-hidden rounded-2xl border border-purple-900/40 bg-gradient-to-br from-purple-950/50 to-black/60 p-4 shadow-inner shadow-black/40"
+                >
+                  <div className="absolute inset-0 opacity-0 transition group-hover:opacity-100">
+                    <div className="h-full w-full bg-[radial-gradient(circle_at_top_left,rgba(168,85,247,0.18),transparent_60%)]" />
+                  </div>
+                  <div className="relative flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-fuchsia-300">
+                        {persona.personaName}
+                      </p>
+                      <span className="rounded-full border border-purple-800/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-purple-300/70">
+                        Persona
+                      </span>
+                    </div>
+                    <p className="text-xs text-purple-300/70">{persona.personaDescription}</p>
+                    <p className="whitespace-pre-wrap text-sm text-purple-100">{persona.answer}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {judge && (
+            <section className="space-y-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-purple-200">Judge Consensus</h3>
+              <div className="overflow-hidden rounded-2xl border border-fuchsia-500/30 bg-gradient-to-br from-fuchsia-900/60 to-black/70 p-5 shadow-lg shadow-purple-900/40">
+                <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-fuchsia-200">
+                  <span className="h-2 w-2 rounded-full bg-fuchsia-400 shadow-[0_0_12px_rgba(236,72,153,0.7)]" />
+                  Consensus summary
+                </div>
+                <p className="mt-2 whitespace-pre-wrap text-sm text-purple-100">{judge.summary}</p>
+                <div className="mt-4 rounded-xl border border-fuchsia-500/30 bg-black/40 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-fuchsia-200">Reasoning</p>
+                  <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-purple-100">{judge.reasoning}</p>
+                </div>
+              </div>
+            </section>
+          )}
+        </div>
+      )}
+    </article>
+  );
+};
+

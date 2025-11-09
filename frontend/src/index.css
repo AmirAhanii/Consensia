@@ -6,3 +6,7 @@
   color-scheme: dark;
 }
 
+body {
+  @apply min-h-screen bg-gradient-to-br from-black via-purple-950 to-black text-purple-100;
+}
+
