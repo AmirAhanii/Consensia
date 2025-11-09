@@ -35,14 +35,20 @@ pip install -e .
 uvicorn app.main:app --reload --port 8000
 ```
 
-Create a `.env` file in `backend/` with your LLM credentials (OpenAI or Gemini):
+Copy `backend/env.template` to `backend/.env` and fill in your local credentials (never commit the real keys):
 
 ```
+cp backend/env.template backend/.env
+```
+
+Update the values as needed, for example:
+
+```
+GEMINI_API_KEY=AIza...       # optional
+GEMINI_MODEL=gemini-2.0-flash
 OPENAI_API_KEY=sk-...        # optional
 OPENAI_MODEL=gpt-4o-mini
 JUDGE_MODEL=gpt-4o-mini
-GEMINI_API_KEY=AIza...       # optional
-GEMINI_MODEL=gemini-1.5-flash-latest
 LLM_PROVIDER=auto            # set to "openai", "gemini", or leave as auto
 CORS_ALLOW_ORIGINS=http://localhost:5173
 ```

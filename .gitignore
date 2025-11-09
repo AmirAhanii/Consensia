@@ -1,0 +1,13 @@
+# Environment files
+backend/.env
+
+# Node modules / build output
+frontend/node_modules
+frontend/dist
+
+# Python virtualenv
+backend/.venv
+
+# macOS
+.DS_Store
+
