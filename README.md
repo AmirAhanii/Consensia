@@ -27,12 +27,28 @@ VITE_API_BASE_URL=http://localhost:8000
 
 ### Backend (FastAPI)
 
+**macOS / Linux (Terminal):**
+
 ```bash
 cd backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e .
+python3 -m venv .venv          # create venv (run once per project)
+source .venv/bin/activate      # activate venv
+pip install -e .               # or: pip install -r requirements.txt
+# if needed: pip install fastapi "uvicorn[standard]"
 uvicorn app.main:app --reload --port 8000
+```
+
+**Windows (CMD):**
+
+```cmd
+cd backend
+py -m venv .venv               # create venv (run once per project)
+.venv\Scripts\activate         # activate venv
+pip install -e .
+REM or: pip install -r requirements.txt
+REM if needed: pip install fastapi "uvicorn[standard]"
+uvicorn app.main:app --reload --port 8000
+REM or: py -m uvicorn app.main:app --reload --port 8000
 ```
 
 Copy `backend/env.template` to `backend/.env` and fill in your local credentials (never commit the real keys):
