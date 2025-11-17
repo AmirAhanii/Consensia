@@ -35,10 +35,7 @@ def create_cors(app_: FastAPI, settings: Settings) -> None:
     )
 
 
-@app.on_event("startup")
-async def configure() -> None:
-    settings = get_settings()
-    create_cors(app, settings)
+create_cors(app, get_settings())
 
 
 def get_llm_service(settings: Settings = Depends(get_settings)) -> LLMService:
@@ -65,13 +62,13 @@ async def generate_consensus(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="At least one persona is required.",
         )
-
     try:
         persona_answers = await asyncio.gather(
             *(service.generate_persona_answer(persona, payload.question) for persona in payload.personas)
         )
         judge_consensus = await service.generate_judge_consensus(persona_answers, payload.question)
-    except Exception as exc:  # pragma: no cover - bubble unexpected errors with FastAPI semantics
+    except Exception as exc: 
+        # pragma: no cover - bubble unexpected errors with FastAPI semantics
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=f"Consensus generation failed: {exc}",
