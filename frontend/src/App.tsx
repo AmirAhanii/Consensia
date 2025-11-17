@@ -53,40 +53,51 @@ function App() {
   };
 
   const handleRun = async () => {
-    setIsLoading(true);
-    setError(null);
+  setIsLoading(true);
+  setError(null);
 
-    try {
-      const payload = {
-        question,
-        personas: personas.map(({ id, name, description }) => ({
-          id,
-          name,
-          description
-        }))
-      };
+  try {
+    const payload = {
+      question,
+      personas: personas.map(({ id, name, description }) => ({
+        id,
+        name,
+        description
+      }))
+    };
 
-      const response = await fetch(`${API_BASE_URL}/api/consensus`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
+    const response = await fetch(`${API_BASE_URL}/api/consensus`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
 
-      if (!response.ok) {
-        throw new Error(`Request failed: ${response.status}`);
-      }
-
-      const data = (await response.json()) as RunResponse;
-      setResponses(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
-      setResponses(null);
-    } finally {
-      setIsLoading(false);
+    if (!response.ok) {
+      throw new Error(`Request failed: ${response.status}`);
     }
-  };
+
+    const raw = await response.json();
+
+    const data: RunResponse = {
+      judge: raw.judge,
+      personas: raw.personas.map((p: any) => ({
+        personaId: p.persona_id,
+        personaName: p.persona_name,
+        personaDescription: p.persona_description,
+        answer: p.answer
+      }))
+    };
+
+    setResponses(data);
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Unknown error");
+    setResponses(null);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const personaAnswers = responses?.personas ?? [];
   const judgeConsensus = responses?.judge ?? null;
