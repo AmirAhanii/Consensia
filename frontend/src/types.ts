@@ -2,6 +2,7 @@ export type Persona = {
   id: string;
   name: string;
   description: string;
+  icon: string;  
 };
 
 export type PersonaResponse = {
