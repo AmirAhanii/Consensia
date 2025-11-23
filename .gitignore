@@ -11,3 +11,9 @@ backend/.venv
 # macOS
 .DS_Store
 
+# Python
+backend/__pycache__/
+backend/*.pyc
+
+# Build metadata
+backend/egg-info/
