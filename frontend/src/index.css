@@ -10,3 +10,21 @@ body {
   @apply min-h-screen bg-gradient-to-br from-black via-purple-950 to-black text-purple-100;
 }
 
+@keyframes slide-across {
+  0% {
+    transform: translateX(-150%); /* start far left */
+  }
+  100% {
+    transform: translateX(900%); /* end far right */
+  }
+}
+
+.slide-image-animation {
+  position: fixed;
+  top: 40%;               /* adjust vertical position */
+  left: 0;
+  width: 200px;           /* image size */
+  animation: slide-across 6.5s linear forwards;
+  pointer-events: none;   /* image should not block UI */
+  z-index: 9999;
+}

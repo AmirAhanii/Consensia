@@ -17,3 +17,9 @@ backend/*.pyc
 
 # Build metadata
 backend/egg-info/
+
+# index.css
+frontend/src/index.css
+
+# public files
+frontend/public
