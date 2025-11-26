@@ -38,6 +38,7 @@ function App() {
   const [responses, setResponses] = useState<RunResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // const [showFlyingImage, setShowFlyingImage] = useState(false); // delete TS
 
   const canRun = useMemo(
     () => personas.length > 0 && question.trim().length > 0 && !isLoading,
@@ -63,6 +64,13 @@ function App() {
   };
 
   const handleRun = async () => {
+    // setShowFlyingImage(true); // delete TS
+
+    // // Hide animation after it finishes (4 seconds)
+    // setTimeout(() => setShowFlyingImage(false), 6500); // delete TS
+
+    // new Audio("/TUM_TUM.mp3").play(); // delete TS
+
     setIsLoading(true);
     setError(null);
 
@@ -115,7 +123,11 @@ function App() {
   return (
     <>
       <GradientBackground />
-      <ToastContainer position="top-center" autoClose={2500} theme="dark" />
+      <ToastContainer position="top-center" autoClose={5000} theme="dark" />
+      {/* {showFlyingImage && (     // delete TS
+        <img src="/image.png" className="slide-image-animation" />    // delete TS
+      )}                                                              */}
+
       <div className="relative z-10 min-h-screen text-purple-50">
         <Header
           onRun={handleRun}

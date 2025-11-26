@@ -13,7 +13,7 @@ class Settings(BaseModel):
     openai_model: str = Field(default_factory=lambda: os.getenv("OPENAI_MODEL", "gpt-4o-mini"))
     judge_model: str = Field(default_factory=lambda: os.getenv("JUDGE_MODEL", "gpt-4o-mini"))
     gemini_api_key: str | None = Field(default_factory=lambda: os.getenv("GEMINI_API_KEY"))
-    gemini_model: str = Field(default_factory=lambda: os.getenv("GEMINI_MODEL", "gemini-1.5-flash-latest"))
+    gemini_model: str = Field(default_factory=lambda: os.getenv("GEMINI_MODEL", "gemini-1.5-flash-latest")) # "gemini-2.0-flash"
     cors_allow_origins: list[str] = Field(
         default_factory=lambda: os.getenv("CORS_ALLOW_ORIGINS", "http://localhost:5173").split(",")
     )

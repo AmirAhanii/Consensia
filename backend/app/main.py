@@ -131,7 +131,7 @@ for use inside an AI multi-agent system.
 Analyze the CV below and extract:
 
 1. The candidate's full name.
-2. Their most appropriate job title (short, e.g., "Software Engineer", "Full-Stack Developer").
+2. Their most appropriate job title (short, e.g., "Software Engineer(candidate's name)", "Full-Stack Developer(candidate's name)").
 3. A persona-style description (2–4 sentences) summarizing:
    - technical strengths,
    - experience level,
