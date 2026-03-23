@@ -71,6 +71,28 @@ CORS_ALLOW_ORIGINS=http://localhost:5173
 
 If no API key is present, the backend falls back to simulated persona and judge outputs so you can iterate on the UI.
 
+## Docker (recommended)
+
+Use Docker Compose to avoid local dependency/env mismatches. This runs backend + frontend in dev mode.
+
+```bash
+docker compose up --build
+```
+
+Then open `http://localhost:5173`.
+
+Stop:
+```bash
+docker compose down
+```
+
+Tail logs (optional):
+```bash
+docker compose logs -f
+```
+
+If you want to provide real API keys, create `backend/.env` locally (and do not commit it), or pass environment variables in `docker-compose.yml`.
+
 ## Next steps
 
 - Replace the simulated responses with real OpenAI calls once credentials are available.

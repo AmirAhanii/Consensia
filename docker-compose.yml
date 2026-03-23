@@ -1,0 +1,40 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      # Keep backend in simulated mode unless you explicitly provide keys.
+      LLM_PROVIDER: "none"
+      CORS_ALLOW_ORIGINS: "http://localhost:5173"
+    volumes:
+      - ./backend/app:/app/backend/app
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      # Must point to host because the browser runs on the host machine.
+      VITE_API_BASE_URL: "http://localhost:8000"
+      VITE_OPEN: "false"
+    volumes:
+      - ./frontend/src:/app/frontend/src
+      - ./frontend/index.html:/app/frontend/index.html
+      - ./frontend/src/index.css:/app/frontend/src/index.css
+      - ./frontend/vite.config.ts:/app/frontend/vite.config.ts
+      - ./frontend/tsconfig.json:/app/frontend/tsconfig.json
+      - ./frontend/tsconfig.app.json:/app/frontend/tsconfig.app.json
+      - ./frontend/tsconfig.node.json:/app/frontend/tsconfig.node.json
+      - ./frontend/tailwind.config.ts:/app/frontend/tailwind.config.ts
+      - ./frontend/postcss.config.cjs:/app/frontend/postcss.config.cjs
+    # Use the local Vite binary to avoid any PATH/entrypoint quirks.
+    command: ./node_modules/.bin/vite --host 0.0.0.0 --port 5173
+    depends_on:
+      - backend
+

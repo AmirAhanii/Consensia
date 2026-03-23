@@ -1,0 +1,12 @@
+# Docker build context hygiene
+**/.DS_Store
+**/.git
+**/.cursor
+**/node_modules
+**/.venv
+**/dist
+
+# Backend python cache
+**/__pycache__
+**/*.pyc
+

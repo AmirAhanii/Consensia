@@ -1,0 +1,19 @@
+Metadata-Version: 2.4
+Name: consensia-backend
+Version: 0.1.0
+Summary: FastAPI backend for orchestrating AI personas and judge consensus.
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi<1.0.0,>=0.115.0
+Requires-Dist: pydantic<3.0,>=2.9
+Requires-Dist: uvicorn[standard]<1.0.0,>=0.30.0
+Requires-Dist: httpx<1.0.0,>=0.27.0
+Requires-Dist: python-dotenv<2.0.0,>=1.0.0
+Requires-Dist: openai<2.0.0,>=1.51.0
+Requires-Dist: google-generativeai<1.0.0,>=0.8.2
+Requires-Dist: python-multipart<1.0.0,>=0.0.7
+Requires-Dist: pdfplumber<1.0.0,>=0.11.0
+Requires-Dist: python-docx<2.0.0,>=1.0.0
+Provides-Extra: dev
+Requires-Dist: ruff<1.0.0,>=0.6.5; extra == "dev"
+Requires-Dist: pytest<9.0.0,>=8.3.0; extra == "dev"

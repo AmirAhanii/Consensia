@@ -5,7 +5,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    open: true
+    // Containers usually don't have a GUI / xdg-open available.
+    // Auto-open locally only when explicitly enabled.
+    open: process.env.VITE_OPEN === "true",
   }
 });
 

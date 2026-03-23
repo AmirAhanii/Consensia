@@ -1,10 +1,15 @@
 import os
 from functools import lru_cache
+from pathlib import Path
 
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 
-load_dotenv()
+# Load .env from the backend directory, not the current working directory
+# This ensures cross-platform compatibility
+backend_dir = Path(__file__).parent.parent
+env_path = backend_dir / ".env"
+load_dotenv(dotenv_path=env_path)
 
 
 class Settings(BaseModel):
