@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Persona } from "../types";
 import { Modal } from "./Modal";
 import { ICON_OPTIONS } from "../constants/icons";
@@ -6,7 +6,14 @@ import { PersonaIconSelector } from "./persona-panel/PersonaIconModal.tsx";
 import { PersonaEditor } from "./persona-panel/PersonaEditor.tsx";
 import { PersonaChooseModal } from "./persona-panel/PersonaChooseModal";
 import { PersonaGrid } from "./persona-panel/PersonaGrid";
-import { PersonaCreateModal } from "./persona-panel/PersonaCreateModal";
+import {
+  PersonaCreateModal,
+  iconNameForScholarId,
+} from "./persona-panel/PersonaCreateModal";
+import {
+  mergeBundledResearchSnapshots,
+  type ResearchSnapshotRow,
+} from "../data/bundledResearchers";
 import { PersonaViewModal } from "./persona-panel/PersonaViewModal";
 
 import { API_BASE_URL } from "../config.ts";
@@ -38,6 +45,10 @@ export const PersonaPanel: React.FC<Props> = ({
   const [personaToConfirm, setPersonaToConfirm] = useState<Persona | null>(
     null
   );
+  const [researchSnapshots, setResearchSnapshots] = useState<
+    ResearchSnapshotRow[]
+  >([]);
+  const [savedResearchersOpen, setSavedResearchersOpen] = useState(false);
 
   const renderIcon = (
     key: string,
@@ -81,6 +92,121 @@ export const PersonaPanel: React.FC<Props> = ({
       icon: "UserStar",
     },
   ];
+
+  useEffect(() => {
+    if (!showCreateModal) {
+      setSavedResearchersOpen(false);
+      setResearchSnapshots([]);
+    }
+  }, [showCreateModal]);
+
+  const handleToggleSavedResearchers = useCallback(() => {
+    if (savedResearchersOpen) {
+      setSavedResearchersOpen(false);
+      return;
+    }
+    setSavedResearchersOpen(true);
+    // Always show bundled examples immediately (no empty state while loading).
+    setResearchSnapshots(mergeBundledResearchSnapshots([]));
+    fetch(`${API_BASE_URL}/api/research/raw-authors`)
+      .then(async (r) => {
+        if (!r.ok) {
+          const hint =
+            r.status === 404
+              ? "Backend route missing — restart the API or update the backend."
+              : `Could not load list (HTTP ${r.status}). Is the API at ${API_BASE_URL} running?`;
+          throw new Error(hint);
+        }
+        return r.json();
+      })
+      .then((data) => {
+        if (!Array.isArray(data)) {
+          toast.error("Unexpected response from server when loading researchers.");
+          setResearchSnapshots(mergeBundledResearchSnapshots([]));
+          return;
+        }
+        setResearchSnapshots(mergeBundledResearchSnapshots(data));
+      })
+      .catch((err) => {
+        console.error(err);
+        setResearchSnapshots(mergeBundledResearchSnapshots([]));
+        toast.error(
+          err instanceof Error
+            ? err.message
+            : "Network error — check the backend is running and VITE_API_BASE_URL."
+        );
+      });
+  }, [savedResearchersOpen]);
+
+  const applyResearchPersonaPayload = (
+    data: {
+      name?: string;
+      title?: string;
+      description?: string;
+    },
+    options?: { icon?: string }
+  ) => {
+    const personaName = data.title || data.name || "Unnamed Persona";
+    const personaDescription = data.description || "No description provided.";
+    const icon = options?.icon ?? "User";
+    const newPersona = {
+      id: Date.now().toString(),
+      name: personaName,
+      description: personaDescription,
+      icon,
+    };
+    setCustomPersonas((prev) => [...prev, newPersona]);
+    onAddPersona({
+      name: newPersona.name,
+      description: newPersona.description,
+      icon: newPersona.icon,
+    });
+    toast.success("Persona added");
+    setShowCreateModal(false);
+    setShowManualForm(false);
+  };
+
+  const handleResearchJsonUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/persona/from-research-json`, {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) throw new Error(`Upload failed: ${res.status}`);
+      const data = await res.json();
+      applyResearchPersonaPayload(data);
+    } catch (err) {
+      console.error(err);
+      toast.error("Couldn’t create persona from that file.");
+    } finally {
+      event.target.value = "";
+    }
+  };
+
+  const handleSelectResearchSnapshot = async (scholarId: string) => {
+    try {
+      const res = await fetch(
+        `${API_BASE_URL}/api/persona/from-research-snapshot/${encodeURIComponent(
+          scholarId
+        )}`,
+        { method: "POST" }
+      );
+      if (!res.ok) throw new Error(`Snapshot failed: ${res.status}`);
+      const data = await res.json();
+      applyResearchPersonaPayload(data, {
+        icon: iconNameForScholarId(scholarId),
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error("Couldn’t create persona from that researcher.");
+    }
+  };
 
   const handleCVUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -214,6 +340,12 @@ export const PersonaPanel: React.FC<Props> = ({
           setShowManualForm(false);
         }}
         handleCVUpload={handleCVUpload}
+        handleResearchJsonUpload={handleResearchJsonUpload}
+        researchSnapshots={researchSnapshots}
+        savedResearchersOpen={savedResearchersOpen}
+        onToggleSavedResearchers={handleToggleSavedResearchers}
+        onSelectResearchSnapshot={handleSelectResearchSnapshot}
+        renderIcon={renderIcon}
       />
 
       {/* Selected Persona Modal */}

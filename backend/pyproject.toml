@@ -26,3 +26,8 @@ dev = [
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+# Docker copies ./data next to ./app under WORKDIR; only `app` is a Python package.
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]

@@ -14,6 +14,7 @@ RUN apt-get update \
 # Install dependencies
 COPY backend/pyproject.toml backend/env.template ./
 COPY backend/app ./app
+COPY backend/data ./data
 
 # Ensure a README exists because pyproject.toml points to it.
 RUN test -f README.md || printf "# consensia-backend\n" > README.md

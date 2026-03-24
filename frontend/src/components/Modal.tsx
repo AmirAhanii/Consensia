@@ -16,8 +16,9 @@ export const Modal: React.FC<ModalProps> = ({ open, onClose, children, showClose
         {children}
 
         <button
+          type="button"
           onClick={onClose}
-          className="mt-4 w-full rounded-xl bg-purple-700 text-white py-2"
+          className="mt-4 w-full rounded-xl bg-purple-700 hover:bg-purple-600 text-white py-2 font-medium transition-colors"
         >
           Close
         </button>

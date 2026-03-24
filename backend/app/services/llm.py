@@ -5,11 +5,10 @@ import json
 from enum import Enum
 from typing import Iterable
 
-import google.generativeai as genai
-from openai import AsyncOpenAI
+from openai import AsyncAzureOpenAI, AsyncOpenAI
 
 from ..config import Settings
-from ..schemas import JudgeConsensus, Persona, PersonaAnswer
+from ..schemas import JudgeConsensus, Persona, PersonaAnswer, TokenUsage
 
 
 class Provider(str, Enum):
@@ -31,8 +30,30 @@ class LLMService:
         self._gemini_model = None
 
         if self._provider is Provider.OPENAI and settings.openai_api_key:
-            self._openai_client = AsyncOpenAI(api_key=settings.openai_api_key)
+            # If OPENAI_API_VERSION is set, treat OPENAI_BASE_URL as an Azure endpoint.
+            if settings.openai_api_version:
+                if not settings.openai_base_url:
+                    raise ValueError(
+                        "OPENAI_BASE_URL is required for Azure OpenAI (use the Azure endpoint URL)."
+                    )
+                self._openai_client = AsyncAzureOpenAI(
+                    api_key=settings.openai_api_key,
+                    azure_endpoint=settings.openai_base_url,
+                    api_version=settings.openai_api_version,
+                )
+            else:
+                # OpenAI-compatible endpoints (optional base_url).
+                if settings.openai_base_url:
+                    self._openai_client = AsyncOpenAI(
+                        api_key=settings.openai_api_key,
+                        base_url=settings.openai_base_url,
+                    )
+                else:
+                    self._openai_client = AsyncOpenAI(api_key=settings.openai_api_key)
         elif self._provider is Provider.GEMINI and settings.gemini_api_key:
+            # Lazy import so OpenAI-only deployments don't emit Gemini import warnings.
+            import google.generativeai as genai
+
             genai.configure(api_key=settings.gemini_api_key)
             model_name = settings.gemini_model
             if not model_name.startswith("models/"):
@@ -96,7 +117,17 @@ class LLMService:
                 },
                 {"role": "user", "content": question},
             ],
+            max_tokens=self._settings.max_output_tokens_persona,
         )
+
+        usage = getattr(response, "usage", None)
+        token_usage: TokenUsage | None = None
+        if usage:
+            token_usage = TokenUsage(
+                prompt_tokens=usage.prompt_tokens,
+                completion_tokens=usage.completion_tokens,
+                total_tokens=usage.total_tokens,
+            )
 
         content = response.choices[0].message.content or ""
         return PersonaAnswer(
@@ -104,6 +135,7 @@ class LLMService:
             persona_name=persona.name,
             persona_description=persona.description,
             answer=content.strip(),
+            usage=token_usage,
         )
 
     async def _generate_persona_answer_gemini(self, persona: Persona, question: str) -> PersonaAnswer:
@@ -140,8 +172,8 @@ class LLMService:
                     "role": "system",
                     "content": (
                         "You are an impartial judge. Read the persona responses and deliver:\n"
-                        "1. A concise summary that captures the best consensus.\n"
-                        "2. A reasoning section that references the personas' points.\n"
+                        "1. A concise summary of the best consensus.\n"
+                        "2. A short reasoning section referencing which personas support the summary.\n"
                         "Return JSON with keys 'summary' and 'reasoning'."
                     ),
                 },
@@ -154,17 +186,35 @@ class LLMService:
                 },
             ],
             response_format={"type": "json_object"},
+            max_tokens=self._settings.max_output_tokens_judge,
         )
 
         message = response.choices[0].message
-        if message.parsed and isinstance(message.parsed, dict):
-            parsed = message.parsed
+        parsed_message = getattr(message, "parsed", None)
+        if parsed_message and isinstance(parsed_message, dict):
+            parsed = parsed_message
         else:
-            parsed = {"summary": message.content or "", "reasoning": ""}
+            content = message.content or ""
+            try:
+                parsed = json.loads(content)
+                if not isinstance(parsed, dict):
+                    parsed = {"summary": content, "reasoning": ""}
+            except json.JSONDecodeError:
+                parsed = {"summary": content, "reasoning": ""}
+
+        usage = getattr(response, "usage", None)
+        token_usage: TokenUsage | None = None
+        if usage:
+            token_usage = TokenUsage(
+                prompt_tokens=usage.prompt_tokens,
+                completion_tokens=usage.completion_tokens,
+                total_tokens=usage.total_tokens,
+            )
 
         return JudgeConsensus(
             summary=parsed.get("summary", "").strip(),
             reasoning=parsed.get("reasoning", "").strip(),
+            usage=token_usage,
         )
 
     async def _generate_judge_consensus_gemini(
@@ -221,7 +271,7 @@ class LLMService:
             f"Your persona name: {persona.name}\n"
             f"Persona background: {persona.description}\n"
             "Role-play this character faithfully, adopt their tone, priorities, and level of expertise.\n"
-            "Keep the response concise (3-6 sentences) unless deeper analysis is required."
+            "Keep the response very concise (2-3 sentences). Prefer short, high-signal reasoning."
         )
 
     def _build_persona_prompt(self, persona: Persona, question: str) -> str:
@@ -233,14 +283,18 @@ class LLMService:
         )
 
     def _build_judge_context(self, persona_answers: Iterable[PersonaAnswer]) -> str:
+        max_chars = self._settings.judge_context_max_chars_per_persona
         sections = []
         for answer in persona_answers:
             # judge needs access to persona metadata; reuse persona description from payload
+            resp = answer.answer or ""
+            if len(resp) > max_chars:
+                resp = resp[:max_chars].rstrip() + "...[truncated]"
             sections.append(
                 f"Persona ID: {answer.persona_id}\n"
                 f"Persona Name: {answer.persona_name}\n"
                 f"Persona Background: {answer.persona_description}\n"
-                f"Response:\n{answer.answer}"
+                f"Response:\n{resp}"
             )
         return "\n\n".join(sections)
 

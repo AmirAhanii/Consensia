@@ -5,12 +5,16 @@ services:
       dockerfile: backend/Dockerfile
     ports:
       - "8000:8000"
+    env_file:
+      - ./backend/.env
     environment:
-      # Keep backend in simulated mode unless you explicitly provide keys.
-      LLM_PROVIDER: "none"
+      # Keep CORS stable for local frontend.
       CORS_ALLOW_ORIGINS: "http://localhost:5173"
+      # Explicit path inside the container (matches volume ./backend/data)
+      RESEARCH_RAW_AUTHORS_DIR: "/app/backend/data/raw_authors"
     volumes:
       - ./backend/app:/app/backend/app
+      - ./backend/data:/app/backend/data
     command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
   frontend:

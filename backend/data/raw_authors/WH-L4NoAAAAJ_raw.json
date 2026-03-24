@@ -1,0 +1,355 @@
+{
+  "name": "Alireza Aghamohammadi",
+  "scholar_id": "WH-L4NoAAAAJ",
+  "affiliation": "Sharif University of Technology",
+  "scraped_at": "2026-02-23T13:17:52.612945Z",
+  "papers": [
+    {
+      "title": "A fine-grained data set and analysis of tangling in bug fixing commits",
+      "authors": "S Herbold, A Trautsch, B Ledel, A Aghamohammadi, TA Ghaleb, ...",
+      "year": "2022",
+      "venue": "Empirical Software Engineering 27 (6), 125, 2022",
+      "citation_count": 88,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:UeHWp8X0CEIC",
+      "abstract": "Context\nTangled commits are changes to software that address multiple concerns at once. For researchers interested in bugs, tangled commits mean that they actually study not only bugs, but also other concerns irrelevant for the study of bugs.\nObjective\nWe want to improve our understanding of the prevalence of tangling and the types of changes that are tangled within bug fixing commits.\nMethods\nWe use a crowd sourcing approach for manual labeling to validate which changes contribute to bug fixes for each line in bug fixing commits. Each line is labeled by four participants. If at least three participants agree on the same label, we have consensus.\nResults\nWe estimate that between 17% and 32% of all changes in bug fixing commits modify the source code to fix the underlying problem. However, when we only consider changes to the production code files this ratio increases to 66% to 87%. We find that about 11% of …"
+    },
+    {
+      "title": "Statement frequency coverage: a code coverage criterion for assessing test suite effectiveness",
+      "authors": "A Aghamohammadi, SH Mirian-Hosseinabadi, S Jalali",
+      "year": "2021",
+      "venue": "Information and Software Technology 129, 106426, 2021",
+      "citation_count": 48,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:2osOgNQ5qMEC",
+      "abstract": "Context\nObjective\nMethod"
+    },
+    {
+      "title": "An ensemble‐based predictive mutation testing approach that considers impact of unreached mutants",
+      "authors": "A Aghamohammadi, SH Mirian‐Hosseinabadi",
+      "year": "2021",
+      "venue": "Software Testing, Verification and Reliability 31 (7), e1784, 2021",
+      "citation_count": 14,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:9yKSN-GCB0IC",
+      "abstract": "Predictive mutation testing (PMT) is a technique to predict whether a mutant is killed, using machine learning approaches. Researchers have proposed various methods for PMT over the years. However, the impact of unreached mutants on PMT is not fully addressed. A mutant is unreached if the statement on which the mutant is generated is not executed by any test cases. We aim at showing that unreached mutants can inflate PMT results. Moreover, we propose an alternative approach to PMT, suggesting a different interpretation for PMT. To this end, we replicated the previous PMT research. We empirically evaluated the suggested approach on 654 Java projects provided by prior literature. Our results indicate that the performance of PMT drastically decreases in terms of area under a receiver operating characteristic curve (AUC) from 0.833 to 0.517. Furthermore, PMT performs worse than random guesses on 27 …"
+    },
+    {
+      "title": "Generating summaries for methods of event-driven programs: An Android case study",
+      "authors": "A Aghamohammadi, M Izadi, A Heydarnoori",
+      "year": "2020",
+      "venue": "Journal of Systems and Software 170, 110800, 2020",
+      "citation_count": 14,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:d1gkVwhDpl0C",
+      "abstract": "The lack of proper documentation makes program comprehension a cumbersome process for developers. Source code summarization is one of the existing solutions to this problem. Many approaches have been proposed to summarize source code in recent years. A prevalent weakness of these solutions is that they do not pay much attention to interactions among elements of software. An element is simply a callable code snippet such as a method or even a clickable button. As a result, these approaches cannot be applied to event-driven programs, such as Android applications, because they have specific features such as numerous interactions between their elements. To tackle this problem, we propose a novel approach based on deep neural networks and dynamic call graphs to generate summaries for methods of event-driven programs. First, we collect a set of comment/code pairs from Github and train a deep …"
+    },
+    {
+      "title": "An Analysis of Python's Topics, Trends, and Technologies Through Mining Stack Overflow Discussions",
+      "authors": "H Tahmooresi, A Heydarnoori, A Aghamohammadi",
+      "year": "2020",
+      "venue": "arXiv preprint arXiv:2004.06280, 2020",
+      "citation_count": 9,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:u5HHmVD_uO8C",
+      "abstract": "Python is a popular, widely used, and general-purpose programming language. In spite of its ever-growing community, researchers have not performed much analysis on Python's topics, trends, and technologies which provides insights for developers about Python community trends and main issues. In this article, we examine the main topics related to this language being discussed by developers on one of the most popular Q\\&A websites, Stack Overflow, as well as temporal trends through mining 2461876 posts. To be more useful for the software engineers, we study what Python provides as the alternative to popular technologies offered by common programming languages like Java. Our results indicate that discussions about Python standard features, web programming, and scientific programming. Programming in areas such as mathematics, data science, statistics, machine learning, natural language processing (NLP), and so forth. are the most popular areas in the Python community. At the same time, areas related to scientific programming are steadily receiving more attention from the Python developers."
+    },
+    {
+      "title": "pysolorie: A Python Package for Optimal Orientation Analysis of Solar Panels",
+      "authors": "A Aghamohammadi, A Aghamohammadi, ME Foulaadvand",
+      "year": "2025",
+      "venue": "Journal of Open Research Software 13 (1), 2025",
+      "citation_count": 1,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:zYLM7Y9cAGgC",
+      "abstract": "How can one maximize the solar irradiation energy received by a fixed flat solar panel? The orientation of a solar panel is determined by two angles: the tilt angle and the azimuthal angle. pysolorie stands for Python Solar Orientation Analysis of Solar Panels. It is a Python package designed to find the optimal tilt angle of solar panels, β, to maximize the beam energy received for a given day, assuming a clear-sky condition. For modeling the clear sky, we use the Hottel’s model. The optimal azimuthal angle is zero."
+    },
+    {
+      "title": "Investigating the Dependence of Optimal Orientation of Flat Solar Collectors on Latitude and Climate Types Under Clear Sky Conditions",
+      "authors": "A Aghamohammadi, ME Foulaadvand, A Aghamohammadi",
+      "year": "2026",
+      "venue": "International Journal of Photoenergy 2026 (1), 9958482, 2026",
+      "citation_count": null,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:Y0pCki6q_DkC",
+      "abstract": "This study investigates the daily dependence of the optimal angle of a flat solar collector on geographical latitude, climate type, and altitude under clear sky conditions. Hottel′s model is primarily used to mathematically describe the clear sky condition. In addition, this paper considers three other clear sky models. It is shown that the dependence of the optimal tilt angle is very close to Hottel′s model prediction. Although the paper mainly considers the direct beam energy, it is shown that the inclusion of sky diffusion irradiation only slightly changes the results. The results show that the climate type does not significantly affect the optimal angle. In contrast, the geographical latitude has a drastic effect on the optimal tilt angle. The plot of the optimal tilt angle versus latitude forms a straight line, whose slope moderately depends on the day of the year and is typically close to unity. In contrast, the line intercept significantly …"
+    },
+    {
+      "title": "Using causal inference and Bayesian statistics to explain the capability of a test suite in exposing software faults",
+      "authors": "A Aghamohammadi, SH Mirian-Hosseinabadi",
+      "year": "2023",
+      "venue": "arXiv preprint arXiv:2303.09968, 2023",
+      "citation_count": null,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:IjCSPb-OGe4C",
+      "abstract": "Test effectiveness refers to the capability of a test suite in exposing faults in software. It is crucial to be aware of factors that influence this capability. We aim at inferring the causal relationship between the two factors (i.e., Cover/Exec) and the capability of a test suite to expose and discover faults in software. Cover refers to the number of distinct test cases covering the statement and Exec equals the number of times a test suite executes a statement. We analyzed 459166 software faults from {12} Java programs. Bayesian statistics along with the back-door criterion was exploited for the purpose of causal inference. Furthermore, we examined the common pitfall measuring association, the mixture of causal and noncausal relationships, instead of causal association. The results show that Cover is of more causal association as against \\textit{Exec}, and the causal association and noncausal one for those variables are statistically different. Software developers could exploit the results to design and write more effective test cases, which lead to discovering more bugs hidden in software."
+    }
+  ],
+  "raw_data": {
+    "serpapi_profile_response": {
+      "search_metadata": {
+        "id": "699c535b304eba50b734eb0e",
+        "status": "Success",
+        "json_endpoint": "https://serpapi.com/searches/ly0MKcKRBo6unEFX6TBFHA/699c535b304eba50b734eb0e.json",
+        "created_at": "2026-02-23 13:17:15 UTC",
+        "processed_at": "2026-02-23 13:17:15 UTC",
+        "google_scholar_author_url": "https://scholar.google.com/citations?user=WH-L4NoAAAAJ&hl=en",
+        "raw_html_file": "https://serpapi.com/searches/ly0MKcKRBo6unEFX6TBFHA/699c535b304eba50b734eb0e.html",
+        "total_time_taken": 2.04
+      },
+      "search_parameters": {
+        "engine": "google_scholar_author",
+        "author_id": "WH-L4NoAAAAJ",
+        "hl": "en"
+      },
+      "author": {
+        "name": "Alireza Aghamohammadi",
+        "affiliations": "Sharif University of Technology",
+        "email": "Verified email at ce.sharif.edu",
+        "website": "https://www.linkedin.com/in/aaghamohammadi/",
+        "interests": [
+          {
+            "title": "Empirical Software Engineering",
+            "link": "https://scholar.google.com/citations?view_op=search_authors&hl=en&mauthors=label:empirical_software_engineering",
+            "serpapi_link": "https://serpapi.com/search.json?engine=google_scholar_profiles&hl=en&mauthors=label%3Aempirical_software_engineering"
+          },
+          {
+            "title": "Software Testing",
+            "link": "https://scholar.google.com/citations?view_op=search_authors&hl=en&mauthors=label:software_testing",
+            "serpapi_link": "https://serpapi.com/search.json?engine=google_scholar_profiles&hl=en&mauthors=label%3Asoftware_testing"
+          },
+          {
+            "title": "Mining Software Repositories",
+            "link": "https://scholar.google.com/citations?view_op=search_authors&hl=en&mauthors=label:mining_software_repositories",
+            "serpapi_link": "https://serpapi.com/search.json?engine=google_scholar_profiles&hl=en&mauthors=label%3Amining_software_repositories"
+          },
+          {
+            "title": "Machine Learning",
+            "link": "https://scholar.google.com/citations?view_op=search_authors&hl=en&mauthors=label:machine_learning",
+            "serpapi_link": "https://serpapi.com/search.json?engine=google_scholar_profiles&hl=en&mauthors=label%3Amachine_learning"
+          }
+        ],
+        "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=view_photo&user=WH-L4NoAAAAJ&citpid=3"
+      },
+      "articles": [
+        {
+          "title": "A fine-grained data set and analysis of tangling in bug fixing commits",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:UeHWp8X0CEIC",
+          "citation_id": "WH-L4NoAAAAJ:UeHWp8X0CEIC",
+          "authors": "S Herbold, A Trautsch, B Ledel, A Aghamohammadi, TA Ghaleb, ...",
+          "publication": "Empirical Software Engineering 27 (6), 125, 2022",
+          "cited_by": {
+            "value": 88,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=15367080930623477018,5155294371116315346",
+            "serpapi_link": "https://serpapi.com/search.json?cites=15367080930623477018%2C5155294371116315346&engine=google_scholar&hl=en",
+            "cites_id": "15367080930623477018,5155294371116315346"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "Statement frequency coverage: a code coverage criterion for assessing test suite effectiveness",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:2osOgNQ5qMEC",
+          "citation_id": "WH-L4NoAAAAJ:2osOgNQ5qMEC",
+          "authors": "A Aghamohammadi, SH Mirian-Hosseinabadi, S Jalali",
+          "publication": "Information and Software Technology 129, 106426, 2021",
+          "cited_by": {
+            "value": 48,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11645103587788809564",
+            "serpapi_link": "https://serpapi.com/search.json?cites=11645103587788809564&engine=google_scholar&hl=en",
+            "cites_id": "11645103587788809564"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "An ensemble‐based predictive mutation testing approach that considers impact of unreached mutants",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:9yKSN-GCB0IC",
+          "citation_id": "WH-L4NoAAAAJ:9yKSN-GCB0IC",
+          "authors": "A Aghamohammadi, SH Mirian‐Hosseinabadi",
+          "publication": "Software Testing, Verification and Reliability 31 (7), e1784, 2021",
+          "cited_by": {
+            "value": 14,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=10007489501524692903,17352572878738904153",
+            "serpapi_link": "https://serpapi.com/search.json?cites=10007489501524692903%2C17352572878738904153&engine=google_scholar&hl=en",
+            "cites_id": "10007489501524692903,17352572878738904153"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "Generating summaries for methods of event-driven programs: An Android case study",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:d1gkVwhDpl0C",
+          "citation_id": "WH-L4NoAAAAJ:d1gkVwhDpl0C",
+          "authors": "A Aghamohammadi, M Izadi, A Heydarnoori",
+          "publication": "Journal of Systems and Software 170, 110800, 2020",
+          "cited_by": {
+            "value": 14,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=5395011134910582670",
+            "serpapi_link": "https://serpapi.com/search.json?cites=5395011134910582670&engine=google_scholar&hl=en",
+            "cites_id": "5395011134910582670"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "An Analysis of Python's Topics, Trends, and Technologies Through Mining Stack Overflow Discussions",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:u5HHmVD_uO8C",
+          "citation_id": "WH-L4NoAAAAJ:u5HHmVD_uO8C",
+          "authors": "H Tahmooresi, A Heydarnoori, A Aghamohammadi",
+          "publication": "arXiv preprint arXiv:2004.06280, 2020",
+          "cited_by": {
+            "value": 9,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=2189863371296788517",
+            "serpapi_link": "https://serpapi.com/search.json?cites=2189863371296788517&engine=google_scholar&hl=en",
+            "cites_id": "2189863371296788517"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "pysolorie: A Python Package for Optimal Orientation Analysis of Solar Panels",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:zYLM7Y9cAGgC",
+          "citation_id": "WH-L4NoAAAAJ:zYLM7Y9cAGgC",
+          "authors": "A Aghamohammadi, A Aghamohammadi, ME Foulaadvand",
+          "publication": "Journal of Open Research Software 13 (1), 2025",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=2733065189428756213",
+            "serpapi_link": "https://serpapi.com/search.json?cites=2733065189428756213&engine=google_scholar&hl=en",
+            "cites_id": "2733065189428756213"
+          },
+          "year": "2025"
+        },
+        {
+          "title": "Investigating the Dependence of Optimal Orientation of Flat Solar Collectors on Latitude and Climate Types Under Clear Sky Conditions",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:Y0pCki6q_DkC",
+          "citation_id": "WH-L4NoAAAAJ:Y0pCki6q_DkC",
+          "authors": "A Aghamohammadi, ME Foulaadvand, A Aghamohammadi",
+          "publication": "International Journal of Photoenergy 2026 (1), 9958482, 2026",
+          "cited_by": {
+            "value": null
+          },
+          "year": "2026"
+        },
+        {
+          "title": "Using causal inference and Bayesian statistics to explain the capability of a test suite in exposing software faults",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=WH-L4NoAAAAJ&citation_for_view=WH-L4NoAAAAJ:IjCSPb-OGe4C",
+          "citation_id": "WH-L4NoAAAAJ:IjCSPb-OGe4C",
+          "authors": "A Aghamohammadi, SH Mirian-Hosseinabadi",
+          "publication": "arXiv preprint arXiv:2303.09968, 2023",
+          "cited_by": {
+            "value": null
+          },
+          "year": "2023"
+        }
+      ],
+      "cited_by": {
+        "table": [
+          {
+            "citations": {
+              "all": 174,
+              "since_2021": 155
+            }
+          },
+          {
+            "h_index": {
+              "all": 5,
+              "since_2021": 5
+            }
+          },
+          {
+            "i10_index": {
+              "all": 4,
+              "since_2021": 4
+            }
+          }
+        ],
+        "graph": [
+          {
+            "year": 2012,
+            "citations": 2
+          },
+          {
+            "year": 2015,
+            "citations": 1
+          },
+          {
+            "year": 2016,
+            "citations": 2
+          },
+          {
+            "year": 2017,
+            "citations": 3
+          },
+          {
+            "year": 2018,
+            "citations": 4
+          },
+          {
+            "year": 2019,
+            "citations": 3
+          },
+          {
+            "year": 2020,
+            "citations": 3
+          },
+          {
+            "year": 2021,
+            "citations": 12
+          },
+          {
+            "year": 2022,
+            "citations": 25
+          },
+          {
+            "year": 2023,
+            "citations": 33
+          },
+          {
+            "year": 2024,
+            "citations": 33
+          },
+          {
+            "year": 2025,
+            "citations": 45
+          },
+          {
+            "year": 2026,
+            "citations": 7
+          }
+        ]
+      },
+      "public_access": {
+        "link": "https://scholar.google.com/citations?view_op=list_mandates&hl=en&user=WH-L4NoAAAAJ",
+        "available": 1,
+        "not_available": 0
+      },
+      "co_authors": [
+        {
+          "name": "Seyed-Hasan Mirian-Hosseinabadi",
+          "link": "https://scholar.google.com/citations?user=Stld52AAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=Stld52AAAAAJ&engine=google_scholar_author&hl=en",
+          "author_id": "Stld52AAAAAJ",
+          "affiliations": "Associate Professor of Computer Science, Sharif University of Technology",
+          "email": "Verified email at sharif.edu",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=Stld52AAAAAJ&citpid=1"
+        },
+        {
+          "name": "Abbas Heydarnoori",
+          "link": "https://scholar.google.com/citations?user=s5vgK3kAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=s5vgK3kAAAAJ&engine=google_scholar_author&hl=en",
+          "author_id": "s5vgK3kAAAAJ",
+          "affiliations": "Bowling Green State University",
+          "email": "Verified email at bgsu.edu",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=s5vgK3kAAAAJ&citpid=4"
+        },
+        {
+          "name": "Maliheh Izadi",
+          "link": "https://scholar.google.com/citations?user=F2D5RawAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=F2D5RawAAAAJ&engine=google_scholar_author&hl=en",
+          "author_id": "F2D5RawAAAAJ",
+          "affiliations": "Assistant Professor - AISE @ Delft University of Technology, The Netherlands",
+          "email": "Verified email at tudelft.nl",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=F2D5RawAAAAJ&citpid=10"
+        },
+        {
+          "name": "Steffen Herbold",
+          "link": "https://scholar.google.com/citations?user=Fac_e58AAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=Fac_e58AAAAJ&engine=google_scholar_author&hl=en",
+          "author_id": "Fac_e58AAAAJ",
+          "affiliations": "University of Passau",
+          "email": "Verified email at uni-passau.de",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=Fac_e58AAAAJ&citpid=2"
+        }
+      ]
+    }
+  }
+}

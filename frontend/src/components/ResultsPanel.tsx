@@ -27,9 +27,11 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ personas, judge, err
         </p>
       ) : (
         <p className="mt-1 text-sm text-purple-300/70">
-          {judge
+          {judge && personas.length > 1
             ? "Explore each persona response and review the judge’s synthesized consensus."
-            : "Run a debate to populate persona answers and the judge consensus."}
+            : judge && personas.length === 1
+              ? "One viewpoint below. Add another persona if you want a multi-perspective debate and judge synthesis."
+              : "Run a debate to populate persona answers and the judge consensus."}
         </p>
       )}
 
@@ -63,7 +65,8 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ personas, judge, err
             </div>
           </section>
 
-          {judge && (
+          {/* With one persona the API echoes the same text as “consensus” — hide to avoid confusion */}
+          {judge && personas.length > 1 && (
             <section className="space-y-4">
               <h3 className="text-sm font-semibold uppercase tracking-wide text-purple-200">Judge Consensus</h3>
               <div className="overflow-hidden rounded-2xl border border-fuchsia-500/30 bg-gradient-to-br from-fuchsia-900/60 to-black/70 p-5 shadow-lg shadow-purple-900/40">
