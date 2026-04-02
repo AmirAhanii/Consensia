@@ -1,0 +1,20 @@
+Project: cayenne
+Commit: 0069f81e6077489c82958c22e6f96f2d4fc93242
+hunk_oid: 5b3b35d27c2cb055576a481a
+file_path: tutorials/tutorial-rop-server/src/main/webapp/META-INF/context.xml
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\cayenne
+
+===== NOTES =====
+- BEFORE file not available at parent (file may be added/renamed, or parent missing locally).
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
++ <!-- 
++  This piece of configuration is needed for deployment on Tomcat 6 or 7
++  to prevent ROP client from losing its server-side session between requests.
++ -->
++ <Context>
++ 	<Valve className="org.apache.catalina.authenticator.BasicAuthenticator" 
++ 		changeSessionIdOnAuthentication="false" />
++ </Context>

@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: 6591eec3f94a1f1bb7092b4818f086ba99548027
+hunk_oid: 5b48ca3356677a7f0bf88090
+file_path: ws-security-dom/src/main/java/org/apache/wss4j/dom/saml/DOMSAMLUtil.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

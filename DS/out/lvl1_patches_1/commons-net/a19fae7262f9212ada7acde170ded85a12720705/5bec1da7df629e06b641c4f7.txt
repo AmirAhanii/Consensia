@@ -1,0 +1,59 @@
+Project: commons-net
+Commit: a19fae7262f9212ada7acde170ded85a12720705
+hunk_oid: 5bec1da7df629e06b641c4f7
+file_path: src/test/java/org/apache/commons/net/smtp/SimpleSMTPHeaderTestCase.java
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\commons-net
+
+===== NOTES =====
+- BEFORE file not available at parent (file may be added/renamed, or parent missing locally).
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
++ package org.apache.commons.net.smtp;
++ 
++ import static org.junit.Assert.*;
++ 
++ import org.junit.Before;
++ import org.junit.Test;
++ 
++ public class SimpleSMTPHeaderTestCase {
++ 
++     private SimpleSMTPHeader header;
++ 
++     @Before
++     public void setUp() {
++         header = new SimpleSMTPHeader("from@here.invalid", "to@there.invalid", "Test email");
++     }
++ 
++     @Test
++     public void testToString() {
++         assertNotNull(header);
++         // Note that the DotTerminatedMessageWriter converts LF to CRLF
++         assertEquals("From: from@here.invalid\nTo: to@there.invalid\nSubject: Test email\n\n", header.toString());
++     }
++ 
++     @Test
++     public void testToStringNoSubject() {
++         SimpleSMTPHeader hdr = new SimpleSMTPHeader("from@here.invalid", "to@there.invalid", null);
++         assertNotNull(hdr);
++         // Note that the DotTerminatedMessageWriter converts LF to CRLF
++         assertEquals("From: from@here.invalid\nTo: to@there.invalid\n\n", hdr.toString());
++     }
++ 
++     @Test(expected=IllegalArgumentException.class)
++     public void testToStringNoFrom() {
++         SimpleSMTPHeader hdr = new SimpleSMTPHeader(null, null, null);
++         assertNotNull(hdr);
++         // Note that the DotTerminatedMessageWriter converts LF to CRLF
++         assertEquals("From: from@here.invalid\n\n", hdr.toString());
++     }
++     @Test
++ 
++     public void testToStringNoTo() {
++         SimpleSMTPHeader hdr = new SimpleSMTPHeader("from@here.invalid", null, null);
++         assertNotNull(hdr);
++         // Note that the DotTerminatedMessageWriter converts LF to CRLF
++         assertEquals("From: from@here.invalid\n\n", hdr.toString());
++     }
++ }

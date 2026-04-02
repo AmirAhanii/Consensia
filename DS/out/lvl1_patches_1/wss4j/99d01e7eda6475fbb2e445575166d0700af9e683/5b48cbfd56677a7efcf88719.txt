@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: 99d01e7eda6475fbb2e445575166d0700af9e683
+hunk_oid: 5b48cbfd56677a7efcf88719
+file_path: src/main/java/org/apache/ws/security/components/crypto/MerlinDevice.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

@@ -1,0 +1,35 @@
+Project: commons-bcel
+Commit: 988802e00cc2ab1eb15f7e6f8a29708bb240c7d5
+hunk_oid: 5c87a78be84e0032bb58fa34
+file_path: src/test/java/org/apache/commons/bcel6/util/BCELifierTestCase.java
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\commons-bcel
+
+===== NOTES =====
+- BEFORE file not available at parent (file may be added/renamed, or parent missing locally).
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
++ package org.apache.commons.bcel6.util;
++ 
++ import static org.junit.Assert.*;
++ 
++ import org.apache.commons.bcel6.classfile.JavaClass;
++ import org.junit.Test;
++ import static org.junit.Assume.assumeTrue;
++ 
++ public class BCELifierTestCase {
++ 
++     // A bit of a hack - we use the same property as for the perf test for now
++     private static final boolean REPORT = Boolean.parseBoolean(System.getProperty("PerformanceTest.report", "true"));;
++ 
++     @Test
++     public void test() throws Exception {
++         assumeTrue(REPORT); // set to false by pom so this will only run on demand
++         JavaClass java_class = BCELifier.getJavaClass("Java8Example");
++         assertNotNull(java_class);
++         BCELifier bcelifier = new BCELifier(java_class, System.out);
++         bcelifier.start();
++     }
++ 
++ }

@@ -1,0 +1,58 @@
+Project: opennlp
+Commit: e57a51f65a72671a3e16a6fb0948d8fd10dcd7c2
+hunk_oid: 5b27c65aeee553716877d645
+file_path: opennlp-tools/src/main/java/opennlp/tools/cmdline/SystemInputStreamFactory.java
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\opennlp
+
+===== NOTES =====
+(none)
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package opennlp.tools.cmdline;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
+import opennlp.tools.util.InputStreamFactory;
+
+public class SystemInputStreamFactory implements InputStreamFactory {
+
+  private boolean isTainted = false;
+  
+  public static Charset encoding() {
+-     return Charset.forName("UTF-8");
++     return Charset.defaultCharset();
+  }
+  
+  @Override
+  public InputStream createInputStream() throws IOException {
+    
+    if (!isTainted) {
+      isTainted = true;
+      return System.in;
+    }
+    else {
+      throw new UnsupportedOperationException("The System.in stream can't be re-created to read from the beginning!");
+    }
+  }
+}

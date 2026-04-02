@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: 36feba9af1162eaca32209882e40ff03dde1b9a4
+hunk_oid: 5b48ccea56677a7f01f89463
+file_path: src/org/apache/ws/security/util/UUIDGenerator.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

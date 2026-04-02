@@ -1,0 +1,159 @@
+Project: archiva
+Commit: 2c42dfa2503373de567bf845fd35c10ea6b21512
+hunk_oid: 5b5847d737b4503eb7b22243
+file_path: archiva-web/archiva-webapp/src/main/webapp/WEB-INF/jsp/findArtifact.jsp
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\archiva
+
+===== NOTES =====
+(none)
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+<%--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  --%>
+
+<div id="contentArea">
+  <div id="searchBox">
+-     <script type="text/javascript">
+-       function generateMd5( file, defVal )
+-       {
+-         if ( file )
++     <ww:if test="${sessionScope.uiOptions.appletFindEnabled}">
++       <script type="text/javascript">
++         function generateMd5( file, defVal )
+        {
+-           var s = document.ChecksumApplet.generateMd5(file);
+-           // If there is a space, it's an error message, not a checksum
+-           if ( s.indexOf(" ") >= 0 )
++           if ( file )
+          {
+-             alert(s);
+-             return "";
++             var s = document.ChecksumApplet.generateMd5(file);
++             // If there is a space, it's an error message, not a checksum
++             if ( s.indexOf(" ") >= 0 )
++             {
++               alert(s);
++               return "";
++             }
++             else
++               return s;
+          }
+-           else
+-             return s;
++           return defVal;
+        }
+-         return defVal;
+-       }
+-     </script>
++       </script>
+
+-     <noscript>
+-       <span class="errorMessage">JavaScript is disabled: using the file browser will not work.</span>
+-     </noscript>
++       <noscript>
++         <span class="errorMessage">JavaScript is disabled: using the file browser will not work.</span>
++       </noscript>
+
+-     <ww:form method="POST" action="checksumSearch" namespace="/"
+-              onsubmit="this.q.value = generateMd5(this.file.value,this.md5.value); this.file.disabled = true;">
+-       <ww:hidden name="q"/>
+-       <ww:if test="${sessionScope.uiOptions.appletFindEnabled}">     
+-       <tr>
+-         <td class="tdLabel"><label for="checksumSearch_file" class="label">Search for:</label></td>
+-         <td>
+-           <input type="file" name="file" size="50" value="" id="checksumSearch_file"/>
+-         </td>
+-       </tr>
+-       </ww:if>
+-       <ww:textfield label="Checksum" size="50" name="md5"/>
+-       <ww:submit value="Go!"/>
+-     </ww:form>
++       <ww:form method="POST" action="checksumSearch" namespace="/"
++                onsubmit="this.q.value = generateMd5(this.file.value,this.md5.value); this.file.disabled = true;">
++         <ww:hidden name="q"/>
++         <tr>
++           <td class="tdLabel"><label for="checksumSearch_file" class="label">Search for:</label></td>
++           <td>
++             <input type="file" name="file" size="50" value="" id="checksumSearch_file"/>
++           </td>
++         </tr>
++         <ww:textfield label="Checksum" size="50" name="md5"/>
++         <ww:submit value="Go!"/>
++       </ww:form>
+
+-     <ww:if test="${sessionScope.uiOptions.appletFindEnabled}">
+-     <p>
+-       Select the file you would like to locate in the remote repository.
+-       The entire file will
+-       <b>not</b>
+-       be uploaded to the server. See the progress bar below for progress of
+-       locally creating a checksum that is uploaded to the server after you hit "Go!".
+-       <ww:actionerror/>
+-     </p>
++       <p>
++         Select the file you would like to locate in the remote repository.
++         The entire file will
++         <b>not</b>
++         be uploaded to the server. See the progress bar below for progress of
++         locally creating a checksum that is uploaded to the server after you hit "Go!".
++         <ww:actionerror/>
++       </p>
+
+-     <p>
+-       <applet code="org/apache/maven/archiva/applet/ChecksumApplet.class"
+-               archive="archiva-applet.jar"
+-               width="400" height="20" name="ChecksumApplet">
+-       </applet>
+-     </p>
++       <p>
++         <applet code="org/apache/maven/archiva/applet/ChecksumApplet.class"
++                 archive="archiva-applet.jar"
++                 width="400" height="20" name="ChecksumApplet">
++         </applet>
++       </p>
+    </ww:if>
++     <ww:else>
++       <ww:form method="POST" action="checksumSearch" namespace="/">
++         <ww:textfield label="Checksum" size="50" name="q"/>
++         <ww:submit value="Go!"/>
++       </ww:form>
++ 
++       <p>
++         <ww:actionerror/>
++       </p>
++     </ww:else>
+  </div>
+</div>
+
+    </p>
+
+    <p>
+      <applet code="org/apache/maven/archiva/applet/ChecksumApplet.class"
+              archive="archiva-applet.jar"
+              width="400" height="20" name="ChecksumApplet">
+      </applet>
+    </p>
+    </ww:if>
+  </div>
+</div>
+
+</body>
+</html>

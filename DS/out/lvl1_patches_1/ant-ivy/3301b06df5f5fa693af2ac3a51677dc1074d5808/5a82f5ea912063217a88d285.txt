@@ -1,0 +1,42 @@
+Project: ant-ivy
+Commit: 3301b06df5f5fa693af2ac3a51677dc1074d5808
+hunk_oid: 5a82f5ea912063217a88d285
+file_path: build.properties
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\ant-ivy
+
+===== NOTES =====
+(none)
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+lib.dir=lib
+src.dir=src/java
+test.dir=test/java
+build.dir=build
+classes.build.dir=build/classes
+test.build.dir=build/test
+artifacts.build.dir=build/artifact
+test.report.dir=build/report
+javadoc.build.dir=build/doc/api
+- lib.dir=lib
+- src.dir=src/java
+- test.dir=test/java
+- build.dir=build
+- classes.build.dir=build/classes
+- test.build.dir=build/test
+- artifacts.build.dir=build/artifact
+- test.report.dir=build/report
+- javadoc.build.dir=build/doc/api
++ lib.dir=${project.dir}/lib
++ src.dir=${project.dir}/src/java
++ test.dir=${project.dir}/test/java
++ build.dir=${project.dir}/build
++ classes.build.dir=${project.dir}/build/classes
++ test.build.dir=${project.dir}/build/test
++ artifacts.build.dir=${project.dir}/build/artifact
++ test.report.dir=${project.dir}/build/report
++ javadoc.build.dir=${project.dir}/build/doc/api
+
+ivy.minimum.javaversion=1.4
+debug.mode=on

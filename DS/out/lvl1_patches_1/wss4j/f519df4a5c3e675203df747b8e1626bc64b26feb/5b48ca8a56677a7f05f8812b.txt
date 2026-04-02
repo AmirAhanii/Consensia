@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: f519df4a5c3e675203df747b8e1626bc64b26feb
+hunk_oid: 5b48ca8a56677a7f05f8812b
+file_path: src/org/apache/ws/security/message/WSSecEncryptedKey.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

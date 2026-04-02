@@ -100,6 +100,12 @@ export const PersonaPanel: React.FC<Props> = ({
     }
   }, [showCreateModal]);
 
+  useEffect(() => {
+     if (selectedPersona) {
+    setEditedIcon(selectedPersona.icon);
+  }
+}, [selectedPersona]);
+
   const handleToggleSavedResearchers = useCallback(() => {
     if (savedResearchersOpen) {
       setSavedResearchersOpen(false);

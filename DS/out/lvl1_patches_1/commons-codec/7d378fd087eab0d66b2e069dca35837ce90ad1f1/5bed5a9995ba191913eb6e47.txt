@@ -1,0 +1,29 @@
+Project: commons-codec
+Commit: 7d378fd087eab0d66b2e069dca35837ce90ad1f1
+hunk_oid: 5bed5a9995ba191913eb6e47
+file_path: NOTICE.txt
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\commons-codec
+
+===== NOTES =====
+(none)
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+Apache Commons Codec
+Copyright 2002-2014 The Apache Software Foundation
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+src/test/org/apache/commons/codec/language/DoubleMetaphoneTest.java
+contains test data from http://aspell.net/test/orig/batch0.tab.
+Copyright (C) 2002 Kevin Atkinson (kevina@gnu.org)
+- 
+- ===============================================================================
+- 
+- The content of package org.apache.commons.codec.language.bm has been translated
+- from the original php source code available at http://stevemorse.org/phoneticinfo.htm
+- with permission from the original authors.
+- Original source copyright:
+- Copyright (c) 2008 Alexander Beider & Stephen P. Morse.

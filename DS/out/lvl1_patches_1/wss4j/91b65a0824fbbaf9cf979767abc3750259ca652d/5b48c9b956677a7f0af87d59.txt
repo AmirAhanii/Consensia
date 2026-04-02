@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: 91b65a0824fbbaf9cf979767abc3750259ca652d
+hunk_oid: 5b48c9b956677a7f0af87d59
+file_path: ws-security-stax/src/test/java/org/apache/wss4j/stax/test/MultipleActionTest.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

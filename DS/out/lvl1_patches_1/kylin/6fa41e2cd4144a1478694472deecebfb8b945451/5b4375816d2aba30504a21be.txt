@@ -1,0 +1,65 @@
+Project: kylin
+Commit: 6fa41e2cd4144a1478694472deecebfb8b945451
+hunk_oid: 5b4375816d2aba30504a21be
+file_path: docs/website/download/index.md
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\kylin
+
+===== NOTES =====
+(none)
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+---
+layout: default
+title: Community
+---
+
+              <p class="big_text">Binary Package (v0.7.x)</p>
+              <p><a href="http://kylin.incubator.apache.org/download/kylin-0.7.1-SNAPSHOT.tgz" target="_blank">v0.7.1-SNAPSHOT</a> 
+-               <br/>Updated Date - March 6, 2015 <br/>							
++               <br/>Updated Date - March 9, 2015 <br/>							
+							</p>
+            </div>
+
+          <h4 class="section-title"><span>Kylin Download</span></h4>
+          <div class="row" style="margin-top:-20px;">
+            <div class="col-sm-4 col-md-4">
+
+              <p class="big_text">Binary Package (v0.7.x)</p>
+              <p><a href="http://kylin.incubator.apache.org/download/kylin-0.7.1-SNAPSHOT.tgz" target="_blank">v0.7.1-SNAPSHOT</a> 
+              <br/>Updated Date - March 6, 2015 <br/>							
+							</p>
+            </div>
+
+            <div class="col-sm-4 col-md-4">
+              <p class="big_text">Source Code Repo</p>
+							<p>v0.7.1 (master branch): 
+              <a href="https://github.com/apache/incubator-kylin" target="_blank" >
+                https://github.com/apache/incubator-kylin
+              </a></p>
+              <p>v0.6.6 (v0.6 branch): <a href="https://github.com/apache/incubator-kylin/tree/0.6" target="_blank"> https://github.com/apache/incubator-kylin/tree/0.6</a></p>              
+              
+            </div>
+
+            <div class="col-sm-4 col-md-4">
+              <p class="big_text">Installation Guide</p> 
+							<p>v0.7.x: <a href="https://github.com/KylinOLAP/Kylin/blob/master/docs/Installation/install_and_run.md" target="_blank">https://github.com/KylinOLAP/Kylin/blob/master/docs/Installation/install_and_run.md</a></p>
+             
+              <p>v0.6.x: <a href="https://github.com/KylinOLAP/Kylin/wiki/On-Hadoop-CLI-installation" target="_blank">https://github.com/KylinOLAP/Kylin/wiki/On-Hadoop-CLI-installation</a></p>
+              
+
+            </div>
+          </div>
+        </div>
+        <!-- /container --> 
+        
+      </header>
+    </div>
+    <!-- / section --> 
+  </div>
+  <!-- /container -->
+  
+  </header>
+  </section>
+</main>

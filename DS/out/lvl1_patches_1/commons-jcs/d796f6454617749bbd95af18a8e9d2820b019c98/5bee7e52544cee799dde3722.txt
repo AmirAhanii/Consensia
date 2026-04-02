@@ -1,0 +1,257 @@
+Project: commons-jcs
+Commit: d796f6454617749bbd95af18a8e9d2820b019c98
+hunk_oid: 5bee7e52544cee799dde3722
+file_path: xdocs/changes.xml
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\commons-jcs
+
+===== NOTES =====
+(none)
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+<document>
+	<properties>
+		<title>JCS Change Log</title>
+		<author email="asmuts@apache.org">Aaron Smuts</author>
+	</properties>
+	<body>
+
++ 		<release version="1.2.7.9.3" date="in CVS">
++ 			<action dev="asmuts" type="fix" issue="JCS-20"
++ 				due-to="Alistair Forbes">
++ 				Fixed partial key removal SQL syntax problem with the
++ 				JDBC disk cache.
++ 			</action>
++ 		</release>
++ 
+		<release version="1.2.7.9.2" date="in CVS">
+			<action dev="asmuts" type="update">
+				Added a summary page to the JCSAdmin.jsp that just dumps
+				the stats for a region. It doesn't display all the keys.
+			</action>
+			<action dev="asmuts" type="update">
+				Added get, put, and remove counts to the lateral and
+				remote stats. Added hit count to disk cache stats.
+			</action>
+			<action dev="asmuts" type="fix" issue="JCS-12"
+				due-to="John Klame">
+				Fixed non thread safe OOS writes in the TCP Lateral
+				Sender. This was causing endless loops deep down in the
+				OOS code.
+			</action>
+
+		</release>
+
+		<release version="1.2.7.9" date="in CVS">
+			<action dev="asmuts" type="fix" issue="JCS-1">
+				Fixed last element too small recycle bin bug.
+			</action>
+			<action dev="asmuts" type="update" issue="JCS-2">
+				Added the ability to send all items to disk or to use
+				the disk merely as a swap. This is done by setting the
+				DiskUsagePattern on the cache attributes for a region.
+			</action>
+			<action dev="asmuts" type="fix" issue="JCS-3"
+				due-to="Peter Schwarz">
+				Disk optimization now occurs in place, without using
+				additional files. It is far more efficient.
+			</action>
+			<action dev="asmuts" type="fix" issue="JCS-4">
+				The disk cache will not optimize on shutdown if the
+				freedata size is 0.
+			</action>
+			<action dev="asmuts" type="fix" issue="JCS-8">
+				Remote cache client will now shutdown properly.
+			</action>
+			<action dev="asmuts" type="fix" issue="JCS-9">
+				Only send memory items to disk auxiliaries on shutdown.
+			</action>
+		</release>
+
+		<release version="1.2.7.8" date="in CVS">
+			<action dev="asmuts" type="update">
+				Added the ability to schedule optimizations for the
+				MySQL disk cache. It can also recover from optimization
+				failure and repair the table. It's been tested and is
+				running in a production environment.
+			</action>
+		</release>
+
+		<release version="1.2.7.7" date="in CVS">
+			<action dev="asmuts" type="fix"
+				due-to="Brian Crow  @noteworthyms.com">
+				Fixed the array index out of bounds exception in the
+				Sorted Preferential Array.
+			</action>
+		</release>
+
+		<release version="1.2.7.6" date="in CVS">
+			<action dev="asmuts" type="fix"
+				due-to="Rick Szeto @vizible.com">
+				Fixed UDP discovery configuration problem. The discovery
+				address was not being used. It was broken in the last
+				release.
+			</action>
+			<action dev="asmuts" type="fix" due-to="Alistair Forbes">
+				Fixed disk cache class cast problem when running inside
+				the remote cache. The disk cache was casting to an
+				instance and not the ICacheElement interface.
+			</action>
+		</release>
+
+		<release version="1.2.7.3" date="in CVS">
+			<action dev="asmuts" type="update" due-to="">
+				You can now configure the remote cache client to not
+				receive from the remote server.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Added a new xdoc for the Remote Cache properties.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Improved the jcs admin jsp: added stats details, better
+				navigation, item lookup, and remove confirmation.
+			</action>
+		</release>
+
+		<release version="1.2.7.2" date="in CVS">
+			<action dev="asmuts" type="update" due-to="">
+				You can configure the remote cache to use a custom RMI
+				Socket Factory with socket timeouts.
+			</action>
+			<action dev="hchar" type="fix" due-to="">
+				Removed redundant system out logging from remote cache
+				server.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Added additional stats for remote cache.
+			</action>
+		</release>
+
+		<release version="1.2.7.1" date="in CVS">
+			<action dev="asmuts" type="update" due-to="">
+				Added a JDBC disk cache. It has been tested with MYSql
+				and HSQL.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Added a special HSQL implementation of the JDBC disk
+				cache. This replaces the previous experimental HSQL
+				implementation.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Added a new xdoc for the JDBC Disk Cache properties.
+			</action>
+		</release>
+
+		<release version="1.2.7.0" date="in CVS">
+			<action dev="asmuts" type="update" due-to="">
+				Removed dependencies on commons-lang and on
+				commons-collections from the core of JCS.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Increased test coverage.
+			</action>
+			<action dev="asmuts" type="fix" due-to="">
+				Fixed entry set creation problem in LRUMap.
+			</action>
+		</release>
+
+		<release version="1.2.6.9" date="in CVS">
+			<action dev="asmuts" type="update" due-to="">
+				The remote cache now sends a byte array to the server
+				instead of the class. This allows you to run the remote
+				server without copies of your objects in its classpath.
+				This makes the remote server far easier to use.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Created an interface for cache element serializers and
+				made a default implementation. This will allow use to
+				use other serialization mechanisms in the future. I
+				converted the remote cache to use the standard
+				serializer.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Added several new unit tests.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Improved Javadocs throughout.
+			</action>
+		</release>
+
+		<release version="1.2.6.8" date="in CVS">
+			<action dev="asmuts" type="fix" due-to="">
+				Moved synchronization from the client to the sorted
+				preferential array. This solved the index out of bounds
+				exception that appeared periodically on disk cleanup.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Improved Javadocs throughout.
+			</action>
+		</release>
+
+		<release version="1.2.6.7" date="in CVS">
+			<action dev="asmuts" type="fix"
+				due-to="Adam Siefker @amazon.com">
+				Fixed shutdown for lateral. Added shutdown observer
+				framework. Changed listener thread to a daemon. Made
+				executor on listener use a daemon setting thread
+				factory.
+			</action>
+			<action dev="asmuts" type="fix" due-to="">
+				Fixed abstract inner class references for Jikes.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Improved Javadocs throughout.
+			</action>
+		</release>
+
+		<release version="1.2.6.6" date="in CVS">
+			<action dev="asmuts" type="fix">
+				Properties are loaded using the current thread's
+				classloader by default.
+			</action>
+			<action dev="asmuts" type="fix">
+				When a config file is not found a descriptive error
+				message is printed to the logs.
+			</action>
+			<action dev="asmuts" type="update">
+				Made an interface for the cache manager to improve
+				testability.
+			</action>
+			<action dev="asmuts" type="update">
+				Auxiliaries are assigned a cache manager and the lateral
+				TCP has a settable source id, so it can be tested.
+			</action>
+			<action dev="asmuts" type="update">
+				Increased JGroups version to 2.2.8. It works again. The
+				old JGroups didn't work for unknown reasons.
+			</action>
+			<action dev="asmuts" type="update">
+				Cleaned up some javadocs.
+			</action>
+			<action dev="asmuts" type="update">
+				Improved info level logging for TCP lateral.
+			</action>
+			<action dev="asmuts" type="update">
+				Added configuration properties xdocs for TCP lateral,
+				indexed disk, and memory cache.
+			</action>
+			<action dev="asmuts" type="update">
+				Created concurrent tests for TCP lateral to verify
+				correct region behavior.
+			</action>
+			<action dev="asmuts" type="update">
+				Made BDBJE work with new auxiliary changes.
+			</action>
+			<action dev="asmuts" type="fix">
+				UDP discovery no longer activates if the lateral type
+				isn't TCP.
+			</action>
+			<action dev="asmuts" type="fix">
+				Reduced lateral get timeout to 1 second, rather than 10.
+				We still need to disable gets when a timeout occurs.
+			</action>
+		</release>
+
+	</body>
+</document>

@@ -1,0 +1,17 @@
+Project: tika
+Commit: f74ff486131e6998800f1f8ee2f6d6ed56a33d7b
+hunk_oid: 5b4854923463875e6a15d23d
+file_path: tika-parsers/src/test/resources/test-documents/testARofText.ar
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\tika
+
+===== NOTES =====
+- BEFORE file not available at parent (file may be added/renamed, or parent missing locally).
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
++ !<arch>
++ testTXT.txt/    1262968202  500   500   100644  47        `
++ Test d'indexation de Txt
++ http://www.apache.org
++ 

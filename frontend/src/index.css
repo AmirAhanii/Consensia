@@ -2,29 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
 }
 
 body {
-  @apply min-h-screen bg-gradient-to-br from-black via-purple-950 to-black text-purple-100;
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #0d0618;
+  color: white;
+}
+
+#root {
+  min-height: 100vh;
 }
 
 @keyframes slide-across {
   0% {
-    transform: translateX(-150%); /* start far left */
+    transform: translateX(-150%);
   }
   100% {
-    transform: translateX(900%); /* end far right */
+    transform: translateX(900%);
   }
 }
 
 .slide-image-animation {
   position: fixed;
-  top: 40%;               /* adjust vertical position */
+  top: 40%;
   left: 0;
-  width: 200px;           /* image size */
+  width: 200px;
   animation: slide-across 6.5s linear forwards;
-  pointer-events: none;   /* image should not block UI */
+  pointer-events: none;
   z-index: 9999;
 }

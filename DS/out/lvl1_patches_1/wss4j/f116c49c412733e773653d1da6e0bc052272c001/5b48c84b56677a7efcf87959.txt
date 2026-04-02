@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: f116c49c412733e773653d1da6e0bc052272c001
+hunk_oid: 5b48c84b56677a7efcf87959
+file_path: ws-security-dom/src/main/java/org/apache/wss4j/dom/handler/WSHandler.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

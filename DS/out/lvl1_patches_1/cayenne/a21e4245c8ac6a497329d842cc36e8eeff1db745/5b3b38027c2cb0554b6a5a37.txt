@@ -1,0 +1,51 @@
+Project: cayenne
+Commit: a21e4245c8ac6a497329d842cc36e8eeff1db745
+hunk_oid: 5b3b38027c2cb0554b6a5a37
+file_path: itests/pojo/src/main/resources/pojo-map.map.xml
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\cayenne
+
+===== NOTES =====
+(none)
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+<?xml version="1.0" encoding="utf-8"?>
+<data-map project-version="2.0">
+	<property name="defaultPackage" value="org.apache.cayenne.itest.pojo"/>
+	<db-entity name="entity1">
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="name" type="VARCHAR" length="100"/>
+	</db-entity>
+	<db-entity name="exposed_pk_entity1">
+		<db-attribute name="name" type="VARCHAR" length="100"/>
+		<db-attribute name="pk" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+	</db-entity>
+	<db-entity name="many_to_one_entity1">
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="one_to_many_entity1_id" type="INTEGER"/>
+	</db-entity>
+	<db-entity name="one_to_many_entity1">
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+	</db-entity>
+	<obj-entity name="Entity1" className="org.apache.cayenne.itest.pojo.Entity1" dbEntityName="entity1">
+		<obj-attribute name="name" type="java.lang.String" db-attribute-path="name"/>
+	</obj-entity>
+	<obj-entity name="ExposedPkEntity1" className="org.apache.cayenne.itest.pojo.ExposedPkEntity1" dbEntityName="exposed_pk_entity1">
+		<obj-attribute name="name" type="java.lang.String" db-attribute-path="name"/>
+- 		<obj-attribute name="pk" type="java.lang.Integer" db-attribute-path="pk"/>
++ 		<obj-attribute name="pk" type="int" db-attribute-path="pk"/>
+	</obj-entity>
+	<obj-entity name="ManyToOneEntity1" className="org.apache.cayenne.itest.pojo.ManyToOneEntity1" dbEntityName="many_to_one_entity1">
+	</obj-entity>
+	<obj-entity name="OneToManyEntity1" className="org.apache.cayenne.itest.pojo.OneToManyEntity1" dbEntityName="one_to_many_entity1">
+	</obj-entity>
+	<db-relationship name="to_one" source="many_to_one_entity1" target="one_to_many_entity1" toMany="false">
+		<db-attribute-pair source="one_to_many_entity1_id" target="id"/>
+	</db-relationship>
+	<db-relationship name="to_many" source="one_to_many_entity1" target="many_to_one_entity1" toMany="true">
+		<db-attribute-pair source="id" target="one_to_many_entity1_id"/>
+	</db-relationship>
+	<obj-relationship name="toOne" source="ManyToOneEntity1" target="OneToManyEntity1" db-relationship-path="to_one"/>
+	<obj-relationship name="toMany" source="OneToManyEntity1" target="ManyToOneEntity1" db-relationship-path="to_many"/>
+</data-map>

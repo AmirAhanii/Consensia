@@ -1,0 +1,41 @@
+Project: cayenne
+Commit: bec360d6629fd15d7462ef25fbf4670d7eb300d8
+hunk_oid: 5b3b344b7c2cb055576a378c
+file_path: docs/docbook/cayenne-guide/src/docbkx/rop-deployment.xml
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\cayenne
+
+===== NOTES =====
+(none)
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
+	version="5.0" xml:id="rop-deployment">
+	<title>ROP Deployment</title>
+	<section xml:id="deploying-rop-server">
+		<title>Deploying ROP Server</title>
++ 		<para>Recent versions of Tomcat and Jetty containers (e.g. Tomcat 6 and 7, Jetty 8) are
++ 			addressing a security concern related to "session fixation problem" by resetting the
++ 			existing session ID of any request that requires BASIC authentcaition. If ROP service is
++ 			protected with declarative security (see the the ROP tutorial and the following chapters
++ 			on security), this feature prevents the ROP client from attaching to its session,
++ 			resulting in MissingSessionExceptions. To solve that you will need to either switch to
++ 			an alternative security mechanism, or disable "session fixation problem" protections of
++ 			the container. E.g. the later can be achieved in Tomcat 7 by adding the following
++ 				<emphasis>context.cml</emphasis> file to the webapp's META-INF/ directory:
++ 			<programlisting>&lt;Context>
++ 	&lt;Valve className="org.apache.catalina.authenticator.BasicAuthenticator" 
++ 			changeSessionIdOnAuthentication="false" />
++ &lt;/Context></programlisting>(The
++ 			&lt;Valve> tag can also be placed within the &lt;Context> in any other locations used by
++ 			Tomcat to load context configurations)</para>
+	</section>
+	<section xml:id="deploying-rop-client">
+		<title>Deploying ROP Client</title>
+	</section>
+	<section xml:id="rop-security">
+		<title>Security</title>
+	</section>
+</chapter>

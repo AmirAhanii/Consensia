@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: d568e5dc23fd33a68a892dae9e0e612528f62f43
+hunk_oid: 5b48cd8f56677a7f09f8b204
+file_path: src/org/apache/ws/security/message/WSSecEncrypt.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

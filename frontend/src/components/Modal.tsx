@@ -7,7 +7,12 @@ type ModalProps = {
   showCloseButton?: boolean;
 };
 
-export const Modal: React.FC<ModalProps> = ({ open, onClose, children, showCloseButton = true }) => {
+export const Modal: React.FC<ModalProps> = ({
+  open,
+  onClose,
+  children,
+  showCloseButton = true,
+}) => {
   if (!open) return null;
 
   return (
@@ -15,13 +20,15 @@ export const Modal: React.FC<ModalProps> = ({ open, onClose, children, showClose
       <div className="bg-black/80 border border-purple-800 rounded-2xl p-6 max-w-lg w-full">
         {children}
 
-        <button
-          type="button"
-          onClick={onClose}
-          className="mt-4 w-full rounded-xl bg-purple-700 hover:bg-purple-600 text-white py-2 font-medium transition-colors"
-        >
-          Close
-        </button>
+        {showCloseButton && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="mt-4 w-full rounded-xl bg-purple-700 hover:bg-purple-600 text-white py-2 font-medium transition-colors"
+          >
+            Close
+          </button>
+        )}
       </div>
     </div>
   );

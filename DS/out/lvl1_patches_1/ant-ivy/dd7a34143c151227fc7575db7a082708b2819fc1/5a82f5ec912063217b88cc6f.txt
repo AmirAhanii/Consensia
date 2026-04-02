@@ -1,0 +1,248 @@
+Project: ant-ivy
+Commit: dd7a34143c151227fc7575db7a082708b2819fc1
+hunk_oid: 5a82f5ec912063217b88cc6f
+file_path: asciidoc/release-notes.adoc
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\ant-ivy
+
+===== NOTES =====
+(none)
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+////
+   Licensed to the Apache Software Foundation (ASF) under one
+   or more contributor license agreements.  See the NOTICE file
+   distributed with this work for additional information
+   regarding copyright ownership.  The ASF licenses this file
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+   KIND, either express or implied.  See the License for the
+   specific language governing permissions and limitations
+   under the License.
+////
+
+= Ivy Release Announcement
+
+XXXX DATE XXXXXX - The Apache Ivy project is pleased to announce its 2.5.0 release.
+
+== What is Ivy?
+Apache Ivy is a tool for managing (recording, tracking, resolving and reporting) project dependencies, characterized by flexibility,
+configurability, and tight integration with link:https://ant.apache.org/[Apache Ant].
+
+== Download
+You can download this release at link:https://ant.apache.org/ivy/download.cgi[]
+
+Issues should either be discussed in the link:https://ant.apache.org/ivy/mailing-lists.html[Ivy user mailing list] or should be reported to at link:https://issues.apache.org/jira/browse/IVY[]
+
+More information about the project can be found on the website link:https://ant.apache.org/ivy/[]
+
+== Key features in this release
+
+Key features of this 2.5.0 release are:
+
+    * The minimum runtime Java version required is now Java 7
+    * Ivy now uses BouncyCastle 1.52. Due to the non backward compatibility of that library, earlier versions are not supported.
+    * Ivy now uses HttpComponents HttpClient 4.5.x version for dealing with HTTP backed resolvers. Users are expected to have this version of the library (and its dependencies) in their runtime classpath if they want to use such resolvers. The previous (similarly named but not the same) commons-httpclient client library is no longer used or supported. (jira:IVY-1563[])
+
+
+== List of Changes in this Release
+
+For details about the following changes, check our JIRA install at link:https://issues.apache.org/jira/browse/IVY[]
+
+*List of changes since Ivy 2.4.0:*
+
+- FIX: Local conflict manager didn't handle deeper conflicts in transitive dependencies (jira:IVY-1404[])
+- FIX: Made the maven 'test' configuration public so we can use the test-jar as dependency (jira:IVY-1444[])
+- FIX: NullPointerException in dependencytree with no dependencies (jira:IVY-1539[])
+- FIX: checkIfChanged is not settable attribute for checkdepsupdate ant task (jira:IVY-1549[])
+- FIX: ArrayIndexOutOfBoundsException when using a p2 repository for dependencies (jira:IVY-1504[])
+- FIX: fixdeps remove transitive 'kept' dependencies
+- FIX: PomModuleDescriptorParser should parse licenses from parent POM (jira:IVY-1526[]) (Thanks to Jaikiran Pai)
+- FIX: dynamic revisions are not cached per resolver (jira:IVY-1430[]) (Thanks to Stephen Haberman)
+- FIX: Dependencies failed using branch attribute (and extra attributes) (jira:IVY-1141[]) (Thanks to Stephen Haberman)
+- FIX: useCacheOnly should allow lookup of changing dependencies in cache (jira:IVY-1515[]) (Thanks to Ilya)
+- FIX: Translation of POM to Ivy XML with * exclusion is removing main artifact (jira:IVY-1531[]) (Thanks to Jaikiran Pai)
+- FIX: Have makepom task take description from ivy-module > info > description element (jira:IVY-1520[])
+- FIX: Fix RetrieveEngine to take into account the correct extension while dealing with unpacked artifacts (jira:IVY-1478[]) (Thanks to Jaikiran Pai)
+- FIX: ParseException "Unsupported repository, resources names are not uris" for ivy.xml with parent on Windows (jira:IVY-1448[]) (Thanks to Riccardo Foschia and Jaikiran Pai)
+- FIX: Ivy 2.4.0 improperly handles modules with colon (:) in version (jira:IVY-1522[]) (Thanks to Jaikiran Pai)
+- FIX: Delay the processing of configured cache ttls, until the IvySettings object is usable (jira:IVY-1495[]) (Thanks to Jaikiran Pai)
+- FIX: Including optional ivysettings of type 'file' doesn't work when file doesn't exist (jira:IVY-1555[]) (Thanks to Jaikiran Pai)
+- FIX: Makepom ignores dependency classifiers (jira:IVY-1528[]) (Thanks to Jaikiran Pai)
+- FIX: Infinite loop in dependencytree (jira:IVY-1540[]) (Thanks to Jaikiran Pai)
++ - FIX: HTTP issue: Basic authentication is stuck in 401 loop (jira:IVY-1336[])
+
+- IMPROVEMENT: Throw an IllegalStateException when retrieving the resolutionCacheRoot on the DefaultResolutionCacheManager if the basedir (or IvySettings) is not set (jira:IVY-1482[])
+- IMPROVEMENT: Optimization: limit the revision numbers scanned if revision prefix is specified (Thanks to Ernestas Vaiciukevi&#269;ius)
+- IMPROVEMENT: Update bouncycastle to 1.52 (jira:IVY-1521[]) (Thanks to Michal Srb)
+
+- NEW: Lets ssh-based resolvers use an ~/.ssh/config file to find username/hostname/keyfile options (Thanks to Colin Stanfill)
+- NEW: Add ivy.maven.lookup.sources and ivy.maven.lookup.javadoc variables to control the lookup of the additional artifacts. Defaults to true, for backward compatibility (jira:IVY-1529[])
+- NEW: Add (conditional) support for SHA-256 SHA-512 and SHA-384 checksum algorithms (jira:IVY-1554[]) (Thanks to Jaikiran Pai)
+
+////
+ Samples :
+- NEW: bla bla bla (jira:IVY-1234[]) (Thanks to Jane Doe)
+- IMPROVEMENT: bla bla bla (jira:IVY-1234[]) (Thanks to Jane Doe)
+- FIX: bla bla bla (jira:IVY-1234[]) (Thanks to Jane Doe)
+- DOCUMENTATION: bla bla bla (jira:IVY-1234[]) (Thanks to Jane Doe)
+////
+
+== Committers and Contributors
+
+Here is the list of people who have contributed source code and documentation up to this release. Many thanks to all of them, and also to the whole IvyDE community contributing ideas and feedback, and promoting the use of Apache Ivy !
+
+*Committers:*
+
+* Matt Benson
+* Jean-Louis Boudart
+* Maarten Coene
+* Charles Duffy
+* Xavier Hanin
+* Nicolas Lalev&#233;e
+* Jaikiran Pai
+* Jon Schneider
+* Gilles Scokart
+
+*Contributors:*
+
+* Ingo Adler
+* alex322
+* Mathieu Anquetin
+* Andreas Axelsson
+* St&#233;phane Bailliez
+* Karl Baum
+* Andrew Bernhagen
+* Mikkel Bjerg
+* Per Arnold Blaasmo
+* Jeffrey Blattman
+* Jasper Blues
+* Jim Bonanno
+* Joseph Boyd
+* Dave Brosius
+* Matthieu Brouillard
+* Carlton Brown
+* Mirko Bulovic
+* Ed Burcher
+* Jamie Burns
+* Wei Chen
+* Chris Chilvers
+* Kristian Cibulskis
+* Andrea Bernardo Ciddio
+* Archie Cobbs
+* Flavio Coutinho da Costa
+* Stefan De Boey
+* Mykhailo Delegan
+* Charles Duffy
+* Martin Eigenbrodt
+* Stephen Evanchik
+* Robin Fernandes
+* Gregory Fernandez
+* Danno Ferrin
+* Riccardo Foschia
+* Benjamin Francisoud
+* Wolfgang Frank
+* Jacob Grydholt Jensen
+* John Gibson
+* Mitch Gitman
+* Evgeny Goldin
+* Scott Goldstein
+* Gintautas Grigelionis
+* Pierre H&#228;gnestrand
+* Scott Hebert
+* Tobias Himstedt
+* Aaron Hachez
+* Ben Hale
+* Stephen Haberman
+* Peter Hayes
+* Scott Hebert
+* Payam Hekmat
+* Achim Huegen
+* Ilya
+* Matt Inger
+* Anders Jacobsson
+* Anders Janmyr
+* Steve Jones
+* Christer Jonsson
+* Michael Kebe
+* Matthias Kilian
+* Alexey Kiselev
+* Gregory Kisling
+* Stepan Koltsov
+* Heschi Kreinick
+* Sebastian Krueger
+* Thomas Kurpick
+* Tat Leung
+* Costin Leau
+* Antoine Levy-Lambert
+* Tony Likhite
+* Andrey Lomakin
+* William Lyvers
+* Sakari Maaranen
+* Jan Materne
+* Markus M. May
+* Abel Muino
+* J. Lewis Muir
+* Stephen Nesbitt
+* Joshua Nichols
+* Bernard Niset
+* Ales Nosek
+* David Maplesden
+* Glen Marchesani
+* Phil Messenger
+* Steve Miller
+* Mathias Muller
+* Randy Nott
+* Peter Oxenham
+* Douglas Palmer
+* Jesper Pedersen
+* Emmanuel Pellereau
+* Carsten Pfeiffer
+* Yanus Poluektovich
+* Roshan Punnoose
+* Jean-Baptiste Quenot
+* Carl Quinn
+* Damon Rand
+* Geoff Reedy
+* Torkild U. Resheim
+* Christian Riege
+* Frederic Riviere
+* Jens Rohloff
+* Andreas Sahlbach
+* Brian Sanders
+* Adrian Sandor
+* Michael Scheetz
+* Ben Schmidt
+* Ruslan Shevchenko
+* John Shields
+* Nihal Sinha
+* Gene Smith
+* Michal Srb
+* Colin Stanfill
+* Simon Steiner
+* Johan Stuyts
+* John Tinetti
+* Erwin Tratar
+* Jason Trump
+* David Turner
+* Ernestas Vaiciukevi&#269;ius
+* Tjeerd Verhagen
+* Richard Vowles
+* Sven Walter
+* James P. White
+* Tom Widmer
+* John Williams
+* Chris Wood
+* Patrick Woodworth
+* Jaroslaw Wypychowski
+* Sven Zethelius
+* Aleksey Zhukov
+* Zhong Wang

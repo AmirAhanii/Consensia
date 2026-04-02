@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: e020aaa2a205f18f7b67ddfd4d0265c29fb74f20
+hunk_oid: 5b48c9d056677a7f02f87c70
+file_path: ws-security-stax/src/main/java/org/apache/wss4j/stax/impl/processor/output/DerivedKeyTokenOutputProcessor.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

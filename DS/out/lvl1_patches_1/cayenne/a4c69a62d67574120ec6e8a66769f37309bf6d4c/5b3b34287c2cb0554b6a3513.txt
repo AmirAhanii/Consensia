@@ -1,0 +1,76 @@
+Project: cayenne
+Commit: a4c69a62d67574120ec6e8a66769f37309bf6d4c
+hunk_oid: 5b3b34287c2cb0554b6a3513
+file_path: docs/doc/src/main/resources/RELEASE-NOTES.txt
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\cayenne
+
+===== NOTES =====
+(none)
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+Apache Cayenne Release Notes
+============================
+
+CAY-957 Deadlock in nested contexts
+CAY-1677 Modeler: text fields discard input unless you press enter
+- CAY-1708 - Modeler error when pasting datamap with EJBQL query
++ CAY-1708 Modeler error when pasting datamap with EJBQL query
++ CAY-1714 ROP: Cayenne tries to build a query for non committed object when using more than 2 nested contexts 
+CAY-1721 Writing blobs fails (Oracle)
+CAY-1725 NullPointerException from call to removeToManyTarget
+CAY-1719 Modeler - Obj Attribute Java Type editor won't focus sometimes
+----------------------------------
+Release: 3.2M1
+Date: 
+----------------------------------
+Changes/New Features:
+
+CAY-1646 Synchronize tabs in Modeler between ObjEntity and DbEntity editor panes
+CAY-1647 Easily switch to/from ObjEntity and DbEntity in Modeler
+CAY-1717 [PATCH] Implement JDBC compatibility layer methods
+CAY-1718 Remove everything deprecated in 3.1
+CAY-1724 Add 'Property' class for easier and better Expression creation
+CAY-1726 Expression parser support for bit operators, support for << and >>
+CAY-1737 ObjectContexts listening to DataChannel events must be non-blocking
+CAY-1748 IdCoder/EntityIdCoder improvements to work with ObjectIds, including temp ones
+CAY-1753 remove light-superclass.vm class template
+CAY-1754 Modeler suggested URL for SQLServer should start with 'jdbc:sqlserver:' instead of 'jdbc:microsoft:sqlserver:'
+CAY-1758 cdbimport improvements
+CAY-1759 cdbimport improvements: add 'catalog', rename 'schemaName' to 'schema'
+CAY-1760 cdbimport improvements: Default adapter (if none specified) must be AutoAdapter, not JdbcAdapter 
+CAY-1761 cdbimport improvements: DbLoader must reverse engineer PK auto-increment state. 
+CAY-1762 cdbimport improvements: Support for "defaultPackage" parameter, as the new DataMaps ends up placing entities in the root package 
+CAY-1763 cdbimport improvements: specified "schema" should become the default schema of the generated DataMap 
+CAY-1764 cdbimport improvements: "overwrite" flag
+CAY-1765 cdbimport improvements: add excludeTables/includeTables parameters
+CAY-1766 Deprecating DataPort ant task
+CAY-1768 cdbimport improvements: DataMap "project-version" attribute is skipped when DM is saved
+CAY-1769 cdbimport improvements: meaningfulPk flag must be turned into a pattern
+CAY-1771 cdbimport improvements: "usePrimitives" flag
+CAY-1772 Real support for DbEntity catalogs
+CAY-1778 TransactionManager to simplify user-managed transactions 
+CAY-1779 Flatten object entities for many to many relationships on reverse engineering 
+CAY-1781 Add StatelessContextRequestHandler as an alternative to the Session-based one
+CAY-1294 Generify query
+
+Bug Fixes:
+
+CAY-957 Deadlock in nested contexts
+CAY-1677 Modeler: text fields discard input unless you press enter
+CAY-1708 - Modeler error when pasting datamap with EJBQL query
+CAY-1721 Writing blobs fails (Oracle)
+CAY-1725 NullPointerException from call to removeToManyTarget
+CAY-1719 Modeler - Obj Attribute Java Type editor won't focus sometimes
+CAY-1727 Modeler thinks entity is using inheritance when it doesn't
+CAY-1729 PersistentDescriptor must have predictable property iteration order
+CAY-1738 Tutorial cayenne-rop-server should be packaged as a war
+CAY-1739 Cayenne ROP server resets session on every request if BASIC auth is used
+CAY-1742 ObjRelationship inspector says "ObjAttribute Inspector"
+CAY-1744 Unexpected read-only relationships in vertical inheritance mapping
+CAY-1749 NPE on simple nested context commit
+CAY-1755 FaultFailureException resolving relationships to UNIQUE non-PK columns
+CAY-1757 ROP: Faulting entity relationship resets uncommitted modifications made to its reverse relationship 
+CAY-1774 EhCacheQueryCache.get(QueryMetadata, QueryCacheEntryFactory) returns null if EhCache instance for group is not present
+CAY-1780 cdbimport do not create xml file in resource folder

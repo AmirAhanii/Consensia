@@ -1,0 +1,15 @@
+Project: santuario-java
+Commit: 0f71f68c2127e30c03787b1155dc484ea17897be
+hunk_oid: 5caee6bd4dd2d957413f6c0a
+file_path: src/main/java/org/apache/xml/security/c14n/implementations/Canonicalizer20010315Excl.java
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\santuario-java
+
+===== NOTES =====
+- Could not determine parent commit (git show -s --format=%P failed or empty).
+- AFTER file not available at commit (file may be deleted/renamed, or commit missing locally).
+- Unified diff not available (git show -- <file> returned empty or failed).
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: git show failed for both parent and commit)

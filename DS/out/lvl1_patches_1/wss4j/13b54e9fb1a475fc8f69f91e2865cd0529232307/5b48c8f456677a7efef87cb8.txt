@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: 13b54e9fb1a475fc8f69f91e2865cd0529232307
+hunk_oid: 5b48c8f456677a7efef87cb8
+file_path: ws-security-dom/src/main/java/org/apache/wss4j/dom/util/WSSecurityUtil.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

@@ -1,0 +1,137 @@
+=== Dataset summary (PATCHES-ONLY; from projects_patches export) ===
+Patch layout detected               : hunk
+Projects (patch folders)            : 40
+Commits scanned                     : 135,383
+Empty commit folders (no .patch)    : 6,373 (empty commit folder = “commit is known, but SmartSHARK has no hunks to export for it.”)
+Entries (patch files; 1 per hunk)   : 3,726,316 (Entries ≈ total number of hunks exported)
+Unique hunks (exact)                : 3,726,316 (distinct <hunk_oid>.patch filenames across all commits; duplicates=0)
+Repositories (unique VCS URL)       : 38
+Unique (repo,file) pairs            : 249,567 (from VCS URL + file_path header) (across all repos, you saw 249,567 distinct file paths (deduplicated per repo))
+
+=== Commit-level counts (PATCHES-ONLY) ===
+Definition: 1-hunk = exactly 1 exported hunk file in the commit folder.
+Patches/commits with 0 '@@' lines    : 135,382 (commit folder where NONE of its .patch files contains a unified-diff hunk header '@@' within the first 250 lines scanned)
+Patch 1-file commits                 : 64,000
+Patch 1-hunk commits                 : 32,937
+Patch 1-file AND 1-hunk commits      : 32,937
+
+Distribution: hunks per commit (patch)
+----------------------------------------
+     1 :    32937
+     2 :    19178
+     3 :    11711
+     4 :     8706
+     5 :     6243
+     6 :     5098
+     7 :     4175
+     8 :     3599
+     9 :     2933
+    10 :     2690
+    11 :     2378
+    12 :     2057
+    13 :     1885
+    14 :     1569
+    15 :     1547
+    16 :     1332
+    17 :     1207
+    18 :     1089
+    19 :     1094
+    20 :      930
+    21 :      833
+    22 :      809
+    23 :      737
+    24 :      670
+    25 :      556
+    26 :      645
+    27 :      569
+    28 :      554
+    29 :      484
+    30 :      456
+... (1148 more rows)
+
+min=1  median=4.00  max=56016  mean=27.52
+
+Distribution: files per commit (patch)
+----------------------------------------
+     1 :    64000
+     2 :    21980
+     3 :    11226
+     4 :     6849
+     5 :     4640
+     6 :     3464
+     7 :     2704
+     8 :     2094
+     9 :     1830
+    10 :     1400
+    11 :     1235
+    12 :     1060
+    13 :     1047
+    14 :      757
+    15 :      666
+    16 :      573
+    17 :      512
+    18 :      469
+    19 :      477
+    20 :      392
+    21 :      361
+    22 :      365
+    23 :      303
+    24 :      255
+    25 :      221
+    26 :      261
+    27 :      211
+    28 :      209
+    29 :      193
+    30 :      168
+... (638 more rows)
+
+min=1  median=2.00  max=7306  mean=10.28
+
+=== Dataset summary (MONGO-ONLY; from MongoDB joins) ===
+Entries (rows in JSON-style)        : 62,984  (Mongo: hunks with lines_manual)
+Unique hunks (annotated)            : 62,984  (Mongo distinct among annotated docs)
+Commits (unique repo+revision_hash) : 135,383  (SmartSHARK joins from 'hunk')
+Projects (Mongo join project.name)  : 38  (sanitized for comparison)
+Repositories (unique repository_url): 38
+Unique (repo,file) pairs            : 249,567
+
+=== Annotators / labels (MONGO-ONLY) ===
+Unique annotators seen              : 64  (Mongo lines_manual keys)
+Annotator IDs (first 20)            : Apollo, Badger, CUE, JG, Jiong, JjGyDTFSqlCnXIzk, KKC, LDlnwznmYPWdNVSA, LastButNotLeast, LeBron, LuCH, Mohammad, NGKRdSgaxGAtmSqP, Pyrrhon, Ruuku, TeeKea, Vale, aaghamohammadi, aarvQeMWXRSETYJu, ap
+Unique label names seen             : 6  (Mongo lines_manual.<ann>.<label> keys)
+Labels                              : bugfix, documentation, refactoring, test, unrelated, whitespace
+
+
+==================== RESULTS ====================
+
+--- Option A (Mongo-truth) ---
+Mongo commits (from hunks join)        : 135,383
+Mongo 1-file commits                  : 64,000
+Mongo 1-hunk commits                  : 32,937
+Mongo 1-file AND 1-hunk commits       : 32,937
+Definition: 1-hunk = exactly 1 SmartSHARK hunk document in that commit.
+
+--- Option B (Patch-truth) ---
+Patch commits scanned                 : 135,383
+Patches/commits with 0 '@@' lines     : 135,382
+Patch 1-file AND 1-hunk               : 32,937
+Definition: 1-hunk = exactly 1 exported hunk file in the commit folder.
+
+--- Cross-source overlap (key = (project, revision_hash)) ---
+Keys in both patch & mongo            : 135,383
+Patch-only keys (no mongo match)      : 0
+Mongo-only keys (no patch match)      : 0
+
+--- Where the mismatch comes from (on shared keys) ---
+Patch says 1file1hunk BUT Mongo says NOT : 0
+  of those, patch has 0 '@@' lines       : 0
+Mongo says 1file1hunk BUT Patch says NOT : 0
+
+--- Interpretation note ---
+If your export has almost no '@@', most diff excerpts are not true unified-diff hunks.
+That is not necessarily a problem if you only need +/- lines, but it limits Git-like hunk parsing.
+
+[DEBUG]
+Mongo hunk collection used: hunk
+Patch folder projects: 40
+Mongo projects (from join, sanitized): 38

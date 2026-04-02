@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: c502cb1a0323c0bb6b4a2b5b79bbba6f9c7c134c
+hunk_oid: 5b48cde056677a7f07f899ca
+file_path: src/org/apache/ws/axis/security/WSDoAllReceiver.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: 66858ae8307a889a2a351c873ec2107b7a227d8f
+hunk_oid: 5b48cf5c56677a7f00f8a161
+file_path: src/org/apache/ws/security/components/crypto/CryptoBase.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

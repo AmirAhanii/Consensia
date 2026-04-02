@@ -1,0 +1,197 @@
+Project: archiva
+Commit: c71589de8049e804467f78e934b1dff867312cbe
+hunk_oid: 5b58446e37b4503ec2b21033
+file_path: archiva-modules/archiva-web/archiva-webapp/src/main/java/org/apache/maven/archiva/web/action/admin/legacy/AddLegacyArtifactPathAction.java
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\archiva
+
+===== NOTES =====
+(none)
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+package org.apache.maven.archiva.web.action.admin.legacy;
+
+    public String commit()
+    {
+-         this.legacyArtifactPath.setArtifact(
+-             this.groupId + ":" + this.artifactId + ":" +  this.classifier + ":" +  this.version + ":" + this.type );
++         this.legacyArtifactPath.setArtifact( this.groupId + ":" + this.artifactId + ":" + this.version + ":" +
++             this.classifier + ":" + this.type );
+
+        // Check the proposed Artifact macthes the path
+        ArtifactReference artifact = new ArtifactReference();
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import org.apache.maven.archiva.configuration.ArchivaConfiguration;
+import org.apache.maven.archiva.configuration.Configuration;
+import org.apache.maven.archiva.configuration.IndeterminateConfigurationException;
+import org.apache.maven.archiva.configuration.LegacyArtifactPath;
+import org.apache.maven.archiva.model.ArtifactReference;
+import org.apache.maven.archiva.repository.ManagedRepositoryContent;
+import org.codehaus.plexus.registry.RegistryException;
+
+import com.opensymphony.xwork2.Preparable;
+import org.apache.maven.archiva.web.action.PlexusActionSupport;
+
+/**
+ * Add a LegacyArtifactPath to archiva configuration
+ *
+ * @since 1.1
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addLegacyArtifactPathAction" instantiation-strategy="per-lookup"
+ */
+public class AddLegacyArtifactPathAction
+    extends PlexusActionSupport
+    implements Preparable
+{
+    /**
+     * @plexus.requirement
+     */
+    private ArchivaConfiguration archivaConfiguration;
+
+    /**
+     * @plexus.requirement role-hint="legacy"
+     */
+    private ManagedRepositoryContent repositoryContent;
+
+
+    private LegacyArtifactPath legacyArtifactPath;
+
+    private String groupId;
+
+    private String artifactId;
+
+    private String version;
+
+    private String classifier;
+
+    private String type;
+
+
+    public void prepare()
+    {
+        this.legacyArtifactPath = new LegacyArtifactPath();
+    }
+
+    public String input()
+    {
+        return INPUT;
+    }
+
+    public String commit()
+    {
+        this.legacyArtifactPath.setArtifact(
+            this.groupId + ":" + this.artifactId + ":" +  this.classifier + ":" +  this.version + ":" + this.type );
+
+        // Check the proposed Artifact macthes the path
+        ArtifactReference artifact = new ArtifactReference();
+
+		artifact.setGroupId( this.groupId );
+		artifact.setArtifactId( this.artifactId );
+		artifact.setClassifier( this.classifier );
+		artifact.setVersion( this.version );
+		artifact.setType( this.type );
+
+        String path = repositoryContent.toPath( artifact );
+        if ( ! path.equals( this.legacyArtifactPath.getPath() ) )
+        {
+            addActionError( "artifact reference does not match the initial path : " + path );
+            return ERROR;
+        }
+
+        Configuration configuration = archivaConfiguration.getConfiguration();
+        configuration.addLegacyArtifactPath( legacyArtifactPath );
+        return saveConfiguration( configuration );
+    }
+
+    public LegacyArtifactPath getLegacyArtifactPath()
+    {
+        return legacyArtifactPath;
+    }
+
+    public void setLegacyArtifactPath( LegacyArtifactPath legacyArtifactPath )
+    {
+        this.legacyArtifactPath = legacyArtifactPath;
+    }
+
+    protected String saveConfiguration( Configuration configuration )
+    {
+        try
+        {
+            archivaConfiguration.save( configuration );
+            addActionMessage( "Successfully saved configuration" );
+        }
+        catch ( IndeterminateConfigurationException e )
+        {
+            addActionError( e.getMessage() );
+            return INPUT;
+        }
+        catch ( RegistryException e )
+        {
+            addActionError( "Configuration Registry Exception: " + e.getMessage() );
+            return INPUT;
+        }
+
+        return SUCCESS;
+    }
+
+    public String getGroupId()
+    {
+        return groupId;
+    }
+
+    public void setGroupId( String groupId )
+    {
+        this.groupId = groupId;
+    }
+
+    public String getArtifactId()
+    {
+        return artifactId;
+    }
+
+    public void setArtifactId( String artifactId )
+    {
+        this.artifactId = artifactId;
+    }
+
+    public String getVersion()
+    {
+        return version;
+    }
+
+    public void setVersion( String version )
+    {
+        this.version = version;
+    }
+
+    public String getClassifier()
+    {
+        return classifier;
+    }
+
+    public void setClassifier( String classifier )
+    {
+        this.classifier = classifier;
+    }
+
+    public String getType()
+    {
+        return type;
+    }
+
+    public void setType( String type )
+    {
+        this.type = type;
+    }
+}

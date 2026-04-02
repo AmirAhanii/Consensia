@@ -1,0 +1,42 @@
+Project: ant-ivy
+Commit: ee1008f1e557715224a16d6190c9f815c8d4f9da
+hunk_oid: 5a82f5e1912063217a88cba8
+file_path: build.properties
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\ant-ivy
+
+===== NOTES =====
+(none)
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+lib.dir=${project.dir}/lib
+src.dir=${project.dir}/src/java
+test.dir=${project.dir}/test/java
+build.dir=${project.dir}/build
+classes.build.dir=${project.dir}/build/classes
+test.build.dir=${project.dir}/build/test
+artifacts.build.dir=${project.dir}/build/artifact
+test.report.dir=${project.dir}/build/report
+javadoc.build.dir=${project.dir}/build/doc/api
+- lib.dir=${project.dir}/lib
+- src.dir=${project.dir}/src/java
+- test.dir=${project.dir}/test/java
+- build.dir=${project.dir}/build
+- classes.build.dir=${project.dir}/build/classes
+- test.build.dir=${project.dir}/build/test
+- artifacts.build.dir=${project.dir}/build/artifact
+- test.report.dir=${project.dir}/build/report
+- javadoc.build.dir=${project.dir}/build/doc/api
++ lib.dir=${basedir}/lib
++ src.dir=${basedir}/src/java
++ test.dir=${basedir}/test/java
++ build.dir=${basedir}/build
++ classes.build.dir=${basedir}/build/classes
++ test.build.dir=${basedir}/build/test
++ artifacts.build.dir=${basedir}/build/artifact
++ test.report.dir=${basedir}/build/report
++ javadoc.build.dir=${basedir}/build/doc/api
+
+ivy.minimum.javaversion=1.4
+debug.mode=on

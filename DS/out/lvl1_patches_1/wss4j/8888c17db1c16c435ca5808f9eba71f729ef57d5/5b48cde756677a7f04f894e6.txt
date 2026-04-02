@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: 8888c17db1c16c435ca5808f9eba71f729ef57d5
+hunk_oid: 5b48cde756677a7f04f894e6
+file_path: src/main/java/org/apache/ws/security/processor/EncryptedKeyProcessor.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

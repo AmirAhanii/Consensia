@@ -1,0 +1,167 @@
+Project: archiva
+Commit: cf9d918e51fc9c4a1a7604c705a3270beb09079d
+hunk_oid: 5b5839ef37b4503ec5b1f297
+file_path: archiva-modules/archiva-base/archiva-configuration/src/main/resources/org/apache/archiva/configuration/default-archiva.xml
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\archiva
+
+===== NOTES =====
+(none)
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <version>2</version>
+  <managedRepositories>
+    <managedRepository>
+      <id>internal</id>
+      <name>Archiva Managed Internal Repository</name>
+      <location>${appserver.base}/repositories/internal</location>
+      <indexDir>${appserver.base}/repositories/internal/.indexer</indexDir>
+      <layout>default</layout>
+      <releases>true</releases>
+      <snapshots>false</snapshots>
+      <blockRedeployments>true</blockRedeployments>
+      <scanned>true</scanned>
+      <refreshCronExpression>0 0 * * * ?</refreshCronExpression>
+      <daysOlder>30</daysOlder>
+    </managedRepository>
+    <managedRepository>
+      <id>snapshots</id>
+      <name>Archiva Managed Snapshot Repository</name>
+      <location>${appserver.base}/repositories/snapshots</location>
+      <indexDir>${appserver.base}/repositories/snapshots/.indexer</indexDir>
+      <layout>default</layout>
+      <releases>false</releases>
+      <snapshots>true</snapshots>
+      <blockRedeployments>false</blockRedeployments>
+      <scanned>true</scanned>
+      <refreshCronExpression>0 0\,30 * * * ?</refreshCronExpression>
+      <daysOlder>30</daysOlder>
+    </managedRepository>
+  </managedRepositories>
+  <remoteRepositories>
+    <remoteRepository>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>http://repo.maven.apache.org/maven2</url>
+      <layout>default</layout>
+    </remoteRepository>
+  </remoteRepositories>
+
+  <proxyConnectors>
+    <proxyConnector>
+      <sourceRepoId>internal</sourceRepoId>
+      <targetRepoId>central</targetRepoId>
+      <proxyId/>
+      <policies>
+        <snapshots>disabled</snapshots>
+        <releases>once</releases>
+        <checksum>fix</checksum>
+        <cache-failures>cached</cache-failures>
+      </policies>
+      <whiteListPatterns>
+        <whiteListPattern>**/*</whiteListPattern>
+      </whiteListPatterns>
+    </proxyConnector>
+  </proxyConnectors>
+
+  <legacyArtifactPaths>
+    <legacyArtifactPath>
+        <path>jaxen/jars/jaxen-1.0-FCS-full.jar</path>
+        <artifact>jaxen:jaxen:1.0-FCS:full:jar</artifact>
+    </legacyArtifactPath>
+  </legacyArtifactPaths>
+
+  <repositoryScanning>
+    <fileTypes>
+      <fileType>
+        <id>artifacts</id>
+        <patterns>
+          <pattern>**/*.pom</pattern>
+          <pattern>**/*.jar</pattern>
+          <pattern>**/*.ear</pattern>
+          <pattern>**/*.war</pattern>
+          <pattern>**/*.car</pattern>
+          <pattern>**/*.sar</pattern>
+          <pattern>**/*.mar</pattern>
+          <pattern>**/*.rar</pattern>
+          <pattern>**/*.dtd</pattern>
+          <pattern>**/*.tld</pattern>
+          <pattern>**/*.tar.gz</pattern>
+          <pattern>**/*.tar.bz2</pattern>
+          <pattern>**/*.zip</pattern>
+        </patterns>
+      </fileType>
+      <fileType>
+        <id>indexable-content</id>
+        <patterns>
+          <pattern>**/*.txt</pattern>
+          <pattern>**/*.TXT</pattern>
+          <pattern>**/*.block</pattern>
+          <pattern>**/*.config</pattern>
+          <pattern>**/*.pom</pattern>
+          <pattern>**/*.xml</pattern>
+          <pattern>**/*.xsd</pattern>
+          <pattern>**/*.dtd</pattern>
+          <pattern>**/*.tld</pattern>
+        </patterns>
+      </fileType>
+      <fileType>
+        <id>auto-remove</id>
+        <patterns>
+          <pattern>**/*.bak</pattern>
+          <pattern>**/*~</pattern>
+          <pattern>**/*-</pattern>
+        </patterns>
+      </fileType>
+      <fileType>
+        <id>ignored</id>
+        <patterns>
+          <pattern>**/.htaccess</pattern>
+          <pattern>**/KEYS</pattern>
+          <pattern>**/*.rb</pattern>
+          <pattern>**/*.sh</pattern>
+          <pattern>**/.svn/**</pattern>
+          <pattern>**/.DAV/**</pattern>
+          <pattern>.index/**</pattern>
+          <pattern>.indexer/**</pattern>
+        </patterns>
+      </fileType>
+    </fileTypes>
+    <knownContentConsumers>
+      <knownContentConsumer>create-missing-checksums</knownContentConsumer>
+      <knownContentConsumer>validate-checksum</knownContentConsumer>
+      <knownContentConsumer>validate-signature</knownContentConsumer>
+      <knownContentConsumer>index-content</knownContentConsumer>
+      <knownContentConsumer>auto-remove</knownContentConsumer>
+      <knownContentConsumer>auto-rename</knownContentConsumer>
+      <knownContentConsumer>metadata-updater</knownContentConsumer>
+      <knownContentConsumer>create-archiva-metadata</knownContentConsumer>
+      <knownContentConsumer>duplicate-artifacts</knownContentConsumer>
+      <!--knownContentConsumer>repository-purge</knownContentConsumer-->
+    </knownContentConsumers>
+    <invalidContentConsumers>
+      <invalidContentConsumer>update-db-bad-content</invalidContentConsumer>
+    </invalidContentConsumers>
+  </repositoryScanning>
+
+  <webapp>
+    <ui>
+      <showFindArtifacts>true</showFindArtifacts>
+      <appletFindEnabled>true</appletFindEnabled>
+    </ui>
+  </webapp>
+
++   <redbackRuntimeConfiguration>
++     <userManagerImpls>
++       <userManagerImpl>jdo</userManagerImpl>
++     </userManagerImpls>
++     <rbacManagerImpls>
++       <rbacManagerImpl>cached</rbacManagerImpl>
++     </rbacManagerImpls>
++   </redbackRuntimeConfiguration>
++ 
++ 
+</configuration>

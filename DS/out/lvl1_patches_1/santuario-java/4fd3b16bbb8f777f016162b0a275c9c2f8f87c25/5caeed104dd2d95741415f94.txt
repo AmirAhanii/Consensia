@@ -1,0 +1,15 @@
+Project: santuario-java
+Commit: 4fd3b16bbb8f777f016162b0a275c9c2f8f87c25
+hunk_oid: 5caeed104dd2d95741415f94
+file_path: CHANGELOG.txt
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\santuario-java
+
+===== NOTES =====
+- Could not determine parent commit (git show -s --format=%P failed or empty).
+- AFTER file not available at commit (file may be deleted/renamed, or commit missing locally).
+- Unified diff not available (git show -- <file> returned empty or failed).
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: git show failed for both parent and commit)

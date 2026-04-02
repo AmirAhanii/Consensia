@@ -1,0 +1,15 @@
+Project: santuario-java
+Commit: fc82413086bb50cfbbee59c9dc8818a2dafa193e
+hunk_oid: 5caee6c14dd2d957413f6d91
+file_path: src/main/java/org/apache/jcp/xml/dsig/internal/dom/XmlWriterToTree.java
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\santuario-java
+
+===== NOTES =====
+- Could not determine parent commit (git show -s --format=%P failed or empty).
+- AFTER file not available at commit (file may be deleted/renamed, or commit missing locally).
+- Unified diff not available (git show -- <file> returned empty or failed).
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: git show failed for both parent and commit)

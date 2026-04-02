@@ -1,0 +1,13 @@
+Project: tika
+Commit: 12c4ad280f267f8cdae8d93086f485729c0d78b7
+hunk_oid: 5b4854853463875e6215d024
+file_path: .gitattributes
+repo_path: C:\Users\ahmad\Desktop\Bilkent\5th year\1st sem\SDP - CS491\dataset_of_tangled_commits\Project's commits\_repos\tika
+
+===== NOTES =====
+- BEFORE file not available at parent (file may be added/renamed, or parent missing locally).
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
++ tika-parsers/src/test/resources/test-documents/testARofText.ar eol=lf

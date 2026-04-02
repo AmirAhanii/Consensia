@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: 94b22c9ee7003265fdde806b07759ca5033a6dfd
+hunk_oid: 5b48ce2056677a7f05f89522
+file_path: test/wssec/TestWSSecurityNew16.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

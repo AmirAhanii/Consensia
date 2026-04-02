@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: 0e2b05ffd70dc313a4d43ff9291d64d6eaef368b
+hunk_oid: 5b48ccfa56677a7efdf88e6d
+file_path: src/org/apache/ws/security/message/EnvelopeIdResolver.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

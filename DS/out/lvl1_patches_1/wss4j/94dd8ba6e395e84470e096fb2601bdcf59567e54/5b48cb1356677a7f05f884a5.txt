@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: 94dd8ba6e395e84470e096fb2601bdcf59567e54
+hunk_oid: 5b48cb1356677a7f05f884a5
+file_path: src/main/java/org/apache/ws/security/message/token/UsernameToken.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

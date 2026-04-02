@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: df3b155ad9297f03c8331ba406b5697969580744
+hunk_oid: 5b48cb8456677a7f01f884fb
+file_path: src/org/apache/ws/security/components/crypto/AbstractCrypto.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)

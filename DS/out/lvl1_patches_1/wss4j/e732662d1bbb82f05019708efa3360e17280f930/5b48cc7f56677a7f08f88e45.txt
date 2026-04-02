@@ -1,0 +1,12 @@
+Project: wss4j
+Commit: e732662d1bbb82f05019708efa3360e17280f930
+hunk_oid: 5b48cc7f56677a7f08f88e45
+file_path: ws-security-common/src/main/java/org/apache/wss4j/common/crypto/ThreadLocalSecurityProvider.java
+
+===== NOTES =====
+- Repo not found locally under _repos/_repo_cache. Cannot run git show.
+
+===== ANNOTATED FULL FILE =====
+Legend: deleted lines prefixed with '- ' ; added lines prefixed with '+ ' ; unchanged lines have no prefix.
+
+(no content available: missing local repo)
