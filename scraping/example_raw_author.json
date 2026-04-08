@@ -1,0 +1,35 @@
+{
+  "name": "Dr. Example Person",
+  "scholar_id": "dummy",
+  "affiliation": "Example University",
+  "profile_url": "https://scholar.google.com/someprofile",
+  "scraped_at": "2025-11-26T00:00:00Z",
+  "papers": [
+    {
+      "title": "Improving Unit Test Quality in Large-Scale Systems",
+      "authors": "Example Person, Co Author",
+      "year": 2018,
+      "venue": "ICSE",
+      "snippet": "We investigate how developers write and maintain unit tests...",
+      "abstract": null,
+      "citation_count": 42,
+      "paper_url": "https://...",
+      "pdf_url": null
+    },
+    {
+      "title": "Refactoring Patterns in Legacy Codebases",
+      "authors": "Example Person",
+      "year": 2020,
+      "venue": "FSE",
+      "snippet": "This paper studies refactoring practices in legacy systems...",
+      "abstract": null,
+      "citation_count": 30,
+      "paper_url": "https://...",
+      "pdf_url": null
+    }
+  ],
+  "raw_data": {
+    "serpapi_author_response": {},
+    "serpapi_publications_responses": []
+  }
+}

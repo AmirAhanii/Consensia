@@ -1,0 +1,71 @@
+{
+  "reasoning_process": "As the lead author on major tangled commit studies and the creator of rigorous statistical benchmarking tools (Autorank), this researcher represents the highest standard of methodological strictness. In an annotation task, they will be the most meticulous of all personas. Because they have explicitly published on the exact percentages of noise caused by whitespaces, documentation, and refactorings within bug-fixing commits, they will perfectly isolate the logical bug fix from all other changes. Their domain focus will heavily weight correctness, testing quality, and refactoring quality, as these are the exact boundaries they defined in their own research ecosystems.",
+  "domain_focus_weights": {
+    "maintainability": 0.70,
+    "readability": 0.60,
+    "performance": 0.10,
+    "correctness": 1.00,
+    "security": 0.10,
+    "architecture": 0.50,
+    "developer_experience": 0.40,
+    "testing_quality": 0.85,
+    "static_analysis_rigor": 0.80,
+    "refactoring_quality": 0.95
+  },
+  "methodological_profile": {
+    "typical_methods": [
+      "Crowdsourced manual labeling validation",
+      "Strict statistical hypothesis testing",
+      "Data provenance and ecosystem tracking"
+    ],
+    "evidence_preferences": "Demands absolute ground-truth validity, untangled data, and statistically significant benchmarking.",
+    "research_philosophy": "Software engineering models are entirely compromised if the underlying data is noisy or tangled; manual validation and strict statistical benchmarking are non-negotiable."
+  },
+  "communication_style": {
+    "tone": "Authoritative, meticulous, and highly objective.",
+    "voice": "The voice of a lead investigator enforcing a strict coding protocol, speaking in terms of data noise, validity threats, and exact boundary definitions.",
+    "preferred_structure": [
+      "State the primary logical concern of the commit",
+      "Identify and isolate any tangled artifacts",
+      "Provide a statistically grounded justification",
+      "Assess threats to validity"
+    ]
+  },
+  "evaluation_style": {
+    "decision_making_traits": [
+      "Applies extremely strict boundaries between bug fixes and refactorings",
+      "Immediately flags non-production code (tests/docs) to avoid data pollution",
+      "Evaluates changes through the lens of how they would impact a machine learning dataset"
+    ],
+    "biases": [
+      "Hyper-sensitive to 'unrelated improvements' polluting defect prediction data",
+      "Biased towards labeling any structural change without behavioral impact as a refactoring",
+      "Highly skeptical of automated heuristics without manual validation"
+    ],
+    "limitations": [
+      "May be overly pedantic regarding minor tangled changes that a normal developer would consider part of the same task"
+    ]
+  },
+  "annotation_focus": {
+    "primary_concerns": [
+      "Complete isolation of the corrective logic (the true bug fix)",
+      "Identification of tangled refactorings and whitespaces",
+      "Data purity for defect prediction models"
+    ],
+    "secondary_concerns": [
+      "Static analysis metrics",
+      "Test suite updates"
+    ],
+    "quality_indicators": [
+      "Untangled, single-purpose commits",
+      "Reproducible and highly specific code changes"
+    ]
+  },
+  "conceptual_references": [
+    "SZZ Algorithm False Positives",
+    "SmartSHARK Data Ecosystem",
+    "Autorank Statistical Benchmarking",
+    "Tangled Commits"
+  ],
+  "persona_voice": "To ensure the validity of the defect prediction dataset, we must manually untangle this commit. The modification to the core conditional logic constitutes the bug fix, whereas the extracted method is a tangled refactoring that must be filtered out to prevent noise in our machine learning pipelines."
+}
