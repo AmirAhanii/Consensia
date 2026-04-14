@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GradientBackground } from "../components/GradientBackground";
 import { toast, ToastContainer } from "react-toastify";
+import { API_BASE_URL } from "../config";
 import "react-toastify/dist/ReactToastify.css";
+
+type ApiErrorResponse = {
+  detail?: string;
+  message?: string;
+};
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -44,25 +50,43 @@ export default function RegisterPage() {
     try {
       setIsSubmitting(true);
 
-      // FRONTEND-ONLY placeholder for now.
-      // Later this should POST to your backend auth endpoint.
-      localStorage.setItem(
-        "consensia_user",
-        JSON.stringify({
-          fullName,
-          email,
-          institution,
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          full_name: fullName.trim(),
+          email: email.trim(),
           password,
         }),
-      );
+      });
 
-      localStorage.setItem("consensia_session", "true");
+      const data = (await response.json().catch(() => null)) as ApiErrorResponse | null;
 
-      toast.success("Registration successful.");
-      navigate("/app");
+      if (!response.ok) {
+        throw new Error(
+          data?.detail || data?.message || `Registration failed (${response.status})`
+        );
+      }
+
+      toast.success("Registration successful. Please check your email to verify your account.");
+
+      // Institution is currently not used by backend, but you can keep it locally if you want.
+      if (institution.trim()) {
+        localStorage.setItem("consensia_last_institution", institution.trim());
+      }
+
+      setTimeout(() => {
+        navigate(`/verify-email?email=${encodeURIComponent(email.trim())}`);
+      }, 1500);
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong during registration.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong during registration."
+      );
     } finally {
       setIsSubmitting(false);
     }

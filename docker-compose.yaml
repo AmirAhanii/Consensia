@@ -1,4 +1,17 @@
 services:
+  db:
+    image: postgres:16
+    container_name: consensia-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: consensia
+      POSTGRES_USER: consensia
+      POSTGRES_PASSWORD: consensia_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   backend:
     build:
       context: .
@@ -8,14 +21,17 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      # Keep CORS stable for local frontend.
       CORS_ALLOW_ORIGINS: "http://localhost:5173"
-      # Explicit path inside the container (matches volume ./backend/data)
       RESEARCH_RAW_AUTHORS_DIR: "/app/backend/data/raw_authors"
+      DATABASE_URL: "postgresql+psycopg://consensia:consensia_password@db:5432/consensia"
     volumes:
       - ./backend/app:/app/backend/app
       - ./backend/data:/app/backend/data
+      - ./backend/alembic:/app/backend/alembic
+      - ./backend/alembic.ini:/app/backend/alembic.ini
     command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    depends_on:
+      - db
 
   frontend:
     build:
@@ -24,7 +40,6 @@ services:
     ports:
       - "5173:5173"
     environment:
-      # Must point to host because the browser runs on the host machine.
       VITE_API_BASE_URL: "http://localhost:8000"
       VITE_OPEN: "false"
     volumes:
@@ -37,8 +52,9 @@ services:
       - ./frontend/tsconfig.node.json:/app/frontend/tsconfig.node.json
       - ./frontend/tailwind.config.ts:/app/frontend/tailwind.config.ts
       - ./frontend/postcss.config.cjs:/app/frontend/postcss.config.cjs
-    # Use the local Vite binary to avoid any PATH/entrypoint quirks.
     command: ./node_modules/.bin/vite --host 0.0.0.0 --port 5173
     depends_on:
       - backend
 
+volumes:
+  postgres_data:

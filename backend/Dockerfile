@@ -6,15 +6,11 @@ WORKDIR /app/backend
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# Some deps (e.g. cryptography) may need build tools if wheels aren't available.
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends build-essential \
-  && rm -rf /var/lib/apt/lists/*
-
 # Install dependencies
-COPY backend/pyproject.toml backend/env.template ./
+COPY backend/pyproject.toml backend/env.template backend/alembic.ini ./
 COPY backend/app ./app
 COPY backend/data ./data
+COPY backend/alembic ./alembic
 
 # Ensure a README exists because pyproject.toml points to it.
 RUN test -f README.md || printf "# consensia-backend\n" > README.md

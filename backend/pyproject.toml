@@ -14,7 +14,15 @@ dependencies = [
   "google-generativeai>=0.8.2,<1.0.0",
   "python-multipart>=0.0.7,<1.0.0",
   "pdfplumber>=0.11.0,<1.0.0",
-  "python-docx>=1.0.0,<2.0.0"
+  "python-docx>=1.0.0,<2.0.0",
+
+  "sqlalchemy>=2.0",
+  "alembic>=1.13",
+  "psycopg[binary]>=3.1",
+  "pyjwt>=2.8",
+  "pwdlib[argon2]>=0.2",
+  "google-auth>=2.35",
+  "email-validator>=2.2"
 ]
 
 [project.optional-dependencies]
@@ -27,7 +35,6 @@ dev = [
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
-# Docker copies ./data next to ./app under WORKDIR; only `app` is a Python package.
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["app*"]
