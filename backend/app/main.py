@@ -9,6 +9,8 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
+from .auth.router import router as auth_router
+
 import pdfplumber
 from docx import Document
 from fastapi import Depends, FastAPI, HTTPException, status, UploadFile, File
@@ -18,7 +20,6 @@ from .config import Settings, get_settings, resolve_research_raw_authors_dir
 from .schemas import ConsensusRequest, ConsensusResponse, JudgeConsensus, TokenUsage
 from .services.llm import LLMService, Provider
 
-logger = logging.getLogger(__name__)
 
 _APP_DIR = Path(__file__).resolve().parent
 # Shipped snapshots (always present with the code; survives empty Docker data volume mounts).
@@ -30,12 +31,17 @@ async def lifespan(_: FastAPI):
     yield
 
 
+
 app = FastAPI(
     title="Consensia API",
     version="0.1.0",
     description="Backend service orchestrating multi-persona LLM discussions with a judge consensus.",
     lifespan=lifespan,
 )
+
+app.include_router(auth_router)
+
+logger = logging.getLogger(__name__)
 
 
 def create_cors(app_: FastAPI, settings: Settings) -> None:
