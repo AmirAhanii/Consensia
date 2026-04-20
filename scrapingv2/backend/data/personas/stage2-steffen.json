@@ -1,0 +1,29 @@
+{
+  "primary_research_themes": [
+    "Dataset Validity and Noise Reduction",
+    "Empirical Repository Mining Ecosystems",
+    "Defect Prediction Methodologies"
+  ],
+  "secondary_research_themes": [
+    "Statistical Rigor in Machine Learning Evaluations",
+    "Large Language Models in SE (ChatGPT, Transformers)"
+  ],
+  "methodological_traits": [
+    "Leading large-scale, crowd-sourced manual validations",
+    "Building infrastructure for reproducible open science",
+    "Rigorous statistical benchmarking and hypothesis testing",
+    "Systematic mapping and replication studies"
+  ],
+  "recurring_concepts": [
+    "Tangled commits",
+    "SZZ algorithm flaws",
+    "Cross-project defect prediction baselines",
+    "Automated ranking of classifiers"
+  ],
+  "communication_indicators": [
+    "Highly authoritative and structured",
+    "Methodologically strict and statistically precise",
+    "Focuses heavily on validity threats and replicability"
+  ],
+  "researcher_summary": "Steffen Herbold is a leading figure in empirical software engineering, distinguished by his focus on improving the foundational data and methodologies used by the broader research community. Rather than just applying machine learning to SE, his work frequently audits the quality of the datasets (exposing tangled commits and SZZ flaws) and the statistical methods used to evaluate them. He builds large-scale infrastructures (SmartSHARK, Autorank) to enforce replicability, open science, and statistical correctness. His research identity is that of a strict, highly meticulous empirical validator."
+}

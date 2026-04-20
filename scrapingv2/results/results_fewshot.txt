@@ -1,0 +1,45 @@
+
+============================================================
+ 🔬 SCIENTIFIC ANNOTATION SCORES: Alexander Trautsch 🔬
+============================================================
+Total Lines Evaluated: 227
+Cohen's Kappa (κ):     0.5827
+F2-Score (Weighted):   0.6539
+F2-Score (Macro):      0.6066
+------------------------------------------------------------
+Detailed Classification Report:
+               precision    recall  f1-score   support
+
+       bugfix       0.36      0.90      0.52        40
+documentation       0.83      0.76      0.79        38
+         test       1.00      1.00      1.00        82
+    unrelated       0.40      0.04      0.07        54
+   whitespace       1.00      0.46      0.63        13
+
+     accuracy                           0.68       227
+    macro avg       0.72      0.63      0.60       227
+ weighted avg       0.72      0.68      0.64       227
+
+
+
+============================================================
+ 🔬 SCIENTIFIC ANNOTATION SCORES: Steffen Herbold 🔬
+============================================================
+Total Lines Evaluated: 428
+Cohen's Kappa (κ):     0.4541
+F2-Score (Weighted):   0.6584
+F2-Score (Macro):      0.4037
+------------------------------------------------------------
+Detailed Classification Report:
+               precision    recall  f1-score   support
+
+       bugfix       0.81      0.98      0.89        48
+documentation       0.36      0.90      0.51        30
+  refactoring       0.00      0.00      0.00         0
+         test       1.00      0.69      0.82       293
+    unrelated       0.00      0.00      0.00        46
+   whitespace       0.02      0.09      0.04        11
+
+     accuracy                           0.65       428
+    macro avg       0.36      0.44      0.38       428
+ weighted avg       0.80      0.65      0.69       428

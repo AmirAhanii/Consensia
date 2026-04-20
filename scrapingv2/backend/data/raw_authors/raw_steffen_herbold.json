@@ -1,0 +1,2123 @@
+{
+  "name": "Steffen Herbold",
+  "scholar_id": "Fac_e58AAAAJ",
+  "affiliation": "University of Passau",
+  "scraped_at": "2026-04-20T11:49:09.736358Z",
+  "papers": [
+    {
+      "title": "A large-scale comparison of human-written versus ChatGPT-generated essays",
+      "authors": "S Herbold, A Hautli-Janisz, U Heuer, Z Kikteva, A Trautsch",
+      "year": "2023",
+      "venue": "Scientific reports 13 (1), 18617, 2023",
+      "citation_count": 531,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:P5F9QuxV20EC",
+      "abstract": "ChatGPT and similar generative AI models have attracted hundreds of millions of users and have become part of the public discourse. Many believe that such models will disrupt society and lead to significant changes in the education system and information generation. So far, this belief is based on either colloquial evidence or benchmarks from the owners of the models—both lack scientific rigor. We systematically assess the quality of AI-generated content through a large-scale study comparing human-written versus ChatGPT-generated argumentative student essays. We use essays that were rated by a large number of human experts (teachers). We augment the analysis by considering a set of linguistic characteristics of the generated essays. Our results demonstrate that ChatGPT generates essays that are rated higher regarding quality than human-written essays. The writing style of the AI models exhibits …"
+    },
+    {
+      "title": "A comparative study to benchmark cross-project defect prediction approaches",
+      "authors": "S Herbold, A Trautsch, J Grabowski",
+      "year": "2017",
+      "venue": "IEEE Transactions on Software Engineering 44 (9), 811 - 833, 2017",
+      "citation_count": 300,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:QIV2ME_5wuYC",
+      "abstract": "Cross-Project Defect Prediction (CPDP) as a means to focus quality assurance of software projects was under heavy investigation in recent years. However, within the current state-of-the-art it is unclear which of the many proposals performs best due to a lack of replication of results and diverse experiment setups that utilize different performance metrics and are based on different underlying data. Within this article [2, 3], we provide a benchmark for CPDP. Our benchmark replicates 24 CPDP approaches proposed by researchers between 2008 and 2015. Through our benchmark, we answer the following research questions:\n• RQ1: Which CPDP approaches perform best in terms of F-measure, G-measure, AUC, and MCC?\n• RQ2: Does any CPDP approach consistently fulfill the performance criteria for successful predictions postulated by Zimmermann et al. [4], i.e., have at least 0.75 recall, 0.75 precision, and 0.75 …"
+    },
+    {
+      "title": "Autorank: A python package for automated ranking of classifiers",
+      "authors": "S Herbold",
+      "year": "2020",
+      "venue": "Journal of Open Source Software 5 (48), 2173, 2020",
+      "citation_count": 219,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:M3NEmzRMIkIC",
+      "abstract": "Analyses to determine differences in the central tendency, eg, mean or median values, are an important application of statistics. Often, such comparisons must be done with paired samples, ie, populations that are not dependent on each other. This is, for example, required if the performance different machine learning algorithms should be compared on multiple data sets. The performance measures on each data set are then the paired samples, the difference in the central tendency can be used to rank the different algorithms. This problem is not new and how such tests could be done was already described in the well-known article by Demšar (2006).\nRegardless, the correct use of Demšar’s guidelines is hard for non-experts in statistics. The distribution of the populations must be analyzed with the Shapiro-Wilk test for normality and, depending on the normality with Levene’s test or Bartlett’s tests for homogeneity of the data. Based on the results and the number of populations, researchers must decide whether the paired t-test, Wilcoxon’s rank sum test, repeated measures ANOVA with Tukey’s HSD as posthoc test, or Friedman’s tests and Nemenyi’s post-hoc test is the suitable statistical framework. All this is already quite complex. Additionally, researchers must adjust the significance level due to the number of tests to achieve the desired family-wise significance and control the false-positive rate of the test results."
+    },
+    {
+      "title": "Training data selection for cross-project defect prediction",
+      "authors": "S Herbold",
+      "year": "2013",
+      "venue": "Proceedings of the 9th international conference on predictive models in …, 2013",
+      "citation_count": 205,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:2osOgNQ5qMEC",
+      "abstract": "Software defect prediction has been a popular research topic in recent years and is considered as a means for the optimization of quality assurance activities. Defect prediction can be done in a within-project or a cross-project scenario. The within-project scenario produces results with a very high quality, but requires historic data of the project, which is often not available. For the cross-project prediction, the data availability is not an issue as data from other projects is readily available, e.g., in repositories like PROMISE. However, the quality of the defect prediction results is too low for practical use. Recent research showed that the selection of appropriate training data can improve the quality of cross-project defect predictions. In this paper, we propose distance-based strategies for the selection of training data based on distributional characteristics of the available data. We evaluate the proposed strategies in a large …"
+    },
+    {
+      "title": "On the validity of pre-trained transformers for natural language processing in the software engineering domain",
+      "authors": "J Von der Mosel, A Trautsch, S Herbold",
+      "year": "2022",
+      "venue": "IEEE Transactions on Software Engineering 49 (4), 1487-1507, 2022",
+      "citation_count": 139,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:2P1L_qKh6hAC",
+      "abstract": "Transformers are the current state-of-the-art of natural language processing in many domains and are using traction within software engineering research as well. Such models are pre-trained on large amounts of data, usually from the general domain. However, we only have a limited understanding regarding the validity of transformers within the software engineering domain, i.e., how good such models are at understanding words and sentences within a software engineering context and how this improves the state-of-the-art. Within this article, we shed light on this complex, but crucial issue. We compare BERT transformer models trained with software engineering data with transformers based on general domain data in multiple dimensions: their vocabulary, their ability to understand which words are missing, and their performance in classification tasks. Our results show that for tasks that require understanding of …"
+    },
+    {
+      "title": "Calculation and optimization of thresholds for sets of software metrics",
+      "authors": "S Herbold, J Grabowski, S Waack",
+      "year": "2011",
+      "venue": "Empirical Software Engineering 16 (6), 812-841, 2011",
+      "citation_count": 117,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:u5HHmVD_uO8C",
+      "abstract": "In this article, we present a novel algorithmic method for the calculation of thresholds for a metric set. To this aim, machine learning and data mining techniques are utilized. We define a data-driven methodology that can be used for efficiency optimization of existing metric sets, for the simplification of complex classification models, and for the calculation of thresholds for a metric set in an environment where no metric set yet exists. The methodology is independent of the metric set and therefore also independent of any language, paradigm or abstraction level. In four case studies performed on large-scale open-source software metric sets for C functions, C+ +, C# methods and Java classes are optimized and the methodology is validated."
+    },
+    {
+      "title": "Problems with SZZ and features: An empirical study of the state of practice of defect prediction data collection",
+      "authors": "S Herbold, A Trautsch, F Trautsch, B Ledel",
+      "year": "2022",
+      "venue": "Empirical Software Engineering 27, 42, 2022",
+      "citation_count": 103,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:pqnbT2bcN3wC",
+      "abstract": "Context\nThe SZZ algorithm is the de facto standard for labeling bug fixing commits and finding inducing changes for defect prediction data. Recent research uncovered potential problems in different parts of the SZZ algorithm. Most defect prediction data sets provide only static code metrics as features, while research indicates that other features are also important.\nObjective\nWe provide an empirical analysis of the defect labels created with the SZZ algorithm and the impact of commonly used features on results.\nMethod\nWe used a combination of manual validation and adopted or improved heuristics for the collection of defect data. We conducted an empirical study on 398 releases of 38 Apache projects.\nResults\nWe found that only half of the bug fixing commits determined by SZZ are actually bug fixing. If a six-month time frame is used in combination with SZZ to determine which bugs affect a release, one file is incorrectly …"
+    },
+    {
+      "title": "A fine-grained data set and analysis of tangling in bug fixing commits",
+      "authors": "S Herbold, A Trautsch, B Ledel, A Aghamohammadi, TA Ghaleb, ...",
+      "year": "2022",
+      "venue": "Empirical Software Engineering 27 (6), 125, 2022",
+      "citation_count": 93,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:M05iB0D1s5AC",
+      "abstract": "Context\nTangled commits are changes to software that address multiple concerns at once. For researchers interested in bugs, tangled commits mean that they actually study not only bugs, but also other concerns irrelevant for the study of bugs.\nObjective\nWe want to improve our understanding of the prevalence of tangling and the types of changes that are tangled within bug fixing commits.\nMethods\nWe use a crowd sourcing approach for manual labeling to validate which changes contribute to bug fixes for each line in bug fixing commits. Each line is labeled by four participants. If at least three participants agree on the same label, we have consensus.\nResults\nWe estimate that between 17% and 32% of all changes in bug fixing commits modify the source code to fix the underlying problem. However, when we only consider changes to the production code files this ratio increases to 66% to 87%. We find that about 11% of …"
+    },
+    {
+      "title": "Global vs. local models for cross-project defect prediction: A replication study",
+      "authors": "S Herbold, A Trautsch, J Grabowski",
+      "year": "2017",
+      "venue": "Empirical software engineering 22 (4), 1866-1902, 2017",
+      "citation_count": 91,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:qxL8FJ1GzNcC",
+      "abstract": "Although researchers invested significant effort, the performance of defect prediction in a cross-project setting, i.e., with data that does not come from the same project, is still unsatisfactory. A recent proposal for the improvement of defect prediction is using local models. With local models, the available data is first clustered into homogeneous regions and afterwards separate classifiers are trained for each homogeneous region. Since the main problem of cross-project defect prediction is data heterogeneity, the idea of local models is promising. Therefore, we perform a conceptual replication of the previous studies on local models with a focus on cross-project defect prediction. In a large case study, we evaluate the performance of local models and investigate their advantages and drawbacks for cross-project predictions. To this aim, we also compare the performance with a global model and a transfer learning …"
+    },
+    {
+      "title": "Addressing problems with replicability and validity of repository mining studies through a smart data platform",
+      "authors": "F Trautsch, S Herbold, P Makedonski, J Grabowski",
+      "year": "2018",
+      "venue": "Empirical Software Engineering 23 (2), 1036-1083, 2018",
+      "citation_count": 66,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:dhFuZR0502QC",
+      "abstract": "The usage of empirical methods has grown common in software engineering. This trend spawned hundreds of publications, whose results are helping to understand and improve the software development process. Due to the data-driven nature of this venue of investigation, we identified several problems within the current state-of-the-art that pose a threat to the replicability and validity of approaches. The heavy re-use of data sets in many studies may invalidate the results in case problems with the data itself are identified. Moreover, for many studies data and/or the implementations are not available, which hinders a replication of the results and, thereby, decreases the comparability between studies. Furthermore, many studies use small data sets, which comprise of less than 10 projects. This poses a threat especially to the external validity of these studies. Even if all information about the studies is available, the …"
+    },
+    {
+      "title": "On the feasibility of automated prediction of bug and non-bug issues",
+      "authors": "S Herbold, A Trautsch, F Trautsch",
+      "year": "2020",
+      "venue": "Empirical Software Engineering 25 (6), 5333-5369, 2020",
+      "citation_count": 62,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:BqipwSGYUEgC",
+      "abstract": "Context\nIssue tracking systems are used to track and describe tasks in the development process, e.g., requested feature improvements or reported bugs. However, past research has shown that the reported issue types often do not match the description of the issue.\nObjective\nWe want to understand the overall maturity of the state of the art of issue type prediction with the goal to predict if issues are bugs and evaluate if we can improve existing models by incorporating manually specified knowledge about issues.\nMethod\nWe train different models for the title and description of the issue to account for the difference in structure between these fields, e.g., the length. Moreover, we manually detect issues whose description contains a null pointer exception, as these are strong indicators that issues are bugs.\nResults\nOur approach performs best overall, but not significantly different from an approach from the literature based on …"
+    },
+    {
+      "title": "On the costs and profit of software defect prediction",
+      "authors": "S Herbold",
+      "year": "2019",
+      "venue": "IEEE Transactions on Software Engineering 47 (11), 2617-2631, 2019",
+      "citation_count": 58,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:r0BpntZqJG4C",
+      "abstract": "Defect prediction can be a powerful tool to guide the use of quality assurance resources. However, while lots of research covered methods for defect prediction as well as methodological aspects of defect prediction research, the actual cost saving potential of defect prediction is still unclear. Within this article, we close this research gap and formulate a cost model for software defect prediction. We derive mathematically provable boundary conditions that must be fulfilled by defect prediction models such that there is a positive profit when the defect prediction model is used. Our cost model includes aspects like the costs for quality assurance, the costs of post-release defects, the possibility that quality assurance fails to reveal predicted defects, and the relationship between software artifacts and defects. We initialize the cost model using different assumptions, perform experiments to show trends of the behavior of costs …"
+    },
+    {
+      "title": "A longitudinal study of static analysis warning evolution and the effects of PMD on software quality in apache open source projects",
+      "authors": "A Trautsch, S Herbold, J Grabowski",
+      "year": "2020",
+      "venue": "Empirical Software Engineering 25 (6), 5137-5192, 2020",
+      "citation_count": 49,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:bEWYMUwI8FkC",
+      "abstract": "Automated static analysis tools (ASATs) have become a major part of the software development workflow. Acting on the generated warnings, i.e., changing the code indicated in the warning, should be part of, at latest, the code review phase. Despite this being a best practice in software development, there is still a lack of empirical research regarding the usage of ASATs in the wild. In this work, we want to study ASAT warning trends in software via the example of PMD as an ASAT and its usage in open source projects. We analyzed the commit history of 54 projects (with 112,266 commits in total), taking into account 193 PMD rules and 61 PMD releases. We investigate trends of ASAT warnings over up to 17 years for the selected study subjects regarding changes of warning types, short and long term impact of ASAT use, and changes in warning severities. We found that large global changes in ASAT warnings are …"
+    },
+    {
+      "title": "Comments on ScottKnottESD in response to\" An empirical comparison of model validation techniques for defect prediction models\"",
+      "authors": "S Herbold",
+      "year": "2017",
+      "venue": "IEEE Transactions on Software Engineering 43 (11), 1091-1094, 2017",
+      "citation_count": 49,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:7PzlFSSx8tAC",
+      "abstract": "In this article, we discuss the ScottKnottESD test, which was proposed in a recent paper “An Empirical Comparison of Model Validation Techniques for Defect Prediction Models” that was published in this journal. We discuss the implications and the empirical impact of the proposed normality correction of ScottKnottESD and come to the conclusion that this correction does not necessarily lead to the fulfillment of the assumptions of the original Scott-Knott test and may cause problems with the statistical analysis."
+    },
+    {
+      "title": "Static source code metrics and static analysis warnings for fine-grained just-in-time defect prediction",
+      "authors": "A Trautsch, S Herbold, J Grabowski",
+      "year": "2020",
+      "venue": "2020 IEEE International Conference on Software Maintenance and Evolution …, 2020",
+      "citation_count": 47,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:YFjsv_pBGBYC",
+      "abstract": "Software quality evolution and predictive models to support decisions about resource distribution in software quality assurance tasks are an important part of software engineering research. Recently, a fine-grained just-in-time defect prediction approach was proposed which has the ability to find bug-inducing files within changes instead of only complete changes. In this work, we utilize this approach and improve it in multiple places: data collection, labeling and features. We include manually validated issue types, an improved SZZ algorithm which discards comments, whitespaces and refactorings. Additionally, we include static source code metrics as well as static analysis warnings and warning density derived metrics as features. To assess whether we can save cost we incorporate a specialized defect prediction cost model. To evaluate our proposed improvements of the fine-grained just-in-time defect prediction …"
+    },
+    {
+      "title": "A systematic mapping study of developer social network research",
+      "authors": "S Herbold, A Amirfallah, F Trautsch, J Grabowski",
+      "year": "2021",
+      "venue": "Journal of Systems and Software 171, 110802, 2021",
+      "citation_count": 45,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:e5wmG9Sq2KIC",
+      "abstract": "Developer social networks (DSNs) are a tool for the analysis of community structures and collaborations between developers in software projects and software ecosystems. Within this paper, we present the results of a systematic mapping study on the use of DSNs in software engineering research. We identified 255 primary studies on DSNs. We mapped the primary studies to research directions, collected information about the data sources and the size of the studies, and conducted a bibliometric assessment. We found that nearly half of the research investigates the structure of developer communities. Other frequent topics are prediction systems build using DSNs, collaboration behavior between developers, and the roles of developers. Moreover, we determined that many publications use a small sample size regarding the number of projects, which could be problematic for the external validity of the research. Our …"
+    },
+    {
+      "title": "Are unit and integration test definitions still valid for modern Java projects? An empirical study on open-source projects",
+      "authors": "F Trautsch, S Herbold, J Grabowski",
+      "year": "2020",
+      "venue": "Journal of Systems and Software 159, 110421, 2020",
+      "citation_count": 37,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:RHpTSmoSYBkC",
+      "abstract": "Context\nObjective\nMethod\nResults"
+    },
+    {
+      "title": "Improved bug reporting and reproduction through non-intrusive gui usage monitoring and automated replaying",
+      "authors": "S Herbold, J Grabowski, S Waack, U Bünting",
+      "year": "2011",
+      "venue": "2011 IEEE fourth international conference on software testing, verification …, 2011",
+      "citation_count": 37,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:u-x6o8ySG0sC",
+      "abstract": "Most software systems are operated using a Graphical User Interface (GUI). Therefore, bugs are often triggered by user interaction with the software's GUI. Hence, accurate and reliable GUI usage information is an important tool for bug fixing, as the reproduction of a bug is the first important step towards fixing it. To support bug reproduction, a generic, easy to integrate, non-intrusive GUI usage monitoring mechanism is introduced in this paper. As supplement for the monitoring, a method for automatically replaying the monitored usage logs is provided. The feasibility of both is demonstrated through proof-of-concept implementations. A case-study shows that the monitoring mechanism can be integrated into large-scale software products without significant effort and that the logs are replayable. Additionally, a usage-based end-to-end GUI testing approach is outlined, in which the monitoring and replaying play major …"
+    },
+    {
+      "title": "The smartshark ecosystem for software repository mining",
+      "authors": "A Trautsch, F Trautsch, S Herbold, B Ledel, J Grabowski",
+      "year": "2020",
+      "venue": "Proceedings of the ACM/IEEE 42nd international conference on software …, 2020",
+      "citation_count": 33,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:isC4tDSrTZIC",
+      "abstract": "Software repository mining is the foundation for many empirical software engineering studies. The collection and analysis of detailed data can be challenging, especially if data shall be shared to enable replicable research and open science practices. SmartSHARK is an ecosystem that supports replicable and reproducible research based on software repository mining."
+    },
+    {
+      "title": "Crosspare: a tool for benchmarking cross-project defect predictions",
+      "authors": "S Herbold",
+      "year": "2015",
+      "venue": "2015 30th IEEE/ACM International Conference on Automated Software …, 2015",
+      "citation_count": 30,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:Se3iqnhoufwC",
+      "abstract": "During the last decade, many papers on defect prediction were published. One still for the most part unresolved issue are cross-project defect predictions. Here, the aim is to predict the defects of a project, with data from other projects. Many approaches were suggested and evaluated in recent years. However, due to the usage of different implementations and data sets, the comparison between the work is a hard task. Within this paper, we present the tool CrossPare. CrossPare is designed to facilitate benchmarks for cross-project defect predictions. The tool already implements many techniques proposed within the current state of the art of cross-project defect predictions. Moreover, the tool is able to load different data sets that are commonly used for the evaluation of techniques and supports all major performance metrics. Through the usage of CrossPare other reseachers can improve the comparability of their …"
+    },
+    {
+      "title": "Studying the explanations for the automated prediction of bug and non-bug issues using LIME and SHAP",
+      "authors": "L Schulte, B Ledel, S Herbold",
+      "year": "2024",
+      "venue": "Empirical Software Engineering 29 (4), 93, 2024",
+      "citation_count": 28,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:OU6Ihb5iCvQC",
+      "abstract": "Context\nThe identification of bugs within issues reported to an issue tracking system is crucial for triage. Machine learning models have shown promising results for this task. However, we have only limited knowledge of how such models identify bugs. Explainable AI methods like LIME and SHAP can be used to increase this knowledge.\nObjective\nWe want to understand if explainable AI provides explanations that are reasonable to us as humans and align with our assumptions about the model’s decision-making. We also want to know if the quality of predictions is correlated with the quality of explanations.\nMethods\nWe conduct a study where we rate LIME and SHAP explanations based on their quality of explaining the outcome of an issue type prediction model. For this, we rate the quality of the explanations, i.e., if they align with our expectations and help us understand the underlying machine learning model.\nResults …"
+    },
+    {
+      "title": "Predicting issue types with sebert",
+      "authors": "A Trautsch, S Herbold",
+      "year": "2022",
+      "venue": "Proceedings of the 1st international workshop on natural language-based …, 2022",
+      "citation_count": 28,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:3s1wT3WcHBgC",
+      "abstract": "Pre-trained transformer models are the current state-of-the-art for natural language models processing. seBERT is such a model, that was developed based on the BERT architecture, but trained from scratch with software engineering data. We fine-tuned this model for the NLBSE challenge for the task of issue type prediction. Our model dominates the baseline fastText for all three issue types in both recall and precision to achieve an overall F1-score of 85.7%, which is an increase of 4.1% over the baseline."
+    },
+    {
+      "title": "Performance tuning for automotive software fault prediction",
+      "authors": "H Altinger, S Herbold, F Schneemann, J Grabowski, F Wotawa",
+      "year": "2017",
+      "venue": "2017 IEEE 24th International Conference on Software Analysis, Evolution and …, 2017",
+      "citation_count": 28,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:aqlVkmm33-oC",
+      "abstract": "Fault prediction on high quality industry grade software often suffers from strong imbalanced class distribution due to a low bug rate. Previous work reports on low predictive performance, thus tuning parameters is required. As the State of the Art recommends sampling methods for imbalanced learning, we analyse effects when under- and oversampling the training data evaluated on seven different classification algorithms. Our results demonstrate settings to achieve higher performance values but the various classifiers are influenced in different ways. Furthermore, not all performance reports can be tuned at the same time."
+    },
+    {
+      "title": "Adressing problems with external validity of repository mining studies through a smart data platform",
+      "authors": "F Trautsch, S Herbold, P Makedonski, J Grabowski",
+      "year": "2016",
+      "venue": "Proceedings of the 13th International Conference on Mining Software …, 2016",
+      "citation_count": 28,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:KlAtU1dfN6UC",
+      "abstract": "Research in software repository mining has grown considerably the last decade. Due to the data-driven nature of this venue of investigation, we identified several problems within the current state-of-the-art that pose a threat to the external validity of results. The heavy re-use of data sets in many studies may invalidate the results in case problems with the data itself are identified. Moreover, for many studies data and/or the implementations are not available, which hinders a replication of the results and, thereby, decreases the comparability between studies. Even if all information about the studies is available, the diversity of the used tooling can make their replication even then very hard. Within this paper, we discuss a potential solution to these problems through a cloud-based platform that integrates data collection and analytics. We created the prototype SmartSHARK that implements our approach. Using …"
+    },
+    {
+      "title": "What really changes when developers intend to improve their source code: a commit-level study of static metric value and static analysis warning changes",
+      "authors": "A Trautsch, J Erbel, S Herbold, J Grabowski",
+      "year": "2023",
+      "venue": "Empirical Software Engineering 28 (2), 30, 2023",
+      "citation_count": 26,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:cFHS6HbyZ2cC",
+      "abstract": "Many software metrics are designed to measure aspects that are believed to be related to software quality. Static software metrics, e.g., size, complexity and coupling are used in defect prediction research as well as software quality models to evaluate software quality. Static analysis tools also include boundary values for complexity and size that generate warnings for developers. While this indicates a relationship between quality and software metrics, the extent of it is not well understood. Moreover, recent studies found that complexity metrics may be unreliable indicators for understandability of the source code. To explore this relationship, we leverage the intent of developers about what constitutes a quality improvement in their own code base. We manually classify a randomized sample of 2,533 commits from 54 Java open source projects as quality improving depending on the intent of the developer by inspecting …"
+    },
+    {
+      "title": "A systematic mapping study on cross-project defect prediction",
+      "authors": "S Herbold",
+      "year": "2017",
+      "venue": "arXiv preprint arXiv:1705.06429, 2017",
+      "citation_count": 25,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:mVmsd5A6BfQC",
+      "abstract": "Cross-Project-Defect Prediction as a sub-topic of defect prediction in general has become a popular topic in research. In this article, we present a systematic mapping study with the focus on CPDP, for which we found 50 publications. We summarize the approaches presented by each publication and discuss the case study setups and results. We discovered a great amount of heterogeneity in the way case studies are conducted, because of differences in the data sets, classifiers, performance metrics, and baseline comparisons used. Due to this, we could not compare the results of our review on a qualitative basis, i.e., determine which approaches perform best for CPDP."
+    },
+    {
+      "title": "Mining software dependency networks for agent-based simulation of software evolution",
+      "authors": "V Honsel, D Honsel, S Herbold, J Grabowski, S Waack",
+      "year": "2015",
+      "venue": "2015 30th IEEE/ACM International Conference on Automated Software …, 2015",
+      "citation_count": 24,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:MXK_kJrjxJIC",
+      "abstract": "During the software development process, the time and resources for quality assurance are limited. Therefore, project managers benefit from knowing in advance if a decision leads to decreasing quality. For this, we build an agent-based simulation tool for software processes for testing the effect of changing parameters, e.g., development team size. Since often changed software entities tend to be more defect-prone, we analyze the evolution of common file changes and evaluate its applicability for our agent-based simulation. For the estimation of simulation parameters we performed a case study focusing on change coupling dependency graphs of open source software projects. The analysis of this also provided valuable insights in the structure of these dependencies. By comparing empirical observations with simulation results we support the assumption that file dependencies can be simulated. Moreover, we are …"
+    },
+    {
+      "title": "Smoke testing for machine learning: simple tests to discover severe bugs",
+      "authors": "S Herbold, T Haar",
+      "year": "2022",
+      "venue": "Empirical Software Engineering 27 (2), 45, 2022",
+      "citation_count": 22,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:HoB7MX3m0LUC",
+      "abstract": "Machine learning is nowadays a standard technique for data analysis within software applications. Software engineers need quality assurance techniques that are suitable for these new kinds of systems. Within this article, we discuss the question whether standard software testing techniques that have been part of textbooks since decades are also useful for the testing of machine learning software. Concretely, we try to determine generic and simple smoke tests that can be used to assert that basic functions can be executed without crashing. We found that we can derive such tests using techniques similar to equivalence classes and boundary value analysis. Moreover, we found that these concepts can also be applied to hyperparameters, to further improve the quality of the smoke tests. Even though our approach is almost trivial, we were able to find bugs in all three machine learning libraries that we tested and …"
+    },
+    {
+      "title": "AutoQUEST--automated quality engineering of event-driven software",
+      "authors": "S Herbold, P Harms",
+      "year": "2013",
+      "venue": "2013 IEEE Sixth International Conference on Software Testing, Verification …, 2013",
+      "citation_count": 21,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:Tyk-4Ss8FVUC",
+      "abstract": "In this paper, we present AutoQUEST, a testing platform for Event-Driven Software (EDS) that decouples the implementation of testing techniques from the concrete platform they should be applied to. AutoQUEST provides the means to define testing techniques against an abstract Application Programming Interface (API) and provides plugins to port the testing techniques to distinct platforms. The requirements on plug-in implementations for AutoQUEST are kept low to keep the porting effort low. We implemented several testing techniques on top of AutoQUEST and provide five plugins for concrete software platforms, which demonstrates the capabililities of our approach."
+    },
+    {
+      "title": "A model for usage-based testing of event-driven software",
+      "authors": "S Herbold, J Grabowski, S Waack",
+      "year": "2011",
+      "venue": "2011 Fifth International Conference on Secure Software Integration and …, 2011",
+      "citation_count": 18,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:d1gkVwhDpl0C",
+      "abstract": "Event-driven software is very diverse, e.g., in form of Graphical User Interfaces (GUIs), Web applications, or embedded software. Regardless of the application, the challenges for testing event-driven software are similar. Most event-driven systems allow a huge number of possible event sequences, which makes exhaustive testing infeasible. As a possible solution, usage-based testing has been proposed for several types of event-driven software. However, previous work has always focused on one type of event-driven software. In this paper, we propose a usage-based testing model for event-driven software in general. The model is divided into three layers to provide a maximum of platform independence while allowing interoperability with existing platform dependent solutions."
+    },
+    {
+      "title": "Msr mining challenge: The smartshark repository mining data",
+      "authors": "A Trautsch, F Trautsch, S Herbold",
+      "year": "2021",
+      "venue": "arXiv preprint arXiv:2102.11540, 2021",
+      "citation_count": 17,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:SeFeTyx0c_EC",
+      "abstract": "The SmartSHARK repository mining data is a collection of rich and detailed information about the evolution of software projects. The data is unique in its diversity and contains detailed information about each change, issue tracking data, continuous integration data, as well as pull request and code review data. Moreover, the data does not contain only raw data scraped from repositories, but also annotations in form of labels determined through a combination of manual analysis and heuristics, as well as links between the different parts of the data set. The SmartSHARK data set provides a rich source of data that enables us to explore research questions that require data from different sources and/or longitudinal data over time."
+    },
+    {
+      "title": "Hidden markov models for the prediction of developer involvement dynamics and workload",
+      "authors": "V Honsel, S Herbold, J Grabowski",
+      "year": "2016",
+      "venue": "Proceedings of the The 12th International Conference on Predictive Models …, 2016",
+      "citation_count": 17,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:Zph67rFs4hoC",
+      "abstract": "The evolution of software projects is driven by developers who are in control of the developed artifacts. When analyzing the behavior of developers, the observable behaviors are, e.g., commits, messages, or bug assignments. For defining dynamic activities and workload of developers, we consider underlying characteristics, which means the level of involvement according to their role in the project. In this paper, we propose to employ Hidden Markov Models (HMMs) to model this underlying behavior given the observable behavior as input. For this, we observe monthly commits, bugfixes, mailing list activity, and bug comments for each developer over the project duration. As output we get a model for each developer describing how likely it is to be in a low, medium, or high contribution state of every point in time. As a result, we discovered that same developer types exhibit similar models in terms of state patterns and …"
+    },
+    {
+      "title": "Intuition vs. truth: Evaluation of common myths about stackoverflow posts",
+      "authors": "V Honsel, S Herbold, J Grabowski",
+      "year": "2015",
+      "venue": "2015 IEEE/ACM 12th Working Conference on Mining Software Repositories, 438-441, 2015",
+      "citation_count": 17,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:LkGwnXOMwfcC",
+      "abstract": "Posting and answering questions on Stack Overflow (SO) is everyday business for many developers. We asked a group of developers what they expect to be true about questions and answers on SO. Most of their expectations were related to the likelihood of getting an answer or to voting behavior. From their comments, we formulated nine myths that they think are true about the platform. Then, we proceeded to use rather simple methods from statistics to check if these myths are supported by the data in the SO dump provided. Through our analysis, we determined that there is an effect for eight of the nine myths the developers believed in. However, for only four of the myths the effect size is large enough to actually make a difference. Hence, we could bust five myths the developers believed in."
+    },
+    {
+      "title": "The MIDAS cloud platform for testing SOA applications",
+      "authors": "S Herbold, A De Francesco, J Grabowski, P Harms, LM Hillah, F Kordon, ...",
+      "year": "2015",
+      "venue": "2015 IEEE 8th International Conference on Software Testing, Verification and …, 2015",
+      "citation_count": 15,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:roLk4NBRz8UC",
+      "abstract": "While Service Oriented Architectures (SOAs) are for many parts deployed online, and today often in a cloud, the testing of the systems still happens mostly locally. In this paper, we want to present the MIDAS Testing as a Service (TaaS), a cloud platform for the testing of SOAs. We focus on the testing of whole SOA orchestrations, a complex task due to the number of potential service interactions and the increasing complexity with each service that joins an orchestration. Since traditional testing does not scale well with such a complex setup, we employ a Model-based Testing (MBT) approach based on the Unified Modeling Language (UML) and the UML Testing Profile (UTP) within MIDAS. Through this, we provide methods for functional testing, security testing, and usage-based testing of service orchestrations. Through harnessing the computational power of the cloud, MIDAS is able to generate and execute …"
+    },
+    {
+      "title": "Trace-based task tree generation",
+      "authors": "P Harms, S Herbold, J Grabowski",
+      "year": "2014",
+      "venue": "Proceedings of the Seventh International Conference on Advances in Computer …, 2014",
+      "citation_count": 14,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:YsMSGLbcyi4C",
+      "abstract": "Task trees are a well-known way for the manual modeling of user interactions. They provide an ideal basis for software analysis including usability evaluations if they are generated based on usage traces. In this paper, we present a method for the automated generation of task trees based on traces of user interactions. For this, we utilize usage monitors to record all events caused by users. These events are written into log files from which we generate task trees. We validate our method in three case studies."
+    },
+    {
+      "title": "Semantic similarity prediction is better than other semantic similarity measures",
+      "authors": "S Herbold",
+      "year": "2023",
+      "venue": "arXiv preprint arXiv:2309.12697, 2023",
+      "citation_count": 13,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:wbdj-CoPYUoC",
+      "abstract": "Semantic similarity between natural language texts is typically measured either by looking at the overlap between subsequences (e.g., BLEU) or by using embeddings (e.g., BERTScore, S-BERT). Within this paper, we argue that when we are only interested in measuring the semantic similarity, it is better to directly predict the similarity using a fine-tuned model for such a task. Using a fine-tuned model for the Semantic Textual Similarity Benchmark tasks (STS-B) from the GLUE benchmark, we define the STSScore approach and show that the resulting similarity is better aligned with our expectations on a robust semantic similarity measure than other approaches."
+    },
+    {
+      "title": "Large-scale manual validation of bugfixing changes",
+      "authors": "S Herbold, A Trautsch, B Ledel",
+      "year": "2020",
+      "venue": "Proceedings of the 17th International Conference on Mining Software …, 2020",
+      "citation_count": 13,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:blknAaTinKkC",
+      "abstract": "Context Accurate data about bug fixes is important for different venues of research, e.g., program repair. While automated procedures are able to identify bug fixing activities, they cannot distinguish between the bug fix and other activities that are happening in parallel, e.g., refactorings or the addition of features. Objective The creation of a large corpus of manually validated bug fixes and to gain insights into the limitations of manual validation. Method We use a crowd working approach to manually validate bug fixing commit and analyze the limitations. Limitations Insights limited to the Java programming language and possibly by the participants in the crowd working.\nContext\n\nObjective\n\nMethod\n\nLimitations\n"
+    },
+    {
+      "title": "What are the machine learning best practices reported by practitioners on stack exchange?",
+      "authors": "A Mojica-Hanke, A Bayona, M Linares-Vásquez, S Herbold, FA González",
+      "year": "2023",
+      "venue": "arXiv preprint arXiv:2301.10516, 2023",
+      "citation_count": 12,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:D03iK_w7-QYC",
+      "abstract": "Machine Learning (ML) is being used in multiple disciplines due to its powerful capability to infer relationships within data. In particular, Software Engineering (SE) is one of those disciplines in which ML has been used for multiple tasks, like software categorization, bugs prediction, and testing. In addition to the multiple ML applications, some studies have been conducted to detect and understand possible pitfalls and issues when using ML. However, to the best of our knowledge, only a few studies have focused on presenting ML best practices or guidelines for the application of ML in different domains. In addition, the practices and literature presented in previous literature (i) are domain-specific (e.g., concrete practices in biomechanics), (ii) describe few practices, or (iii) the practices lack rigorous validation and are presented in gray literature. In this paper, we present a study listing 127 ML best practices systematically mining 242 posts of 14 different Stack Exchange (STE) websites and validated by four independent ML experts. The list of practices is presented in a set of categories related to different stages of the implementation process of an ML-enabled system; for each practice, we include explanations and examples. In all the practices, the provided examples focus on SE tasks. We expect this list of practices could help practitioners to understand better the practices and use ML in a more informed way, in particular newcomers to this new area that sits at the intersection of software engineering and machine learning."
+    },
+    {
+      "title": "Combining usage-based and model-based testing for service-oriented architectures in the industrial practice",
+      "authors": "S Herbold, P Harms, J Grabowski",
+      "year": "2017",
+      "venue": "International Journal on Software Tools for Technology Transfer 19 (3), 309-324, 2017",
+      "citation_count": 12,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:4TOpqqG69KYC",
+      "abstract": "Usage-based testing focuses quality assurance on highly used parts of the software. The basis for this are usage profiles based on which test cases are generated. There are two fundamental approaches in usage-based testing for deriving usage profiles: either the system under test (SUT) is observed during its operation and from the obtained usage data a usage profile is automatically inferred, or a usage profile is modeled by hand within a model-based testing (MBT) approach. In this article, we propose a third and combined approach, where we automatically infer a usage profile and create a test data repository from usage data. Then, we create representations of the generated tests and test data in the test model from an MBT approach. The test model enables us to generate executable Testing and Test Control Notation version 3 (TTCN-3) and thereby allows us to automate the test execution. Together with …"
+    },
+    {
+      "title": "System Analysis and Modeling. Technology-Specific Aspects of Models: 9th International Conference, SAM 2016, Saint-Melo, France, October 3-4, 2016. Proceedings",
+      "authors": "J Grabowski, S Herbold",
+      "year": "2016",
+      "venue": "Springer, 2016",
+      "citation_count": 12,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:M3ejUd6NZC8C",
+      "abstract": "This book constitutes revised papers of the proceedings of the 9th International Workshop on System Analysis and Modeling, SAM 2016, held in Saint-Melo, France, in October 2016. The 15 full papers presented were carefully reviewed and selected from 31 submissions. The contributions are organized in topical theme named: Technology-Specific Aspects of Models. The volume reflects the five sessions of the conference. The first two sessions are closely aligned with the conference theme with a session on the Internet of Things and a session on Technology-specific Aspects. The other three sessions cover aspects regarding modeling languages and model-driven development in general and were organized in the sessions Languages, Configurations and Features, and Patterns and Compilation."
+    },
+    {
+      "title": "Usage-based Testing of Event-driven Software",
+      "authors": "S Herbold",
+      "year": "2012",
+      "venue": null,
+      "citation_count": 12,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:9yKSN-GCB0IC",
+      "abstract": "Der Großteil von moderner Endnutzer Software ist eventgetrieben, das heißt durch graphische Benutzeroberflächen (GUIs), Smartphone Apps oder Webanwendungen. Beispiele für Events sind Mausklicks in GUI Applikationen, das Berühren des Touchscreens eines Smartphones und Klicks auf Links in Webanwendungen. Aufgrund der hohen Durchdringung von eventgetriebener Software ist die Qualitätssicherung dieser Art von Software entscheidend um qualitativ hochwertige Endnutzersoftware zu erstellen. In dieser Arbeit betrachten wir eine benutzungsbasierte Strategie für das Testen von eventgetriebener Software. Der Vorteil von benutzungsbasierten Strategien ist, dass der Testfokus auf häufig benutzten Teilen der Software liegt, während selten benutzte Teile der Software nur sporadisch getestet werden. Hierdurch wird die durch den Benutzer wahrgenommene Softwarequalität optimiert und der Testaufwand ist reduziert im Vergleich zum intensiven Testen der kompletten Software. Das Ziel dieser Arbeit ist zweigeteilt. Auf der einen Seite wollen wir den State-of-the-Art des benutzungsbasierten Testen vorantreiben. Wir definieren neue Überdeckungskriterien für die Evaluierung des Testaufwands in Bezug auf die Benutzung. Weiterhin schlagen wir drei neue benutzungsbasierte Testfallgenerierungsansätze vor. Zwei dieser Ansätze verfolgen die klassische Art und Weise der benutzungsbasierten Testfallerstellung. Das bedeutet das Testfälle randomisiert aufgrund der Benutzungswahrscheinlichkeiten abgeleitet werden. Unser dritter Ansatz verfolgt eine andere Richtung. Wir definieren eine Heuristik, die eine Testsuite ermittelt, welche …"
+    },
+    {
+      "title": "Novel insights on cross project fault prediction applied to automotive software",
+      "authors": "H Altinger, S Herbold, J Grabowski, F Wotawa",
+      "year": "2015",
+      "venue": "IFIP International Conference on Testing Software and Systems, 141-157, 2015",
+      "citation_count": 11,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:UebtZRa9Y70C",
+      "abstract": "Defect prediction is a powerful tool that greatly helps focusing quality assurance efforts during development. In the case of the availability of fault data from a particular context, there are different ways of using such fault predictions in practice. Companies like Google, Bell Labs and Cisco make use of fault prediction, whereas its use within automotive industry has not yet gained a lot of attraction, although, modern cars require a huge amount of software to operate. In this paper, we want to contribute the adoption of fault prediction techniques for automotive software projects. Hereby we rely on a publicly available data set comprising fault data from three automotive software projects. When learning a fault prediction model from the data of one particular project, we achieve a remarkably high and nearly perfect prediction performance for the same project. However, when applying a cross-project prediction we obtain …"
+    },
+    {
+      "title": "Large language models can impersonate politicians and other public figures",
+      "authors": "S Herbold, A Trautsch, Z Kikteva, A Hautli-Janisz",
+      "year": "2024",
+      "venue": "arXiv preprint arXiv:2407.12855, 2024",
+      "citation_count": 9,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:Tiz5es2fbqcC",
+      "abstract": "Modern AI technology like Large language models (LLMs) has the potential to pollute the public information sphere with made-up content, which poses a significant threat to the cohesion of societies at large. A wide range of research has shown that LLMs are capable of generating text of impressive quality, including persuasive political speech, text with a pre-defined style, and role-specific content. But there is a crucial gap in the literature: We lack large-scale and systematic studies of how capable LLMs are in impersonating political and societal representatives and how the general public judges these impersonations in terms of authenticity, relevance and coherence. We present the results of a study based on a cross-section of British society that shows that LLMs are able to generate responses to debate questions that were part of a broadcast political debate programme in the UK. The impersonated responses are judged to be more authentic and relevant than the original responses given by people who were impersonated. This shows two things: (1) LLMs can be made to contribute meaningfully to the public political debate and (2) there is a dire need to inform the general public of the potential harm this can have on society."
+    },
+    {
+      "title": "Are automated static analysis tools worth it? An investigation into relative warning density and external software quality on the example of Apache open source projects",
+      "authors": "A Trautsch, S Herbold, J Grabowski",
+      "year": "2023",
+      "venue": "Empirical Software Engineering 28 (3), 66, 2023",
+      "citation_count": 9,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:g5m5HwL7SMYC",
+      "abstract": "Automated Static Analysis Tools (ASATs) are part of software development best practices. ASATs are able to warn developers about potential problems in the code. On the one hand, ASATs are based on best practices so there should be a noticeable effect on software quality. On the other hand, ASATs suffer from false positive warnings, which developers have to inspect and then ignore or mark as invalid. In this article, we ask whether ASATs have a measurable impact on external software quality, using the example of PMD for Java. We investigate the relationship between ASAT warnings emitted by PMD on defects per change and per file. Our case study includes data for the history of each file as well as the differences between changed files and the project in which they are contained. We investigate whether files that induce a defect have more static analysis warnings than the rest of the project. Moreover, we …"
+    },
+    {
+      "title": "Studying the explanations for the automated prediction of bug and non-bug issues using lime and shap",
+      "authors": "B Ledel, S Herbold",
+      "year": "2022",
+      "venue": "arXiv preprint arXiv:2209.07623, 2022",
+      "citation_count": 9,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:dfsIfKJdRG4C",
+      "abstract": "Context\n\nObjective\n\nMethod\n"
+    },
+    {
+      "title": "Benchmarking cross-project defect prediction approaches with costs metrics",
+      "authors": "S Herbold",
+      "year": "2018",
+      "venue": "arXiv preprint arXiv:1801.04107, 2018",
+      "citation_count": 9,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:ZeXyd9-uunAC",
+      "abstract": "Defect prediction can be a powerful tool to guide the use of quality assurance resources. In recent years, many researchers focused on the problem of Cross-Project Defect Prediction (CPDP), i.e., the creation of prediction models based on training data from other projects. However, only few of the published papers evaluate the cost efficiency of predictions, i.e., if they save costs if they are used to guide quality assurance efforts. Within this paper, we provide a benchmark of 26 CPDP approaches based on cost metrics. Our benchmark shows that trivially assuming everything as defective is on average better than CPDP under cost considerations. Moreover, we show that our ranking of approaches using cost metrics is uncorrelated to a ranking based on metrics that do not directly consider costs. These findings show that we must put more effort into evaluating the actual benefits of CPDP, as the current state of the art of CPDP can actually be beaten by a trivial approach in cost-oriented evaluations."
+    }
+  ],
+  "filtered_papers": [
+    {
+      "title": "Galba: genome annotation with miniprot and AUGUSTUS",
+      "reason": "This paper belongs to bioinformatics, focusing on genome annotation, which is a biological domain."
+    },
+    {
+      "title": "Spatio-temporal mapping of soil water storage in a semi-arid landscape of northern Ghana–A multi-tasked ensemble machine-learning approach",
+      "reason": "This paper belongs to environmental science, focusing on spatio-temporal mapping of soil water storage, which is a geographical and hydrological domain."
+    },
+    {
+      "title": "Automatic source localization and spectra generation from sparse beamforming maps",
+      "reason": "This paper belongs to acoustics and signal processing, focusing on source localization and spectra generation from beamforming maps."
+    },
+    {
+      "title": "Expert decision support system for aeroacoustic source type identification using clustering",
+      "reason": "This paper belongs to aeroacoustics, focusing on source type identification, which is an engineering domain outside software development."
+    }
+  ],
+  "raw_data": {
+    "serpapi_profile_response": {
+      "search_metadata": {
+        "id": "69e61239f0114ab9e2a2c050",
+        "status": "Success",
+        "json_endpoint": "https://serpapi.com/searches/WXrk9peYcxJQCZZISJL5GA/69e61239f0114ab9e2a2c050.json",
+        "created_at": "2026-04-20 11:47:05 UTC",
+        "processed_at": "2026-04-20 11:47:05 UTC",
+        "google_scholar_author_url": "https://scholar.google.com/citations?user=Fac_e58AAAAJ&hl=en&pagesize=100",
+        "raw_html_file": "https://serpapi.com/searches/WXrk9peYcxJQCZZISJL5GA/69e61239f0114ab9e2a2c050.html",
+        "total_time_taken": 10.55
+      },
+      "search_parameters": {
+        "engine": "google_scholar_author",
+        "author_id": "Fac_e58AAAAJ",
+        "hl": "en",
+        "num": "100"
+      },
+      "author": {
+        "name": "Steffen Herbold",
+        "affiliations": "University of Passau",
+        "email": "Verified email at unipassau.de",
+        "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=view_photo&user=Fac_e58AAAAJ&citpid=2"
+      },
+      "articles": [
+        {
+          "title": "A large-scale comparison of human-written versus ChatGPT-generated essays",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:P5F9QuxV20EC",
+          "citation_id": "Fac_e58AAAAJ:P5F9QuxV20EC",
+          "authors": "S Herbold, A Hautli-Janisz, U Heuer, Z Kikteva, A Trautsch",
+          "publication": "Scientific reports 13 (1), 18617, 2023",
+          "cited_by": {
+            "value": 531,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=1049420144524191213",
+            "serpapi_link": "https://serpapi.com/search.json?cites=1049420144524191213&engine=google_scholar&hl=en",
+            "cites_id": "1049420144524191213"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "A comparative study to benchmark cross-project defect prediction approaches",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:QIV2ME_5wuYC",
+          "citation_id": "Fac_e58AAAAJ:QIV2ME_5wuYC",
+          "authors": "S Herbold, A Trautsch, J Grabowski",
+          "publication": "IEEE Transactions on Software Engineering 44 (9), 811 - 833, 2017",
+          "cited_by": {
+            "value": 300,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=7126230857914753644,3623036000459059328,12285984772559905222",
+            "serpapi_link": "https://serpapi.com/search.json?cites=7126230857914753644%2C3623036000459059328%2C12285984772559905222&engine=google_scholar&hl=en",
+            "cites_id": "7126230857914753644,3623036000459059328,12285984772559905222"
+          },
+          "year": "2017"
+        },
+        {
+          "title": "Autorank: A python package for automated ranking of classifiers",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:M3NEmzRMIkIC",
+          "citation_id": "Fac_e58AAAAJ:M3NEmzRMIkIC",
+          "authors": "S Herbold",
+          "publication": "Journal of Open Source Software 5 (48), 2173, 2020",
+          "cited_by": {
+            "value": 219,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=10873492941899250463",
+            "serpapi_link": "https://serpapi.com/search.json?cites=10873492941899250463&engine=google_scholar&hl=en",
+            "cites_id": "10873492941899250463"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "Training data selection for cross-project defect prediction",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:2osOgNQ5qMEC",
+          "citation_id": "Fac_e58AAAAJ:2osOgNQ5qMEC",
+          "authors": "S Herbold",
+          "publication": "Proceedings of the 9th international conference on predictive models in …, 2013",
+          "cited_by": {
+            "value": 205,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11467998412379884920",
+            "serpapi_link": "https://serpapi.com/search.json?cites=11467998412379884920&engine=google_scholar&hl=en",
+            "cites_id": "11467998412379884920"
+          },
+          "year": "2013"
+        },
+        {
+          "title": "On the validity of pre-trained transformers for natural language processing in the software engineering domain",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:2P1L_qKh6hAC",
+          "citation_id": "Fac_e58AAAAJ:2P1L_qKh6hAC",
+          "authors": "J Von der Mosel, A Trautsch, S Herbold",
+          "publication": "IEEE Transactions on Software Engineering 49 (4), 1487-1507, 2022",
+          "cited_by": {
+            "value": 139,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=17406017280874427611",
+            "serpapi_link": "https://serpapi.com/search.json?cites=17406017280874427611&engine=google_scholar&hl=en",
+            "cites_id": "17406017280874427611"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "Calculation and optimization of thresholds for sets of software metrics",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:u5HHmVD_uO8C",
+          "citation_id": "Fac_e58AAAAJ:u5HHmVD_uO8C",
+          "authors": "S Herbold, J Grabowski, S Waack",
+          "publication": "Empirical Software Engineering 16 (6), 812-841, 2011",
+          "cited_by": {
+            "value": 117,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=15786143615756804296",
+            "serpapi_link": "https://serpapi.com/search.json?cites=15786143615756804296&engine=google_scholar&hl=en",
+            "cites_id": "15786143615756804296"
+          },
+          "year": "2011"
+        },
+        {
+          "title": "Problems with SZZ and features: An empirical study of the state of practice of defect prediction data collection",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:pqnbT2bcN3wC",
+          "citation_id": "Fac_e58AAAAJ:pqnbT2bcN3wC",
+          "authors": "S Herbold, A Trautsch, F Trautsch, B Ledel",
+          "publication": "Empirical Software Engineering 27, 42, 2022",
+          "cited_by": {
+            "value": 103,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=15094905915435892104,3450538571134223989,13003660586520920441",
+            "serpapi_link": "https://serpapi.com/search.json?cites=15094905915435892104%2C3450538571134223989%2C13003660586520920441&engine=google_scholar&hl=en",
+            "cites_id": "15094905915435892104,3450538571134223989,13003660586520920441"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "Galba: genome annotation with miniprot and AUGUSTUS",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:pyW8ca7W8N0C",
+          "citation_id": "Fac_e58AAAAJ:pyW8ca7W8N0C",
+          "authors": "T Brůna, H Li, J Guhlin, D Honsel, S Herbold, M Stanke, N Nenasheva, ...",
+          "publication": "BMC bioinformatics 24 (1), 327, 2023",
+          "cited_by": {
+            "value": 102,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=17413322125963170281",
+            "serpapi_link": "https://serpapi.com/search.json?cites=17413322125963170281&engine=google_scholar&hl=en",
+            "cites_id": "17413322125963170281"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "A fine-grained data set and analysis of tangling in bug fixing commits",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:M05iB0D1s5AC",
+          "citation_id": "Fac_e58AAAAJ:M05iB0D1s5AC",
+          "authors": "S Herbold, A Trautsch, B Ledel, A Aghamohammadi, TA Ghaleb, ...",
+          "publication": "Empirical Software Engineering 27 (6), 125, 2022",
+          "cited_by": {
+            "value": 93,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=15367080930623477018,5155294371116315346",
+            "serpapi_link": "https://serpapi.com/search.json?cites=15367080930623477018%2C5155294371116315346&engine=google_scholar&hl=en",
+            "cites_id": "15367080930623477018,5155294371116315346"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "Global vs. local models for cross-project defect prediction: A replication study",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:qxL8FJ1GzNcC",
+          "citation_id": "Fac_e58AAAAJ:qxL8FJ1GzNcC",
+          "authors": "S Herbold, A Trautsch, J Grabowski",
+          "publication": "Empirical software engineering 22 (4), 1866-1902, 2017",
+          "cited_by": {
+            "value": 91,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11356141666939074906",
+            "serpapi_link": "https://serpapi.com/search.json?cites=11356141666939074906&engine=google_scholar&hl=en",
+            "cites_id": "11356141666939074906"
+          },
+          "year": "2017"
+        },
+        {
+          "title": "Addressing problems with replicability and validity of repository mining studies through a smart data platform",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:dhFuZR0502QC",
+          "citation_id": "Fac_e58AAAAJ:dhFuZR0502QC",
+          "authors": "F Trautsch, S Herbold, P Makedonski, J Grabowski",
+          "publication": "Empirical Software Engineering 23 (2), 1036-1083, 2018",
+          "cited_by": {
+            "value": 66,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=9863477960586140279",
+            "serpapi_link": "https://serpapi.com/search.json?cites=9863477960586140279&engine=google_scholar&hl=en",
+            "cites_id": "9863477960586140279"
+          },
+          "year": "2018"
+        },
+        {
+          "title": "On the feasibility of automated prediction of bug and non-bug issues",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:BqipwSGYUEgC",
+          "citation_id": "Fac_e58AAAAJ:BqipwSGYUEgC",
+          "authors": "S Herbold, A Trautsch, F Trautsch",
+          "publication": "Empirical Software Engineering 25 (6), 5333-5369, 2020",
+          "cited_by": {
+            "value": 62,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=8775819659294145890,12081877632231382912,17430253862491458861",
+            "serpapi_link": "https://serpapi.com/search.json?cites=8775819659294145890%2C12081877632231382912%2C17430253862491458861&engine=google_scholar&hl=en",
+            "cites_id": "8775819659294145890,12081877632231382912,17430253862491458861"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "On the costs and profit of software defect prediction",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:r0BpntZqJG4C",
+          "citation_id": "Fac_e58AAAAJ:r0BpntZqJG4C",
+          "authors": "S Herbold",
+          "publication": "IEEE Transactions on Software Engineering 47 (11), 2617-2631, 2019",
+          "cited_by": {
+            "value": 58,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=9772415739696482649",
+            "serpapi_link": "https://serpapi.com/search.json?cites=9772415739696482649&engine=google_scholar&hl=en",
+            "cites_id": "9772415739696482649"
+          },
+          "year": "2019"
+        },
+        {
+          "title": "A longitudinal study of static analysis warning evolution and the effects of PMD on software quality in apache open source projects",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:bEWYMUwI8FkC",
+          "citation_id": "Fac_e58AAAAJ:bEWYMUwI8FkC",
+          "authors": "A Trautsch, S Herbold, J Grabowski",
+          "publication": "Empirical Software Engineering 25 (6), 5137-5192, 2020",
+          "cited_by": {
+            "value": 49,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=7345714347739345783",
+            "serpapi_link": "https://serpapi.com/search.json?cites=7345714347739345783&engine=google_scholar&hl=en",
+            "cites_id": "7345714347739345783"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "Comments on ScottKnottESD in response to\" An empirical comparison of model validation techniques for defect prediction models\"",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:7PzlFSSx8tAC",
+          "citation_id": "Fac_e58AAAAJ:7PzlFSSx8tAC",
+          "authors": "S Herbold",
+          "publication": "IEEE Transactions on Software Engineering 43 (11), 1091-1094, 2017",
+          "cited_by": {
+            "value": 49,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=8755215945446381379",
+            "serpapi_link": "https://serpapi.com/search.json?cites=8755215945446381379&engine=google_scholar&hl=en",
+            "cites_id": "8755215945446381379"
+          },
+          "year": "2017"
+        },
+        {
+          "title": "Static source code metrics and static analysis warnings for fine-grained just-in-time defect prediction",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:YFjsv_pBGBYC",
+          "citation_id": "Fac_e58AAAAJ:YFjsv_pBGBYC",
+          "authors": "A Trautsch, S Herbold, J Grabowski",
+          "publication": "2020 IEEE International Conference on Software Maintenance and Evolution …, 2020",
+          "cited_by": {
+            "value": 47,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=15674342365101634254",
+            "serpapi_link": "https://serpapi.com/search.json?cites=15674342365101634254&engine=google_scholar&hl=en",
+            "cites_id": "15674342365101634254"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "A systematic mapping study of developer social network research",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:e5wmG9Sq2KIC",
+          "citation_id": "Fac_e58AAAAJ:e5wmG9Sq2KIC",
+          "authors": "S Herbold, A Amirfallah, F Trautsch, J Grabowski",
+          "publication": "Journal of Systems and Software 171, 110802, 2021",
+          "cited_by": {
+            "value": 45,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=3250642279200076764,1518219993059818034",
+            "serpapi_link": "https://serpapi.com/search.json?cites=3250642279200076764%2C1518219993059818034&engine=google_scholar&hl=en",
+            "cites_id": "3250642279200076764,1518219993059818034"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "Are unit and integration test definitions still valid for modern Java projects? An empirical study on open-source projects",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:RHpTSmoSYBkC",
+          "citation_id": "Fac_e58AAAAJ:RHpTSmoSYBkC",
+          "authors": "F Trautsch, S Herbold, J Grabowski",
+          "publication": "Journal of Systems and Software 159, 110421, 2020",
+          "cited_by": {
+            "value": 37,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=16795678173265079999",
+            "serpapi_link": "https://serpapi.com/search.json?cites=16795678173265079999&engine=google_scholar&hl=en",
+            "cites_id": "16795678173265079999"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "Improved bug reporting and reproduction through non-intrusive gui usage monitoring and automated replaying",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:u-x6o8ySG0sC",
+          "citation_id": "Fac_e58AAAAJ:u-x6o8ySG0sC",
+          "authors": "S Herbold, J Grabowski, S Waack, U Bünting",
+          "publication": "2011 IEEE fourth international conference on software testing, verification …, 2011",
+          "cited_by": {
+            "value": 37,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=6332846567928036383",
+            "serpapi_link": "https://serpapi.com/search.json?cites=6332846567928036383&engine=google_scholar&hl=en",
+            "cites_id": "6332846567928036383"
+          },
+          "year": "2011"
+        },
+        {
+          "title": "The smartshark ecosystem for software repository mining",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:isC4tDSrTZIC",
+          "citation_id": "Fac_e58AAAAJ:isC4tDSrTZIC",
+          "authors": "A Trautsch, F Trautsch, S Herbold, B Ledel, J Grabowski",
+          "publication": "Proceedings of the ACM/IEEE 42nd international conference on software …, 2020",
+          "cited_by": {
+            "value": 33,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=13938385788163788871",
+            "serpapi_link": "https://serpapi.com/search.json?cites=13938385788163788871&engine=google_scholar&hl=en",
+            "cites_id": "13938385788163788871"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "Crosspare: a tool for benchmarking cross-project defect predictions",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:Se3iqnhoufwC",
+          "citation_id": "Fac_e58AAAAJ:Se3iqnhoufwC",
+          "authors": "S Herbold",
+          "publication": "2015 30th IEEE/ACM International Conference on Automated Software …, 2015",
+          "cited_by": {
+            "value": 30,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=6537201608482311822",
+            "serpapi_link": "https://serpapi.com/search.json?cites=6537201608482311822&engine=google_scholar&hl=en",
+            "cites_id": "6537201608482311822"
+          },
+          "year": "2015"
+        },
+        {
+          "title": "Studying the explanations for the automated prediction of bug and non-bug issues using LIME and SHAP",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:OU6Ihb5iCvQC",
+          "citation_id": "Fac_e58AAAAJ:OU6Ihb5iCvQC",
+          "authors": "L Schulte, B Ledel, S Herbold",
+          "publication": "Empirical Software Engineering 29 (4), 93, 2024",
+          "cited_by": {
+            "value": 28,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=1835849692630990027",
+            "serpapi_link": "https://serpapi.com/search.json?cites=1835849692630990027&engine=google_scholar&hl=en",
+            "cites_id": "1835849692630990027"
+          },
+          "year": "2024"
+        },
+        {
+          "title": "Predicting issue types with sebert",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:3s1wT3WcHBgC",
+          "citation_id": "Fac_e58AAAAJ:3s1wT3WcHBgC",
+          "authors": "A Trautsch, S Herbold",
+          "publication": "Proceedings of the 1st international workshop on natural language-based …, 2022",
+          "cited_by": {
+            "value": 28,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=5726220627476010917",
+            "serpapi_link": "https://serpapi.com/search.json?cites=5726220627476010917&engine=google_scholar&hl=en",
+            "cites_id": "5726220627476010917"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "Performance tuning for automotive software fault prediction",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:aqlVkmm33-oC",
+          "citation_id": "Fac_e58AAAAJ:aqlVkmm33-oC",
+          "authors": "H Altinger, S Herbold, F Schneemann, J Grabowski, F Wotawa",
+          "publication": "2017 IEEE 24th International Conference on Software Analysis, Evolution and …, 2017",
+          "cited_by": {
+            "value": 28,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=4812403489518105016",
+            "serpapi_link": "https://serpapi.com/search.json?cites=4812403489518105016&engine=google_scholar&hl=en",
+            "cites_id": "4812403489518105016"
+          },
+          "year": "2017"
+        },
+        {
+          "title": "Adressing problems with external validity of repository mining studies through a smart data platform",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:KlAtU1dfN6UC",
+          "citation_id": "Fac_e58AAAAJ:KlAtU1dfN6UC",
+          "authors": "F Trautsch, S Herbold, P Makedonski, J Grabowski",
+          "publication": "Proceedings of the 13th International Conference on Mining Software …, 2016",
+          "cited_by": {
+            "value": 28,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=2650886992541451865",
+            "serpapi_link": "https://serpapi.com/search.json?cites=2650886992541451865&engine=google_scholar&hl=en",
+            "cites_id": "2650886992541451865"
+          },
+          "year": "2016"
+        },
+        {
+          "title": "What really changes when developers intend to improve their source code: a commit-level study of static metric value and static analysis warning changes",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:cFHS6HbyZ2cC",
+          "citation_id": "Fac_e58AAAAJ:cFHS6HbyZ2cC",
+          "authors": "A Trautsch, J Erbel, S Herbold, J Grabowski",
+          "publication": "Empirical Software Engineering 28 (2), 30, 2023",
+          "cited_by": {
+            "value": 26,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=16504371454498743059",
+            "serpapi_link": "https://serpapi.com/search.json?cites=16504371454498743059&engine=google_scholar&hl=en",
+            "cites_id": "16504371454498743059"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "A systematic mapping study on cross-project defect prediction",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:mVmsd5A6BfQC",
+          "citation_id": "Fac_e58AAAAJ:mVmsd5A6BfQC",
+          "authors": "S Herbold",
+          "publication": "arXiv preprint arXiv:1705.06429, 2017",
+          "cited_by": {
+            "value": 25,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=6201569686719178696",
+            "serpapi_link": "https://serpapi.com/search.json?cites=6201569686719178696&engine=google_scholar&hl=en",
+            "cites_id": "6201569686719178696"
+          },
+          "year": "2017"
+        },
+        {
+          "title": "Mining software dependency networks for agent-based simulation of software evolution",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:MXK_kJrjxJIC",
+          "citation_id": "Fac_e58AAAAJ:MXK_kJrjxJIC",
+          "authors": "V Honsel, D Honsel, S Herbold, J Grabowski, S Waack",
+          "publication": "2015 30th IEEE/ACM International Conference on Automated Software …, 2015",
+          "cited_by": {
+            "value": 24,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=16745398263127378083",
+            "serpapi_link": "https://serpapi.com/search.json?cites=16745398263127378083&engine=google_scholar&hl=en",
+            "cites_id": "16745398263127378083"
+          },
+          "year": "2015"
+        },
+        {
+          "title": "Spatio-temporal mapping of soil water storage in a semi-arid landscape of northern Ghana–A multi-tasked ensemble machine-learning approach",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:rO6llkc54NcC",
+          "citation_id": "Fac_e58AAAAJ:rO6llkc54NcC",
+          "authors": "KA Nketia, SB Asabere, A Ramcharan, S Herbold, S Erasmi, D Sauer",
+          "publication": "Geoderma 410, 115691, 2022",
+          "cited_by": {
+            "value": 22,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=17103151491300587948",
+            "serpapi_link": "https://serpapi.com/search.json?cites=17103151491300587948&engine=google_scholar&hl=en",
+            "cites_id": "17103151491300587948"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "Smoke testing for machine learning: simple tests to discover severe bugs",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:HoB7MX3m0LUC",
+          "citation_id": "Fac_e58AAAAJ:HoB7MX3m0LUC",
+          "authors": "S Herbold, T Haar",
+          "publication": "Empirical Software Engineering 27 (2), 45, 2022",
+          "cited_by": {
+            "value": 22,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=10366532783040559820",
+            "serpapi_link": "https://serpapi.com/search.json?cites=10366532783040559820&engine=google_scholar&hl=en",
+            "cites_id": "10366532783040559820"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "Automatic source localization and spectra generation from sparse beamforming maps",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:vV6vV6tmYwMC",
+          "citation_id": "Fac_e58AAAAJ:vV6vV6tmYwMC",
+          "authors": "A Goudarzi, C Spehr, S Herbold",
+          "publication": "The Journal of the Acoustical Society of America 150 (3), 1866-1882, 2021",
+          "cited_by": {
+            "value": 22,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=5761446487957040317,5865585706734280644",
+            "serpapi_link": "https://serpapi.com/search.json?cites=5761446487957040317%2C5865585706734280644&engine=google_scholar&hl=en",
+            "cites_id": "5761446487957040317,5865585706734280644"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "AutoQUEST--automated quality engineering of event-driven software",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:Tyk-4Ss8FVUC",
+          "citation_id": "Fac_e58AAAAJ:Tyk-4Ss8FVUC",
+          "authors": "S Herbold, P Harms",
+          "publication": "2013 IEEE Sixth International Conference on Software Testing, Verification …, 2013",
+          "cited_by": {
+            "value": 21,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=12157561497972877826,4863482413989696821",
+            "serpapi_link": "https://serpapi.com/search.json?cites=12157561497972877826%2C4863482413989696821&engine=google_scholar&hl=en",
+            "cites_id": "12157561497972877826,4863482413989696821"
+          },
+          "year": "2013"
+        },
+        {
+          "title": "A model for usage-based testing of event-driven software",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:d1gkVwhDpl0C",
+          "citation_id": "Fac_e58AAAAJ:d1gkVwhDpl0C",
+          "authors": "S Herbold, J Grabowski, S Waack",
+          "publication": "2011 Fifth International Conference on Secure Software Integration and …, 2011",
+          "cited_by": {
+            "value": 18,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=17053067912733688785",
+            "serpapi_link": "https://serpapi.com/search.json?cites=17053067912733688785&engine=google_scholar&hl=en",
+            "cites_id": "17053067912733688785"
+          },
+          "year": "2011"
+        },
+        {
+          "title": "Msr mining challenge: The smartshark repository mining data",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:SeFeTyx0c_EC",
+          "citation_id": "Fac_e58AAAAJ:SeFeTyx0c_EC",
+          "authors": "A Trautsch, F Trautsch, S Herbold",
+          "publication": "arXiv preprint arXiv:2102.11540, 2021",
+          "cited_by": {
+            "value": 17,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=882970858296587610,12209240119811658970",
+            "serpapi_link": "https://serpapi.com/search.json?cites=882970858296587610%2C12209240119811658970&engine=google_scholar&hl=en",
+            "cites_id": "882970858296587610,12209240119811658970"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "Hidden markov models for the prediction of developer involvement dynamics and workload",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:Zph67rFs4hoC",
+          "citation_id": "Fac_e58AAAAJ:Zph67rFs4hoC",
+          "authors": "V Honsel, S Herbold, J Grabowski",
+          "publication": "Proceedings of the The 12th International Conference on Predictive Models …, 2016",
+          "cited_by": {
+            "value": 17,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=703049560636438075",
+            "serpapi_link": "https://serpapi.com/search.json?cites=703049560636438075&engine=google_scholar&hl=en",
+            "cites_id": "703049560636438075"
+          },
+          "year": "2016"
+        },
+        {
+          "title": "Intuition vs. truth: Evaluation of common myths about stackoverflow posts",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:LkGwnXOMwfcC",
+          "citation_id": "Fac_e58AAAAJ:LkGwnXOMwfcC",
+          "authors": "V Honsel, S Herbold, J Grabowski",
+          "publication": "2015 IEEE/ACM 12th Working Conference on Mining Software Repositories, 438-441, 2015",
+          "cited_by": {
+            "value": 17,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=16702959591123538680",
+            "serpapi_link": "https://serpapi.com/search.json?cites=16702959591123538680&engine=google_scholar&hl=en",
+            "cites_id": "16702959591123538680"
+          },
+          "year": "2015"
+        },
+        {
+          "title": "Expert decision support system for aeroacoustic source type identification using clustering",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:ZHo1McVdvXMC",
+          "citation_id": "Fac_e58AAAAJ:ZHo1McVdvXMC",
+          "authors": "A Goudarzi, C Spehr, S Herbold",
+          "publication": "The Journal of the Acoustical Society of America 151 (2), 1259-1276, 2022",
+          "cited_by": {
+            "value": 15,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=7513727464709524019,9427986031534282896",
+            "serpapi_link": "https://serpapi.com/search.json?cites=7513727464709524019%2C9427986031534282896&engine=google_scholar&hl=en",
+            "cites_id": "7513727464709524019,9427986031534282896"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "The MIDAS cloud platform for testing SOA applications",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:roLk4NBRz8UC",
+          "citation_id": "Fac_e58AAAAJ:roLk4NBRz8UC",
+          "authors": "S Herbold, A De Francesco, J Grabowski, P Harms, LM Hillah, F Kordon, ...",
+          "publication": "2015 IEEE 8th International Conference on Software Testing, Verification and …, 2015",
+          "cited_by": {
+            "value": 15,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=1057696087120768214",
+            "serpapi_link": "https://serpapi.com/search.json?cites=1057696087120768214&engine=google_scholar&hl=en",
+            "cites_id": "1057696087120768214"
+          },
+          "year": "2015"
+        },
+        {
+          "title": "Trace-based task tree generation",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:YsMSGLbcyi4C",
+          "citation_id": "Fac_e58AAAAJ:YsMSGLbcyi4C",
+          "authors": "P Harms, S Herbold, J Grabowski",
+          "publication": "Proceedings of the Seventh International Conference on Advances in Computer …, 2014",
+          "cited_by": {
+            "value": 14,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=10855490576494068389",
+            "serpapi_link": "https://serpapi.com/search.json?cites=10855490576494068389&engine=google_scholar&hl=en",
+            "cites_id": "10855490576494068389"
+          },
+          "year": "2014"
+        },
+        {
+          "title": "Semantic similarity prediction is better than other semantic similarity measures",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:wbdj-CoPYUoC",
+          "citation_id": "Fac_e58AAAAJ:wbdj-CoPYUoC",
+          "authors": "S Herbold",
+          "publication": "arXiv preprint arXiv:2309.12697, 2023",
+          "cited_by": {
+            "value": 13,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=13272040329141531424",
+            "serpapi_link": "https://serpapi.com/search.json?cites=13272040329141531424&engine=google_scholar&hl=en",
+            "cites_id": "13272040329141531424"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "Large-scale manual validation of bugfixing changes",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:blknAaTinKkC",
+          "citation_id": "Fac_e58AAAAJ:blknAaTinKkC",
+          "authors": "S Herbold, A Trautsch, B Ledel",
+          "publication": "Proceedings of the 17th International Conference on Mining Software …, 2020",
+          "cited_by": {
+            "value": 13,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=5664232594759837354",
+            "serpapi_link": "https://serpapi.com/search.json?cites=5664232594759837354&engine=google_scholar&hl=en",
+            "cites_id": "5664232594759837354"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "What are the machine learning best practices reported by practitioners on stack exchange?",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:D03iK_w7-QYC",
+          "citation_id": "Fac_e58AAAAJ:D03iK_w7-QYC",
+          "authors": "A Mojica-Hanke, A Bayona, M Linares-Vásquez, S Herbold, FA González",
+          "publication": "arXiv preprint arXiv:2301.10516, 2023",
+          "cited_by": {
+            "value": 12,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=7181310564570864015",
+            "serpapi_link": "https://serpapi.com/search.json?cites=7181310564570864015&engine=google_scholar&hl=en",
+            "cites_id": "7181310564570864015"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "Combining usage-based and model-based testing for service-oriented architectures in the industrial practice",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:4TOpqqG69KYC",
+          "citation_id": "Fac_e58AAAAJ:4TOpqqG69KYC",
+          "authors": "S Herbold, P Harms, J Grabowski",
+          "publication": "International Journal on Software Tools for Technology Transfer 19 (3), 309-324, 2017",
+          "cited_by": {
+            "value": 12,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=3777783091592062864",
+            "serpapi_link": "https://serpapi.com/search.json?cites=3777783091592062864&engine=google_scholar&hl=en",
+            "cites_id": "3777783091592062864"
+          },
+          "year": "2017"
+        },
+        {
+          "title": "System Analysis and Modeling. Technology-Specific Aspects of Models: 9th International Conference, SAM 2016, Saint-Melo, France, October 3-4, 2016. Proceedings",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:M3ejUd6NZC8C",
+          "citation_id": "Fac_e58AAAAJ:M3ejUd6NZC8C",
+          "authors": "J Grabowski, S Herbold",
+          "publication": "Springer, 2016",
+          "cited_by": {
+            "value": 12,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=10911637202664346552,17204509703519637747",
+            "serpapi_link": "https://serpapi.com/search.json?cites=10911637202664346552%2C17204509703519637747&engine=google_scholar&hl=en",
+            "cites_id": "10911637202664346552,17204509703519637747"
+          },
+          "year": "2016"
+        },
+        {
+          "title": "Usage-based Testing of Event-driven Software",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:9yKSN-GCB0IC",
+          "citation_id": "Fac_e58AAAAJ:9yKSN-GCB0IC",
+          "authors": "S Herbold",
+          "cited_by": {
+            "value": 12,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=8331531806246828631",
+            "serpapi_link": "https://serpapi.com/search.json?cites=8331531806246828631&engine=google_scholar&hl=en",
+            "cites_id": "8331531806246828631"
+          },
+          "year": "2012"
+        },
+        {
+          "title": "Novel insights on cross project fault prediction applied to automotive software",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:UebtZRa9Y70C",
+          "citation_id": "Fac_e58AAAAJ:UebtZRa9Y70C",
+          "authors": "H Altinger, S Herbold, J Grabowski, F Wotawa",
+          "publication": "IFIP International Conference on Testing Software and Systems, 141-157, 2015",
+          "cited_by": {
+            "value": 11,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=17295213251059389895",
+            "serpapi_link": "https://serpapi.com/search.json?cites=17295213251059389895&engine=google_scholar&hl=en",
+            "cites_id": "17295213251059389895"
+          },
+          "year": "2015"
+        },
+        {
+          "title": "Large language models can impersonate politicians and other public figures",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:Tiz5es2fbqcC",
+          "citation_id": "Fac_e58AAAAJ:Tiz5es2fbqcC",
+          "authors": "S Herbold, A Trautsch, Z Kikteva, A Hautli-Janisz",
+          "publication": "arXiv preprint arXiv:2407.12855, 2024",
+          "cited_by": {
+            "value": 9,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=12573701022712020755",
+            "serpapi_link": "https://serpapi.com/search.json?cites=12573701022712020755&engine=google_scholar&hl=en",
+            "cites_id": "12573701022712020755"
+          },
+          "year": "2024"
+        },
+        {
+          "title": "Are automated static analysis tools worth it? An investigation into relative warning density and external software quality on the example of Apache open source projects",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:g5m5HwL7SMYC",
+          "citation_id": "Fac_e58AAAAJ:g5m5HwL7SMYC",
+          "authors": "A Trautsch, S Herbold, J Grabowski",
+          "publication": "Empirical Software Engineering 28 (3), 66, 2023",
+          "cited_by": {
+            "value": 9,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=14429268197736263535",
+            "serpapi_link": "https://serpapi.com/search.json?cites=14429268197736263535&engine=google_scholar&hl=en",
+            "cites_id": "14429268197736263535"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "Studying the explanations for the automated prediction of bug and non-bug issues using lime and shap",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:dfsIfKJdRG4C",
+          "citation_id": "Fac_e58AAAAJ:dfsIfKJdRG4C",
+          "authors": "B Ledel, S Herbold",
+          "publication": "arXiv preprint arXiv:2209.07623, 2022",
+          "cited_by": {
+            "value": 9,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=15302858639343047149",
+            "serpapi_link": "https://serpapi.com/search.json?cites=15302858639343047149&engine=google_scholar&hl=en",
+            "cites_id": "15302858639343047149"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "Benchmarking cross-project defect prediction approaches with costs metrics",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:ZeXyd9-uunAC",
+          "citation_id": "Fac_e58AAAAJ:ZeXyd9-uunAC",
+          "authors": "S Herbold",
+          "publication": "arXiv preprint arXiv:1801.04107, 2018",
+          "cited_by": {
+            "value": 9,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=14472395251087646310",
+            "serpapi_link": "https://serpapi.com/search.json?cites=14472395251087646310&engine=google_scholar&hl=en",
+            "cites_id": "14472395251087646310"
+          },
+          "year": "2018"
+        },
+        {
+          "title": "Automated refactoring suggestions using the results of code analysis tools",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:zYLM7Y9cAGgC",
+          "citation_id": "Fac_e58AAAAJ:zYLM7Y9cAGgC",
+          "authors": "S Herbold, J Grabowski, H Neukirchen",
+          "publication": "2009 First International Conference on Advances in System Testing and …, 2009",
+          "cited_by": {
+            "value": 9,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=6989580417095999564",
+            "serpapi_link": "https://serpapi.com/search.json?cites=6989580417095999564&engine=google_scholar&hl=en",
+            "cites_id": "6989580417095999564"
+          },
+          "year": "2009"
+        },
+        {
+          "title": "Differential testing for machine learning: an analysis for classification algorithms beyond deep learning",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:fPk4N6BV_jEC",
+          "citation_id": "Fac_e58AAAAJ:fPk4N6BV_jEC",
+          "authors": "S Herbold, S Tunkel",
+          "publication": "Empirical Software Engineering 28 (2), 34, 2023",
+          "cited_by": {
+            "value": 8,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=6850895010187578108",
+            "serpapi_link": "https://serpapi.com/search.json?cites=6850895010187578108&engine=google_scholar&hl=en",
+            "cites_id": "6850895010187578108"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "Exploring the relationship between performance metrics and cost saving potential of defect prediction models",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:RYcK_YlVTxYC",
+          "citation_id": "Fac_e58AAAAJ:RYcK_YlVTxYC",
+          "authors": "S Tunkel, S Herbold",
+          "publication": "Empirical Software Engineering 27 (7), 182, 2022",
+          "cited_by": {
+            "value": 8,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=6681318783276777424",
+            "serpapi_link": "https://serpapi.com/search.json?cites=6681318783276777424&engine=google_scholar&hl=en",
+            "cites_id": "6681318783276777424"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "Model-based testing as a service",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:4DMP91E08xMC",
+          "citation_id": "Fac_e58AAAAJ:4DMP91E08xMC",
+          "authors": "S Herbold, A Hoffmann",
+          "publication": "International Journal on Software Tools for Technology Transfer 19 (3), 271-279, 2017",
+          "cited_by": {
+            "value": 8,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=16068021305196223715",
+            "serpapi_link": "https://serpapi.com/search.json?cites=16068021305196223715&engine=google_scholar&hl=en",
+            "cites_id": "16068021305196223715"
+          },
+          "year": "2017"
+        },
+        {
+          "title": "GIMO: A multi-objective anytime rule mining system to ease iterative feedback from domain experts",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:mB3voiENLucC",
+          "citation_id": "Fac_e58AAAAJ:mB3voiENLucC",
+          "authors": "T Baum, S Herbold, K Schneider",
+          "publication": "Expert Systems with Applications: X 8, 100040, 2020",
+          "cited_by": {
+            "value": 6,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=2207898704614464565,140869819460499469",
+            "serpapi_link": "https://serpapi.com/search.json?cites=2207898704614464565%2C140869819460499469&engine=google_scholar&hl=en",
+            "cites_id": "2207898704614464565,140869819460499469"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "A Generalized Model of PAC Learning and itsApplicability",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:UeHWp8X0CEIC",
+          "citation_id": "Fac_e58AAAAJ:UeHWp8X0CEIC",
+          "authors": "T Brodag, S Herbold, S Waack",
+          "publication": "RAIRO-Theoretical Informatics and Applications 48 (2), 209-245, 2014",
+          "cited_by": {
+            "value": 6,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=1871898271015932686",
+            "serpapi_link": "https://serpapi.com/search.json?cites=1871898271015932686&engine=google_scholar&hl=en",
+            "cites_id": "1871898271015932686"
+          },
+          "year": "2014"
+        },
+        {
+          "title": "Deployable Capture/Replay Supported by Internal Messages",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:_FxGoFyzp5QC",
+          "citation_id": "Fac_e58AAAAJ:_FxGoFyzp5QC",
+          "authors": "S Herbold, U Bünting, J Grabowski, S Waack",
+          "publication": "Advances in Computers 85, 327-367, 2012",
+          "cited_by": {
+            "value": 6,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=12957328365718844237",
+            "serpapi_link": "https://serpapi.com/search.json?cites=12957328365718844237&engine=google_scholar&hl=en",
+            "cites_id": "12957328365718844237"
+          },
+          "year": "2012"
+        },
+        {
+          "title": "Evaluating the Performance and Efficiency of Sentence-BERT for Code Comment Classification",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:mvPsJ3kp5DgC",
+          "citation_id": "Fac_e58AAAAJ:mvPsJ3kp5DgC",
+          "authors": "FC Peña, S Herbold",
+          "publication": "2025 IEEE/ACM International Workshop on Natural Language-Based Software …, 2025",
+          "cited_by": {
+            "value": 5,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=9928735348161507099",
+            "serpapi_link": "https://serpapi.com/search.json?cites=9928735348161507099&engine=google_scholar&hl=en",
+            "cites_id": "9928735348161507099"
+          },
+          "year": "2025"
+        },
+        {
+          "title": "On the impact of reconstruction and context for argument prediction in natural debate",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:KxtntwgDAa4C",
+          "citation_id": "Fac_e58AAAAJ:KxtntwgDAa4C",
+          "authors": "Z Kikteva, A Trautsch, P Katzer, M Oest, S Herbold, A Hautli",
+          "publication": "Proceedings of the 10th Workshop on Argument Mining, 100-106, 2023",
+          "cited_by": {
+            "value": 5,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11785626020313848754",
+            "serpapi_link": "https://serpapi.com/search.json?cites=11785626020313848754&engine=google_scholar&hl=en",
+            "cites_id": "11785626020313848754"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "Understanding issues related to personal data and data protection in open source projects on GitHub",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:bFI3QPDXJZMC",
+          "citation_id": "Fac_e58AAAAJ:bFI3QPDXJZMC",
+          "authors": "A Henning, L Schulte, S Herbold, O Kulyk, P Mayer",
+          "publication": "arXiv preprint arXiv:2304.06367, 2023",
+          "cited_by": {
+            "value": 5,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=7000143666870962321",
+            "serpapi_link": "https://serpapi.com/search.json?cites=7000143666870962321&engine=google_scholar&hl=en",
+            "cites_id": "7000143666870962321"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "Data-Science-Crashkurs: eine interaktive und praktische Einführung",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:xtRiw3GOFMkC",
+          "citation_id": "Fac_e58AAAAJ:xtRiw3GOFMkC",
+          "authors": "S Herbold",
+          "publication": "dpunkt. verlag, 2022",
+          "cited_by": {
+            "value": 5,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11959780067031280770",
+            "serpapi_link": "https://serpapi.com/search.json?cites=11959780067031280770&engine=google_scholar&hl=en",
+            "cites_id": "11959780067031280770"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "Broccoli: Bug localization with the help of text search engines",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:ldfaerwXgEUC",
+          "citation_id": "Fac_e58AAAAJ:ldfaerwXgEUC",
+          "authors": "B Ledel, S Herbold",
+          "publication": "arXiv preprint arXiv:2109.11902, 2021",
+          "cited_by": {
+            "value": 5,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=7949509570628753952",
+            "serpapi_link": "https://serpapi.com/search.json?cites=7949509570628753952&engine=google_scholar&hl=en",
+            "cites_id": "7949509570628753952"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "With registered reports towards large scale data curation",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:TFP_iSt0sucC",
+          "citation_id": "Fac_e58AAAAJ:TFP_iSt0sucC",
+          "authors": "S Herbold",
+          "publication": "Proceedings of the ACM/IEEE 42nd International Conference on Software …, 2020",
+          "cited_by": {
+            "value": 5,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11311093646634001896",
+            "serpapi_link": "https://serpapi.com/search.json?cites=11311093646634001896&engine=google_scholar&hl=en",
+            "cites_id": "11311093646634001896"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "Expert decision support system for aeroacoustic classification from deconvolved beamforming maps",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:JV2RwH3_ST0C",
+          "citation_id": "Fac_e58AAAAJ:JV2RwH3_ST0C",
+          "authors": "A Goudarzi, C Spehr, S Herbold",
+          "publication": "AIAA Aviation 2020 Forum, 2610, 2020",
+          "cited_by": {
+            "value": 5,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=6205555868851725562",
+            "serpapi_link": "https://serpapi.com/search.json?cites=6205555868851725562&engine=google_scholar&hl=en",
+            "cites_id": "6205555868851725562"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "On the relatively small impact of deep dependencies on cloud application reliability",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:L8Ckcad2t8MC",
+          "citation_id": "Fac_e58AAAAJ:L8Ckcad2t8MC",
+          "authors": "X Wang, F Glaser, S Herbold, J Grabowski",
+          "publication": "2017 IEEE 10th International Conference on Cloud Computing (CLOUD), 528-535, 2017",
+          "cited_by": {
+            "value": 5,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11273562485474991150",
+            "serpapi_link": "https://serpapi.com/search.json?cites=11273562485474991150&engine=google_scholar&hl=en",
+            "cites_id": "11273562485474991150"
+          },
+          "year": "2017"
+        },
+        {
+          "title": "From isolates to families: Using neural networks for automated language affiliation",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:LPZeul_q3PIC",
+          "citation_id": "Fac_e58AAAAJ:LPZeul_q3PIC",
+          "authors": "F Blum, S Herbold, JM List",
+          "publication": "Proceedings of the 63rd Annual Meeting of the Association for Computational …, 2025",
+          "cited_by": {
+            "value": 4,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=8443142950042211088",
+            "serpapi_link": "https://serpapi.com/search.json?cites=8443142950042211088&engine=google_scholar&hl=en",
+            "cites_id": "8443142950042211088"
+          },
+          "year": "2025"
+        },
+        {
+          "title": "SortBench: Benchmarking LLMs based on their ability to sort lists",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:q3oQSFYPqjQC",
+          "citation_id": "Fac_e58AAAAJ:q3oQSFYPqjQC",
+          "authors": "S Herbold",
+          "publication": "arXiv preprint arXiv:2504.08312, 2025",
+          "cited_by": {
+            "value": 4,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=15996725992086420771",
+            "serpapi_link": "https://serpapi.com/search.json?cites=15996725992086420771&engine=google_scholar&hl=en",
+            "cites_id": "15996725992086420771"
+          },
+          "year": "2025"
+        },
+        {
+          "title": "Question type prediction in natural debate",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:tOudhMTPpwUC",
+          "citation_id": "Fac_e58AAAAJ:tOudhMTPpwUC",
+          "authors": "Z Kikteva, A Trautsch, S Herbold, A Hautli",
+          "publication": "Proceedings of the 25th Annual Meeting of the Special Interest Group on …, 2024",
+          "cited_by": {
+            "value": 4,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=1900921530369783991",
+            "serpapi_link": "https://serpapi.com/search.json?cites=1900921530369783991&engine=google_scholar&hl=en",
+            "cites_id": "1900921530369783991"
+          },
+          "year": "2024"
+        },
+        {
+          "title": "A new perspective on the competent programmer hypothesis through the reproduction of real faults with repeated mutations",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:dshw04ExmUIC",
+          "citation_id": "Fac_e58AAAAJ:dshw04ExmUIC",
+          "authors": "Z Ahmed, E Schwass, S Herbold, F Trautsch, J Grabowski",
+          "publication": "Software Testing, Verification and Reliability 34 (3), e1874, 2024",
+          "cited_by": {
+            "value": 4,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11274207364740304944",
+            "serpapi_link": "https://serpapi.com/search.json?cites=11274207364740304944&engine=google_scholar&hl=en",
+            "cites_id": "11274207364740304944"
+          },
+          "year": "2024"
+        },
+        {
+          "title": "Repayment under flexible loan contracts: Evidence based on high frequency data",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:35N4QoGY0k4C",
+          "citation_id": "Fac_e58AAAAJ:35N4QoGY0k4C",
+          "authors": "A Grohmann, F Lenel, S Herbold",
+          "publication": "Available at SSRN 3917712, 2021",
+          "cited_by": {
+            "value": 4,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=6097455007035449288,1762782129758911871,3244162290735300400",
+            "serpapi_link": "https://serpapi.com/search.json?cites=6097455007035449288%2C1762782129758911871%2C3244162290735300400&engine=google_scholar&hl=en",
+            "cites_id": "6097455007035449288,1762782129758911871,3244162290735300400"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "A new perspective on the competent programmer hypothesis through the reproduction of bugs with repeated mutations",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:lSLTfruPkqcC",
+          "citation_id": "Fac_e58AAAAJ:lSLTfruPkqcC",
+          "authors": "Z Ahmed, E Stein, S Herbold, F Trautsch, J Grabowski",
+          "publication": "arXiv preprint arXiv:2104.02517, 2021",
+          "cited_by": {
+            "value": 4,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=16006043463478054182",
+            "serpapi_link": "https://serpapi.com/search.json?cites=16006043463478054182&engine=google_scholar&hl=en",
+            "cites_id": "16006043463478054182"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "An industrial case study on shrinking code review changesets through remark prediction",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:HDshCWvjkbEC",
+          "citation_id": "Fac_e58AAAAJ:HDshCWvjkbEC",
+          "authors": "T Baum, S Herbold, K Schneider",
+          "publication": "arXiv preprint arXiv:1812.09510, 2018",
+          "cited_by": {
+            "value": 4,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=8368707062188332708",
+            "serpapi_link": "https://serpapi.com/search.json?cites=8368707062188332708&engine=google_scholar&hl=en",
+            "cites_id": "8368707062188332708"
+          },
+          "year": "2018"
+        },
+        {
+          "title": "Extended trace-based task tree generation",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:0EnyYjriUFMC",
+          "citation_id": "Fac_e58AAAAJ:0EnyYjriUFMC",
+          "authors": "P Harms, S Herbold, J Grabowski",
+          "publication": "Int. J. Adv. Intell. Syst 7 (3), 450-467, 2014",
+          "cited_by": {
+            "value": 4,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11752819921847764509",
+            "serpapi_link": "https://serpapi.com/search.json?cites=11752819921847764509&engine=google_scholar&hl=en",
+            "cites_id": "11752819921847764509"
+          },
+          "year": "2014"
+        },
+        {
+          "title": "Evaluating Large Language Models on Non-Code Software Engineering Tasks",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:kRWSkSYxWN8C",
+          "citation_id": "Fac_e58AAAAJ:kRWSkSYxWN8C",
+          "authors": "FC Peña, S Herbold",
+          "publication": "arXiv preprint arXiv:2506.10833, 2025",
+          "cited_by": {
+            "value": 3,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11330207664789335570",
+            "serpapi_link": "https://serpapi.com/search.json?cites=11330207664789335570&engine=google_scholar&hl=en",
+            "cites_id": "11330207664789335570"
+          },
+          "year": "2025"
+        },
+        {
+          "title": "Legal aspects for software developers interested in generative AI applications",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:SP6oXDckpogC",
+          "citation_id": "Fac_e58AAAAJ:SP6oXDckpogC",
+          "authors": "S Herbold, B Valerius, A Mojica-Hanke, I Lex, J Mittel",
+          "publication": "IEEE Software 42 (2), 68-75, 2024",
+          "cited_by": {
+            "value": 3,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=18041020783092665203",
+            "serpapi_link": "https://serpapi.com/search.json?cites=18041020783092665203&engine=google_scholar&hl=en",
+            "cites_id": "18041020783092665203"
+          },
+          "year": "2024"
+        },
+        {
+          "title": "On using information retrieval to recommend machine learning good practices for software engineers",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:abG-DnoFyZgC",
+          "citation_id": "Fac_e58AAAAJ:abG-DnoFyZgC",
+          "authors": "L Cabra-Acela, A Mojica-Hanke, M Linares-Vásquez, S Herbold",
+          "publication": "Proceedings of the 31st ACM Joint European Software Engineering Conference …, 2023",
+          "cited_by": {
+            "value": 3,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=1780892147470065650",
+            "serpapi_link": "https://serpapi.com/search.json?cites=1780892147470065650&engine=google_scholar&hl=en",
+            "cites_id": "1780892147470065650"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "sherbold/replication-kit-tse-2017-benchmark: Release of the replication kit",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:Y5dfb0dijaUC",
+          "citation_id": "Fac_e58AAAAJ:Y5dfb0dijaUC",
+          "authors": "S Herbold",
+          "publication": "Zenodo, 2017",
+          "cited_by": {
+            "value": 3,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=15150087833092285265",
+            "serpapi_link": "https://serpapi.com/search.json?cites=15150087833092285265&engine=google_scholar&hl=en",
+            "cites_id": "15150087833092285265"
+          },
+          "year": "2017"
+        },
+        {
+          "title": "Neurosymbolic Architectural Reasoning: Towards Formal Analysis through Neural Software Architecture Inference",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:5ugPr518TE4C",
+          "citation_id": "Fac_e58AAAAJ:5ugPr518TE4C",
+          "authors": "S Herbold, C Knieke, A Rausch, C Schindler",
+          "publication": "arXiv preprint arXiv:2503.16262, 2025",
+          "cited_by": {
+            "value": 2,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=5672224460793721049",
+            "serpapi_link": "https://serpapi.com/search.json?cites=5672224460793721049&engine=google_scholar&hl=en",
+            "cites_id": "5672224460793721049"
+          },
+          "year": "2025"
+        },
+        {
+          "title": "MAMUT: A Novel Framework for Modifying Mathematical Formulas for the Generation of Specialized Datasets for Language Model Training",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:eJXPG6dFmWUC",
+          "citation_id": "Fac_e58AAAAJ:eJXPG6dFmWUC",
+          "authors": "J Drechsel, A Reusch, S Herbold",
+          "publication": "arXiv preprint arXiv:2502.20855, 2025",
+          "cited_by": {
+            "value": 2,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=14136484491076295890",
+            "serpapi_link": "https://serpapi.com/search.json?cites=14136484491076295890&engine=google_scholar&hl=en",
+            "cites_id": "14136484491076295890"
+          },
+          "year": "2025"
+        },
+        {
+          "title": "GRADIEND: Feature Learning within Neural Networks Exemplified through Biases",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:WqliGbK-hY8C",
+          "citation_id": "Fac_e58AAAAJ:WqliGbK-hY8C",
+          "authors": "J Drechsel, S Herbold",
+          "publication": "arXiv preprint arXiv:2502.01406, 2025",
+          "cited_by": {
+            "value": 2,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=8286935923585380942",
+            "serpapi_link": "https://serpapi.com/search.json?cites=8286935923585380942&engine=google_scholar&hl=en",
+            "cites_id": "8286935923585380942"
+          },
+          "year": "2025"
+        },
+        {
+          "title": "An exploratory study of bug-introducing changes: what happens when bugs are introduced in open source software?",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:f2IySw72cVMC",
+          "citation_id": "Fac_e58AAAAJ:f2IySw72cVMC",
+          "authors": "L Schulte, A Mojica-Hanke, M Linares-Vásquez, S Herbold",
+          "publication": "arXiv preprint arXiv:2304.05358, 2023",
+          "cited_by": {
+            "value": 2,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=10380334757354339182",
+            "serpapi_link": "https://serpapi.com/search.json?cites=10380334757354339182&engine=google_scholar&hl=en",
+            "cites_id": "10380334757354339182"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "Are automated static analysis tools worth it? An investigation into relative warning density and external software quality",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:u9iWguZQMMsC",
+          "citation_id": "Fac_e58AAAAJ:u9iWguZQMMsC",
+          "authors": "A Trautsch, S Herbold, J Grabowski",
+          "publication": "arXiv preprint arXiv:2111.09188, 2021",
+          "cited_by": {
+            "value": 2,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=12871719819884598333",
+            "serpapi_link": "https://serpapi.com/search.json?cites=12871719819884598333&engine=google_scholar&hl=en",
+            "cites_id": "12871719819884598333"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "Sherbold/replication-kit-tse-2017-comment-scottknottesd: Release of the replication kit",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:tkaPQYYpVKoC",
+          "citation_id": "Fac_e58AAAAJ:tkaPQYYpVKoC",
+          "authors": "S Herbold",
+          "publication": "Zenodo, 2017",
+          "cited_by": {
+            "value": 2,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=15708617210988374015",
+            "serpapi_link": "https://serpapi.com/search.json?cites=15708617210988374015&engine=google_scholar&hl=en",
+            "cites_id": "15708617210988374015"
+          },
+          "year": "2017"
+        },
+        {
+          "title": "Automated Deployment and Parallel Execution of Legacy Applications in Cloud Environments (Short Paper)",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:8k81kl-MbHgC",
+          "citation_id": "Fac_e58AAAAJ:8k81kl-MbHgC",
+          "authors": "M Göttsche, F Glaser, S Herbold, J Grabowski",
+          "publication": "2015 IEEE 8th International Conference on Service-Oriented Computing and …, 2015",
+          "cited_by": {
+            "value": 2,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=9248009903050300935",
+            "serpapi_link": "https://serpapi.com/search.json?cites=9248009903050300935&engine=google_scholar&hl=en",
+            "cites_id": "9248009903050300935"
+          },
+          "year": "2015"
+        },
+        {
+          "title": "Improving security testing with usage-based fuzz testing",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:hqOjcs7Dif8C",
+          "citation_id": "Fac_e58AAAAJ:hqOjcs7Dif8C",
+          "authors": "MA Schneider, S Herbold, MF Wendland, J Grabowski",
+          "publication": "International Workshop on Risk Assessment and Risk-driven Testing, 110-119, 2015",
+          "cited_by": {
+            "value": 2,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=18308371413645467120",
+            "serpapi_link": "https://serpapi.com/search.json?cites=18308371413645467120&engine=google_scholar&hl=en",
+            "cites_id": "18308371413645467120"
+          },
+          "year": "2015"
+        },
+        {
+          "title": "Retrospective Analysis of Software Projects using k-Means Clustering",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:qjMakFHDy7sC",
+          "citation_id": "Fac_e58AAAAJ:qjMakFHDy7sC",
+          "authors": "S Herbold, J Grabowski, H Neukirchen, S Waack",
+          "publication": "Proc. of the 2nd Design for Future 2010 Workshop (DFF 2010), Bad Honnef, Germany, 2010",
+          "cited_by": {
+            "value": 2,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=465612713281424490",
+            "serpapi_link": "https://serpapi.com/search.json?cites=465612713281424490&engine=google_scholar&hl=en",
+            "cites_id": "465612713281424490"
+          },
+          "year": "2010"
+        },
+        {
+          "title": "The whos, whats, and whys of issues related to personal data and data protection in open-source projects on GitHub",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:HE397vMXCloC",
+          "citation_id": "Fac_e58AAAAJ:HE397vMXCloC",
+          "authors": "A Hennig, L Schulte, S Herbold, O Kulyk, P Mayer",
+          "publication": "Empirical Software Engineering 31 (1), 1-51, 2026",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=398019024576126427",
+            "serpapi_link": "https://serpapi.com/search.json?cites=398019024576126427&engine=google_scholar&hl=en",
+            "cites_id": "398019024576126427"
+          },
+          "year": "2026"
+        },
+        {
+          "title": "Understanding or Memorizing? A Case Study of German Definite Articles in Language Models",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:9vf0nzSNQJEC",
+          "citation_id": "Fac_e58AAAAJ:9vf0nzSNQJEC",
+          "authors": "J Drechsel, E Bytyqi, S Herbold",
+          "publication": "arXiv preprint arXiv:2601.09313, 2026",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=6632299625511987260",
+            "serpapi_link": "https://serpapi.com/search.json?cites=6632299625511987260&engine=google_scholar&hl=en",
+            "cites_id": "6632299625511987260"
+          },
+          "year": "2026"
+        },
+        {
+          "title": "Criminal Liability of Generative Artificial Intelligence Providers for User-Generated Child Sexual Abuse Material",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:dTyEYWd-f8wC",
+          "citation_id": "Fac_e58AAAAJ:dTyEYWd-f8wC",
+          "authors": "A Mojica-Hanke, T Goger, S WĂślfel, B Valerius, S Herbold",
+          "publication": "arXiv preprint arXiv:2601.03788, 2026",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=14041564579221122863",
+            "serpapi_link": "https://serpapi.com/search.json?cites=14041564579221122863&engine=google_scholar&hl=en",
+            "cites_id": "14041564579221122863"
+          },
+          "year": "2026"
+        },
+        {
+          "title": "AI-Driven Software Development: A New Course Concept and Assessment Model for the Era of Large Language Models",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:ye4kPcJQO24C",
+          "citation_id": "Fac_e58AAAAJ:ye4kPcJQO24C",
+          "authors": "B Fein, G Fraser, S Herbold",
+          "publication": "International Conference on Software Engineering–Software Engineering …, 2026",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=17551904190030969734",
+            "serpapi_link": "https://serpapi.com/search.json?cites=17551904190030969734&engine=google_scholar&hl=en",
+            "cites_id": "17551904190030969734"
+          },
+          "year": "2026"
+        },
+        {
+          "title": "GRADIEND: Monosemantic Feature Learning within Neural Networks Applied to Gender Debiasing of Transformer Models",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:VOx2b1Wkg3QC",
+          "citation_id": "Fac_e58AAAAJ:VOx2b1Wkg3QC",
+          "authors": "J Drechsel, S Herbold",
+          "publication": "arXiv e-prints, arXiv: 2502.01406, 2025",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=7570362724564550888",
+            "serpapi_link": "https://serpapi.com/search.json?cites=7570362724564550888&engine=google_scholar&hl=en",
+            "cites_id": "7570362724564550888"
+          },
+          "year": "2025"
+        },
+        {
+          "title": "Perspective of Software Engineering Researchers on Machine Learning Practices Regarding Research, Review, and Education",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:tS2w5q8j5-wC",
+          "citation_id": "Fac_e58AAAAJ:tS2w5q8j5-wC",
+          "authors": "A Mojica-Hanke, DN Palacio, D Poshyvanyk, M Linares-Vásquez, ...",
+          "publication": "arXiv preprint arXiv:2411.19304, 2024",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=7806224157239786033",
+            "serpapi_link": "https://serpapi.com/search.json?cites=7806224157239786033&engine=google_scholar&hl=en",
+            "cites_id": "7806224157239786033"
+          },
+          "year": "2024"
+        },
+        {
+          "title": "Exploring the relationship between performance metrics and cost saving potential of defect prediction models",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:UxriW0iASnsC",
+          "citation_id": "Fac_e58AAAAJ:UxriW0iASnsC",
+          "authors": "S Herbold",
+          "publication": "arXiv e-prints, arXiv: 2104.00566, 2021",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=13425268099710718806",
+            "serpapi_link": "https://serpapi.com/search.json?cites=13425268099710718806&engine=google_scholar&hl=en",
+            "cites_id": "13425268099710718806"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "On the differences between quality increasing and other changes in open source Java projects.",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:70eg2SAEIzsC",
+          "citation_id": "Fac_e58AAAAJ:70eg2SAEIzsC",
+          "authors": "A Trautsch, J Erbel, S Herbold, J Grabowski",
+          "publication": "CoRR, 2021",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=10315129063870800500",
+            "serpapi_link": "https://serpapi.com/search.json?cites=10315129063870800500&engine=google_scholar&hl=en",
+            "cites_id": "10315129063870800500"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "sherbold/replication-kit-tse-2018-costmodel: Release of the replication kit",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:Mojj43d5GZwC",
+          "citation_id": "Fac_e58AAAAJ:Mojj43d5GZwC",
+          "authors": "S Herbold",
+          "publication": "Zenodo, 2019",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=3142081551994365393",
+            "serpapi_link": "https://serpapi.com/search.json?cites=3142081551994365393&engine=google_scholar&hl=en",
+            "cites_id": "3142081551994365393"
+          },
+          "year": "2019"
+        },
+        {
+          "title": "Experiences with replicable experiments and replication kits for software engineering research",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:hFOr9nPyWt4C",
+          "citation_id": "Fac_e58AAAAJ:hFOr9nPyWt4C",
+          "authors": "S Herbold, F Trautsch, P Harms, V Herbold, J Grabowski",
+          "publication": "Advances in Computers 113, 315-344, 2019",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=7865097143876267745",
+            "serpapi_link": "https://serpapi.com/search.json?cites=7865097143876267745&engine=google_scholar&hl=en",
+            "cites_id": "7865097143876267745"
+          },
+          "year": "2019"
+        },
+        {
+          "title": "sherbold/replication-kit-tse-2017-benchmark: Correction of the replication kit",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:eMMeJKvmdy0C",
+          "citation_id": "Fac_e58AAAAJ:eMMeJKvmdy0C",
+          "authors": "S Herbold",
+          "publication": "Zenodo, 2017",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=8494335731940274765",
+            "serpapi_link": "https://serpapi.com/search.json?cites=8494335731940274765&engine=google_scholar&hl=en",
+            "cites_id": "8494335731940274765"
+          },
+          "year": "2017"
+        },
+        {
+          "title": "Automated Deployment and Parallel Execution of Legacy Applications in Cloud Environments (Short Paper)",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:R3hNpaxXUhUC",
+          "citation_id": "Fac_e58AAAAJ:R3hNpaxXUhUC",
+          "authors": "M Gottsche, F Glaser, S Herbold, J Grabowski",
+          "publication": "Proceedings of the 2015 IEEE 8th International Conference on Service …, 2015",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=427415886122674919",
+            "serpapi_link": "https://serpapi.com/search.json?cites=427415886122674919&engine=google_scholar&hl=en",
+            "cites_id": "427415886122674919"
+          },
+          "year": "2015"
+        },
+        {
+          "title": "Retrospective Project Analysis Using the Expectation-Maximization Clustering Algorithm",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:W7OEmFMy1HYC",
+          "citation_id": "Fac_e58AAAAJ:W7OEmFMy1HYC",
+          "authors": "S Herbold, J Grabowski, S Waack",
+          "publication": "Third International Conference on Advances in System Testing and Validation …, 2011",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=8913206861937661814",
+            "serpapi_link": "https://serpapi.com/search.json?cites=8913206861937661814&engine=google_scholar&hl=en",
+            "cites_id": "8913206861937661814"
+          },
+          "year": "2011"
+        },
+        {
+          "title": "Detection of feature freezes using clustering algorithms",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=Fac_e58AAAAJ&pagesize=100&citation_for_view=Fac_e58AAAAJ:IjCSPb-OGe4C",
+          "citation_id": "Fac_e58AAAAJ:IjCSPb-OGe4C",
+          "authors": "S Herbold",
+          "publication": "Master’s thesis, Masterarbeit im Studiengang Angewandte Informatik am …, 2008",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=6976520255788964898",
+            "serpapi_link": "https://serpapi.com/search.json?cites=6976520255788964898&engine=google_scholar&hl=en",
+            "cites_id": "6976520255788964898"
+          },
+          "year": "2008"
+        }
+      ],
+      "cited_by": {
+        "table": [
+          {
+            "citations": {
+              "all": 3088,
+              "since_2021": 2395
+            }
+          },
+          {
+            "h_index": {
+              "all": 26,
+              "since_2021": 22
+            }
+          },
+          {
+            "i10_index": {
+              "all": 46,
+              "since_2021": 32
+            }
+          }
+        ],
+        "graph": [
+          {
+            "year": 2012,
+            "citations": 14
+          },
+          {
+            "year": 2013,
+            "citations": 13
+          },
+          {
+            "year": 2014,
+            "citations": 27
+          },
+          {
+            "year": 2015,
+            "citations": 41
+          },
+          {
+            "year": 2016,
+            "citations": 64
+          },
+          {
+            "year": 2017,
+            "citations": 68
+          },
+          {
+            "year": 2018,
+            "citations": 99
+          },
+          {
+            "year": 2019,
+            "citations": 142
+          },
+          {
+            "year": 2020,
+            "citations": 198
+          },
+          {
+            "year": 2021,
+            "citations": 222
+          },
+          {
+            "year": 2022,
+            "citations": 329
+          },
+          {
+            "year": 2023,
+            "citations": 353
+          },
+          {
+            "year": 2024,
+            "citations": 563
+          },
+          {
+            "year": 2025,
+            "citations": 725
+          },
+          {
+            "year": 2026,
+            "citations": 195
+          }
+        ]
+      },
+      "public_access": {
+        "link": "https://scholar.google.com/citations?view_op=list_mandates&hl=en&user=Fac_e58AAAAJ",
+        "available": 19,
+        "not_available": 2
+      },
+      "co_authors": [
+        {
+          "name": "Jens Grabowski",
+          "link": "https://scholar.google.com/citations?user=59rolV4AAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=59rolV4AAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "59rolV4AAAAJ",
+          "affiliations": "Professor of Computer Science, Georg-August-Universität Göttingen",
+          "email": "Verified email at informatik.uni-goettingen.de",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=59rolV4AAAAJ&citpid=1"
+        },
+        {
+          "name": "Alexander Trautsch",
+          "link": "https://scholar.google.com/citations?user=VlSBMuIAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=VlSBMuIAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "VlSBMuIAAAAJ",
+          "affiliations": "University of Passau",
+          "email": "Verified email at uni-passau.de",
+          "thumbnail": "https://scholar.google.com/citations/images/avatar_scholar_56.png"
+        },
+        {
+          "name": "Fabian Trautsch",
+          "link": "https://scholar.google.com/citations?user=I06-9BwAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=I06-9BwAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "I06-9BwAAAAJ",
+          "affiliations": "University of Goettingen",
+          "email": "Verified email at cs.uni-goettingen.de",
+          "thumbnail": "https://scholar.google.com/citations/images/avatar_scholar_56.png"
+        },
+        {
+          "name": "Stephan Waack",
+          "link": "https://scholar.google.com/citations?user=D3noPisAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=D3noPisAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "D3noPisAAAAJ",
+          "affiliations": "Professor für Informatik im Ruhestand, Universität Göttingen",
+          "email": "Verified email at informatik.uni-goettingen.de",
+          "thumbnail": "https://scholar.google.com/citations/images/avatar_scholar_56.png"
+        },
+        {
+          "name": "Patrick Harms",
+          "link": "https://scholar.google.com/citations?user=74XHExAAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=74XHExAAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "74XHExAAAAAJ",
+          "affiliations": "Electrical Engineering, Precision Engineering, Information Technology, Nuremberg Institute of",
+          "email": "Verified email at th-nuernberg.de",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=74XHExAAAAAJ&citpid=1"
+        },
+        {
+          "name": "Altinger Harald",
+          "link": "https://scholar.google.com/citations?user=WeXo2g4AAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=WeXo2g4AAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "WeXo2g4AAAAJ",
+          "affiliations": "Audi AG",
+          "email": "Verified email at audi.de",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=WeXo2g4AAAAJ&citpid=1"
+        },
+        {
+          "name": "Franz Wotawa",
+          "link": "https://scholar.google.com/citations?user=Z27gH2wAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=Z27gH2wAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "Z27gH2wAAAAJ",
+          "affiliations": "Professor of Computer Science, Graz University of Technology, Austria",
+          "email": "Verified email at ist.tugraz.at",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=Z27gH2wAAAAJ&citpid=2"
+        },
+        {
+          "name": "Martin A. Schneider",
+          "link": "https://scholar.google.com/citations?user=7HfI5AcAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=7HfI5AcAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "7HfI5AcAAAAJ",
+          "affiliations": "Fraunhofer FOKUS",
+          "email": "Verified email at fokus.fraunhofer.de",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=7HfI5AcAAAAJ&citpid=2"
+        },
+        {
+          "name": "Tobias Baum",
+          "link": "https://scholar.google.com/citations?user=OEzTzgIAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=OEzTzgIAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "OEzTzgIAAAAJ",
+          "affiliations": "FG SE, Leibniz Universität Hannover",
+          "email": "Verified email at inf.uni-hannover.de",
+          "thumbnail": "https://scholar.google.com/citations/images/avatar_scholar_56.png"
+        },
+        {
+          "name": "Kurt Schneider",
+          "link": "https://scholar.google.com/citations?user=Jlu_3qcAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=Jlu_3qcAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "Jlu_3qcAAAAJ",
+          "affiliations": "leibniz universität hannover",
+          "email": "Verified email at inf.uni-hannover.de",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=Jlu_3qcAAAAJ&citpid=3"
+        },
+        {
+          "name": "Marc-Florian Wendland",
+          "link": "https://scholar.google.com/citations?user=BIuj_3UAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=BIuj_3UAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "BIuj_3UAAAAJ",
+          "affiliations": "Fraunhofer Institut FOKUS",
+          "email": "Verified email at fokus.fraunhofer.de",
+          "thumbnail": "https://scholar.google.com/citations/images/avatar_scholar_56.png"
+        },
+        {
+          "name": "Helmut Neukirchen",
+          "link": "https://scholar.google.com/citations?user=vnb7ijMAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=vnb7ijMAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "vnb7ijMAAAAJ",
+          "affiliations": "Professor of Software Engineering and Computer Science, University of Iceland",
+          "email": "Verified email at hi.is",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=vnb7ijMAAAAJ&citpid=1"
+        },
+        {
+          "name": "Fabrice Kordon",
+          "link": "https://scholar.google.com/citations?user=NdzGZwEAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=NdzGZwEAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "NdzGZwEAAAAJ",
+          "affiliations": "Professeur d'Informatique, Sorbonne Université",
+          "email": "Verified email at lip6.fr",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=NdzGZwEAAAAJ&citpid=3"
+        },
+        {
+          "name": "Lom Hillah",
+          "link": "https://scholar.google.com/citations?user=3z4X9GsAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=3z4X9GsAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "3z4X9GsAAAAJ",
+          "affiliations": "Laboratoire d'informatique de Paris 6",
+          "email": "Verified email at lip6.fr",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=3z4X9GsAAAAJ&citpid=3"
+        },
+        {
+          "name": "Nicola Tonellotto",
+          "link": "https://scholar.google.com/citations?user=mTVRtZQAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=mTVRtZQAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "mTVRtZQAAAAJ",
+          "affiliations": "Associate Professor, University of Pisa",
+          "email": "Verified email at unipi.it",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=mTVRtZQAAAAJ&citpid=4"
+        },
+        {
+          "name": "Claudia Di Napoli",
+          "link": "https://scholar.google.com/citations?user=pLXRzqwAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=pLXRzqwAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "pLXRzqwAAAAJ",
+          "affiliations": "Istituto di Calcolo e Reti ad Alte Prestazioni - C.N.R.",
+          "email": "Verified email at cnr.it",
+          "thumbnail": "https://scholar.google.com/citations/images/avatar_scholar_56.png"
+        },
+        {
+          "name": "Alberto De Francesco",
+          "link": "https://scholar.google.com/citations?user=Rc2oYuAAAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=Rc2oYuAAAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "Rc2oYuAAAAAJ",
+          "affiliations": "Research Fellow, ISTI-CNR",
+          "email": "Verified email at isti.cnr.it",
+          "thumbnail": "https://scholar.google.com/citations/images/avatar_scholar_56.png"
+        },
+        {
+          "name": "Verena Herbold",
+          "link": "https://scholar.google.com/citations?user=v-CwBq8AAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=v-CwBq8AAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "v-CwBq8AAAAJ",
+          "affiliations": "Researcher, University of Goettingen",
+          "email": "Verified email at cs.uni-goettingen.de",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=v-CwBq8AAAAJ&citpid=1"
+        }
+      ],
+      "serpapi_pagination": {
+        "next": "https://serpapi.com/search.json?author_id=Fac_e58AAAAJ&engine=google_scholar_author&hl=en&num=100&start=100"
+      }
+    }
+  }
+}

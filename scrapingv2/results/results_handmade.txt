@@ -1,0 +1,71 @@
+Alireza Aghamohammadi
+==================================================
+ 🔬 SCIENTIFIC ANNOTATION SCORES (Line-Level) 🔬 
+==================================================
+Total Lines Evaluated: 2416
+Cohen's Kappa (κ):     0.6872  <-- Report this as Inter-Rater Reliability
+F2-Score (Weighted):   0.7909  <-- Report this for classification strength
+F2-Score (Macro):      0.5911
+==================================================
+
+Detailed Classification Report (Standard F1/Precision/Recall):
+               precision    recall  f1-score   support
+
+       bugfix       0.87      0.56      0.68       236
+documentation       0.88      0.88      0.88       816
+  refactoring       0.06      0.78      0.10         9
+         test       0.89      0.83      0.86      1071
+    unrelated       0.22      0.56      0.31        84
+   whitespace       0.87      0.54      0.67       200
+
+     accuracy                           0.78      2416
+    macro avg       0.63      0.69      0.58      2416
+ weighted avg       0.86      0.78      0.81      2416
+
+Alexander Trautsch
+==================================================
+ 🔬 SCIENTIFIC ANNOTATION SCORES (Line-Level) 🔬 
+==================================================
+Total Lines Evaluated: 1152
+Cohen's Kappa (κ):     0.5873  <-- Report this as Inter-Rater Reliability
+F2-Score (Weighted):   0.7202  <-- Report this for classification strength
+F2-Score (Macro):      0.4790
+==================================================
+
+Detailed Classification Report (Standard F1/Precision/Recall):
+               precision    recall  f1-score   support
+
+       bugfix       0.67      0.73      0.70       212
+documentation       0.64      0.85      0.73       219
+  refactoring       0.00      0.00      0.00         0
+         test       0.99      0.73      0.84       628
+    unrelated       0.07      0.07      0.07        68
+   whitespace       0.24      0.72      0.36        25
+
+     accuracy                           0.71      1152
+    macro avg       0.44      0.52      0.45      1152
+ weighted avg       0.80      0.71      0.74      1152
+
+Steffen Herbold
+==================================================
+ 🔬 SCIENTIFIC ANNOTATION SCORES (Line-Level) 🔬 
+==================================================
+Total Lines Evaluated: 1233
+Cohen's Kappa (κ):     0.5872  <-- Report this as Inter-Rater Reliability
+F2-Score (Weighted):   0.7133  <-- Report this for classification strength
+F2-Score (Macro):      0.4658
+==================================================
+
+Detailed Classification Report (Standard F1/Precision/Recall):
+               precision    recall  f1-score   support
+
+       bugfix       0.84      0.63      0.72       309
+documentation       0.67      0.91      0.77       201
+  refactoring       0.00      0.00      0.00         9
+         test       1.00      0.77      0.87       598
+    unrelated       0.03      0.01      0.02        78
+   whitespace       0.33      0.50      0.40        38
+
+     accuracy                           0.70      1233
+    macro avg       0.48      0.47      0.46      1233
+ weighted avg       0.82      0.70      0.74      1233

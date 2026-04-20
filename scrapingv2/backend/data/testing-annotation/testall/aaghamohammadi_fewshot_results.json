@@ -1,0 +1,1206 @@
+{
+  "results": [
+    {
+      "hunk_number": 201,
+      "reasoning": "The diff shows a change in an XML-like `<action>` tag, specifically modifying the 'due-to' attribute. This pattern is consistent with examples like Example 5, where changes within XML or comment-like action/fix descriptions are classified as 'documentation'.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0,
+          1
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 202,
+      "reasoning": "Lines 0, 1, 3, 4 describe bug fixes for specific issues (IO-101, IO-102) in a changelog or similar documentation format. This aligns with examples like Example 2, 3, 4, 5, 6, 7, 16, 17, and 24, where descriptions of fixes are categorized as 'documentation'. Line 2 is an empty line, which is classified as 'whitespace'.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          2
+        ],
+        "documentation": [
+          0,
+          1,
+          3,
+          4
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 203,
+      "reasoning": "The diff introduces an XML `<action>` tag with a 'type=\"fix\"' attribute and a description of the fix. This is a clear pattern for documentation, as seen in examples like Example 2, 3, 4, 5, 6, 7, 16, 17, and 24, where such entries are classified as 'documentation'.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0,
+          1,
+          2
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 204,
+      "reasoning": "Similar to Hunk 203, this diff introduces an XML `<action>` tag describing a fix for an issue. This pattern is consistently classified as 'documentation' in examples such as Example 2, 3, 4, 5, 6, 7, 16, 17, and 24.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0,
+          1,
+          2
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 205,
+      "reasoning": "The diff shows a change in the name of a public test method. Changes to test method signatures or content are classified as 'test' based on examples like Example 23 (changing an assertion in a test) and Example 13, 19, 25, 29 (adding or modifying test code).",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [],
+        "refactoring": [],
+        "test": [
+          0,
+          1
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 206,
+      "reasoning": "Lines 0-2 are removed code. Lines 3-10 are added code. The added code introduces a double-check `if (!directory.isDirectory())` to ensure the directory wasn't created by another thread/process before throwing an IOException. This is a defensive programming measure to prevent a potential error, which aligns with the 'bugfix' category as seen in examples like 1, 18, and 26 where conditional logic or checks are added to resolve issues. Lines 3-4 are comments explaining the logic of the bugfix.",
+      "labels": {
+        "bugfix": [
+          0,
+          1,
+          2,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "whitespace": [],
+        "documentation": [
+          3,
+          4
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 207,
+      "reasoning": "Lines 0-2 are added code that introduces a conditional check `if (FilenameUtils.isSystemWindows())` and returns `false`. This is a specific logic change, likely to address behavior differences on Windows, which falls under 'bugfix' as it modifies program behavior to correct an issue or handle a specific scenario, similar to the conditional changes in example 1 and 18.",
+      "labels": {
+        "bugfix": [
+          0,
+          1,
+          2
+        ],
+        "whitespace": [],
+        "documentation": [],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 208,
+      "reasoning": "Lines 0-1 are added code that resets internal states (`bbuf.limit(0)` and `encoder.reset()`). Such operational changes to ensure correct state or behavior are typically classified as 'bugfix', similar to example 21 where `ensureConfigured()` is added as a bugfix.",
+      "labels": {
+        "bugfix": [
+          0,
+          1
+        ],
+        "whitespace": [],
+        "documentation": [],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 209,
+      "reasoning": "Lines 0-1 show a change within an XML `<action>` tag, specifically changing the `type` attribute from `add` to `fix`. This is a modification to a changelog or release note entry, which is consistently classified as 'documentation' in the examples (e.g., examples 2, 3, 4, 5, 6, 7, 16, 17, 24).",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0,
+          1
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 210,
+      "reasoning": "Line 0 is removed and lines 1-4 are added. The change involves wrapping the `file.setLastModified()` call with a check for its success and throwing an `IOException` if it fails. This is an improvement in error handling and robustness, preventing silent failures. This type of change, which makes the code more resilient to errors, is a 'bugfix' as demonstrated in examples like 1, 18, and 26 where conditional checks are added to handle potential issues.",
+      "labels": {
+        "bugfix": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "whitespace": [],
+        "documentation": [],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 211,
+      "reasoning": "The lines added are within an XML-like 'action' tag, describing a fix. This pattern is consistently labeled as 'documentation' in examples 2, 3, 4, 5, 6, 7, 16, 17, and 24.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0,
+          1,
+          2
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 212,
+      "reasoning": "Line 0 is a comment explaining a code decision. Similar comments or descriptive text within code are classified as 'documentation' in example 26 (line 0, 10) and example 13 (lines 30, 31, 32, 39, 40, 41).",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 213,
+      "reasoning": "The lines added are within an XML-like 'action' tag, describing an addition. This pattern is consistently labeled as 'documentation' in examples 2, 3, 4, 5, 6, 7, 16, 17, and 24.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0,
+          1,
+          2
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 214,
+      "reasoning": "The diff shows a modification within an XML-like 'action' tag. As established in examples 2, 3, 4, 5, 6, 7, 16, 17, and 24, these tags are considered 'documentation'. A change to such a tag, even a minor one like adding a name, remains 'documentation'.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0,
+          1
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 215,
+      "reasoning": "Lines 1, 5, 9, 13, 17 define methods starting with 'public void test', which is a clear indicator of test code, as seen in examples 13, 19, 23, 25, and 29. The code within these test methods (lines 2, 3, 6, 7, 10, 11, 14, 15, 18, 19) is also part of the test. Lines 0, 4, 8, 12, 16, 20 are blank lines, which are consistently classified as 'whitespace' in examples 6, 13, 19, 25, and 29.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          0,
+          4,
+          8,
+          12,
+          16,
+          20
+        ],
+        "documentation": [],
+        "refactoring": [],
+        "test": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          9,
+          10,
+          11,
+          13,
+          14,
+          15,
+          17,
+          18,
+          19
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 216,
+      "reasoning": "Line 0 is a removed blank line, which is classified as whitespace. Lines 1-3 describe a fix for an issue (IO-117) and are formatted as release notes or changelog entries. Following examples 2, 3, 4, 5, 6, 7, 16, 17, and 24, such descriptive text about fixes is categorized as documentation.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          0
+        ],
+        "documentation": [
+          1,
+          2,
+          3
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 217,
+      "reasoning": "Line 0 is a removed blank line, which is classified as whitespace. Line 1 describes a fix for an issue (BCEL-177) and is formatted as a release note or changelog entry. Following examples 2, 3, 4, 5, 6, 7, 16, 17, and 24, such descriptive text about fixes is categorized as documentation.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          0
+        ],
+        "documentation": [
+          1
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 218,
+      "reasoning": "Lines 0-4 are removed code that implements a conditional assignment. Line 5 is added code that simplifies this conditional assignment into a single boolean expression. This change is a simplification of existing logic, which, according to example 1, is classified as a bugfix.",
+      "labels": {
+        "bugfix": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "whitespace": [],
+        "documentation": [],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 219,
+      "reasoning": "Lines 0-16 constitute a standard Apache license header, which is consistently classified as documentation in examples 13 and 19. Lines 17 and 19 are blank lines, classified as whitespace. Lines 18, 20-28 define a new class `PLSETestClass2` with a `main` method containing a simple loop. This structure, especially the `main` method, suggests it's either a test case or an example, similar to the test code in examples 13 and 19, and is thus classified as test code.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          17,
+          19
+        ],
+        "documentation": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "refactoring": [],
+        "test": [
+          18,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 220,
+      "reasoning": "Line 0 is an XML action tag describing a fix for an issue (BCEL-267). This type of line, which documents a fix or change, is consistently classified as documentation in examples 2, 3, 4, 5, 6, 7, 16, 17, and 24.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 221,
+      "reasoning": "Both lines are part of an XML 'action' tag, which describes a fix. Following examples like 2, 3, 4, 5, 6, 7, 16, 17, 19, 28, these are classified as documentation.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0,
+          1
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 222,
+      "reasoning": "This line adds an XML 'action' tag describing a fix. Following examples like 2, 3, 4, 5, 6, 7, 16, 17, 19, 28, this is classified as documentation.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 223,
+      "reasoning": "This line is a removed Javadoc comment. Javadoc comments are classified as documentation, as seen in example 13.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 224,
+      "reasoning": "Line 0 is a changelog-style entry, similar to the 'FIX:' entries in examples 3, 4, 5, 6, 7, 16, 17, which are classified as documentation. Line 1 is a blank line, which is classified as whitespace, as seen in examples 6, 13, 19, 25, 28, 29.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          1
+        ],
+        "documentation": [
+          0
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 225,
+      "reasoning": "This line adds an XML 'action' tag describing a fix. Following examples like 2, 3, 4, 5, 6, 7, 16, 17, 19, 28, this is classified as documentation.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 226,
+      "reasoning": "The change modifies an error message by replacing 'ACC_STATIC' with 'ACC_ABSTRACT'. This is a correction of incorrect information in an error message, which aligns with the 'bugfix' category as seen in examples like 1, 8, 10, 11, 12, 15, 20, 26, 27 where incorrect code or logic is corrected.",
+      "labels": {
+        "bugfix": [
+          0,
+          1
+        ],
+        "whitespace": [],
+        "documentation": [],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 227,
+      "reasoning": "Lines 0-3 introduce a new test method 'testVALIDATOR_278' and contain 'assertFalse' statements, which are test assertions. This pattern is consistently labeled as 'test' in examples such as 13, 19, 23, 25, and 29. Line 4 is an empty line, classified as 'whitespace'.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          4
+        ],
+        "documentation": [],
+        "refactoring": [],
+        "test": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 228,
+      "reasoning": "Line 0 is an empty line, classified as 'whitespace'. Lines 1-4 are Javadoc-style comments describing the purpose of the test, which aligns with the 'documentation' category as seen in examples 2, 13, 19, 25, 28. Lines 5-18 define a new test method 'testEmailWithSlashes' and contain 'assertTrue' and 'assertFalse' statements, which are test assertions. This pattern is consistently labeled as 'test' in examples such as 13, 19, 23, 25, and 29.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          0
+        ],
+        "documentation": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "refactoring": [],
+        "test": [
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 229,
+      "reasoning": "Lines 0-3 and 6 introduce a new test method 'testValidator380' and contain 'assertTrue' statements, which are test assertions. This pattern is consistently labeled as 'test' in examples such as 13, 19, 23, 25, and 29. Line 4 is a comment explaining a future fix, which is considered 'documentation' based on example 25 where comments within test methods explaining parts of the test are labeled as documentation. Line 5 is a commented-out test assertion, which is still part of the test logic and thus labeled 'test'. Line 7 is an empty line, classified as 'whitespace'.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          7
+        ],
+        "documentation": [
+          4
+        ],
+        "refactoring": [],
+        "test": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 230,
+      "reasoning": "Line 0 adds an 'assertTrue' statement, which is a test assertion. This pattern is consistently labeled as 'test' in examples such as 13, 19, 23, 25, and 29. Line 1 is an empty line, classified as 'whitespace'.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          1
+        ],
+        "documentation": [],
+        "refactoring": [],
+        "test": [
+          0
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 231,
+      "reasoning": "Lines 1, 2, 3, 4 are part of a new test method, including assertions, which directly matches the 'test' category as seen in examples like 13 and 25. Line 5 is an empty line, fitting the 'whitespace' category. Lines 0 and 6 are Javadoc comments, which are classified as 'documentation' as per example 13.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          5
+        ],
+        "documentation": [
+          0,
+          6
+        ],
+        "refactoring": [],
+        "test": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 232,
+      "reasoning": "Line 0 is a removed 'System.err.println' statement. Example 9 shows the removal of 'System.out.println' as a 'bugfix', implying these are often debug statements removed as part of a fix or cleanup.",
+      "labels": {
+        "bugfix": [
+          0
+        ],
+        "whitespace": [],
+        "documentation": [],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 233,
+      "reasoning": "Lines 0, 1, 2, 4, 5 are all part of a new test method, including setup and an assertion, which aligns with the 'test' category (e.g., examples 13, 25). Line 3 is a 'System.err.println' statement within a test method. While print statements can be 'bugfix' when removed (Example 9), when added within a test, they are typically for debugging the test itself, thus falling under 'test'. Line 6 is an empty line, classified as 'whitespace'.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          6
+        ],
+        "documentation": [],
+        "refactoring": [],
+        "test": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 234,
+      "reasoning": "Lines 0 and 1 show a change in variable type from 'long' to 'int'. This type of change, especially for a port number which is typically an integer, often addresses potential overflow issues or incorrect type usage, similar to the variable assignment/type-related bugfix in Example 1.",
+      "labels": {
+        "bugfix": [
+          0,
+          1
+        ],
+        "whitespace": [],
+        "documentation": [],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 235,
+      "reasoning": "Lines 1 and 3 are comments, which are categorized as 'documentation' (e.g., example 13). Lines 0 and 2 represent a change in a regular expression pattern. Such precise modifications to parsing logic are typically made to correct a bug in how strings are matched or parsed, similar to the small syntax fix in Example 11 which was classified as 'bugfix'.",
+      "labels": {
+        "bugfix": [
+          0,
+          2
+        ],
+        "whitespace": [],
+        "documentation": [
+          1,
+          3
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 236,
+      "reasoning": "Lines 0-2 are XML tags and descriptions related to an action/fix, which aligns with the 'documentation' category as seen in examples like 2, 3, 4, 5, 6, 7, 16, 17, 24, and 28.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0,
+          1,
+          2
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 237,
+      "reasoning": "Lines 0-2 are XML tags and descriptions related to an action/fix, which aligns with the 'documentation' category as seen in examples like 2, 3, 4, 5, 6, 7, 16, 17, 24, and 28.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0,
+          1,
+          2
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 238,
+      "reasoning": "Line 0 is a blank line, matching the 'whitespace' category (e.g., Example 6, 13, 19, 25, 29). Lines 1-26 define a test method, including its signature, assertions, and test data, which clearly falls under the 'test' category (e.g., Example 13, 19, 23, 25, 29).",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          0
+        ],
+        "documentation": [],
+        "refactoring": [],
+        "test": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 239,
+      "reasoning": "Lines 0-3 define a test method, including its signature, setup, and assertions, which clearly falls under the 'test' category (e.g., Example 13, 19, 23, 25, 29). Line 4 is a blank line, matching the 'whitespace' category (e.g., Example 6, 13, 19, 25, 29).",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          4
+        ],
+        "documentation": [],
+        "refactoring": [],
+        "test": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 240,
+      "reasoning": "Lines 0-1 are comments describing a fix for an issue, which aligns with the 'documentation' category as seen in examples like 2, 3, 4, 5, 6, 7, 16, 17, 24, and 28.",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0,
+          1
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 241,
+      "reasoning": "The change introduces a 'synchronized' block around the iteration logic. This is a functional change to ensure thread safety and prevent potential bugs related to concurrency. All removed and added lines contribute to this functional correction, similar to examples 1, 8, 14, 15, 18, 20, 21, 22, 26, 27 where functional code changes are classified as bugfixes.",
+      "labels": {
+        "bugfix": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31
+        ],
+        "whitespace": [],
+        "documentation": [],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 242,
+      "reasoning": "The change modifies a regular expression pattern by adding new allowed characters ('_' and ';'). This is a correction to the validation logic, likely to fix cases where valid paths were previously rejected. This aligns with bugfix examples like 1 and 20, where a functional correction is made to a constant or condition.",
+      "labels": {
+        "bugfix": [
+          0,
+          1
+        ],
+        "whitespace": [],
+        "documentation": [],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 243,
+      "reasoning": "Line 0 is a comment explaining the purpose of the new test cases, which is classified as documentation (similar to examples 13, 25). Lines 1 and 2 are new test assertions, which are classified as test code (similar to examples 23, 25, 29). Line 3 is an empty line, classified as whitespace (similar to examples 6, 13, 19, 25, 29).",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          3
+        ],
+        "documentation": [
+          0
+        ],
+        "refactoring": [],
+        "test": [
+          1,
+          2
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 244,
+      "reasoning": "The change modifies a string literal within a 'assertTrue' statement. This is a modification within an existing test case, likely to correct the representation of the string or the test message. As it's part of a test assertion, both lines are classified as test (similar to example 23).",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [],
+        "refactoring": [],
+        "test": [
+          0,
+          1
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 245,
+      "reasoning": "This hunk replaces a large block of custom domain validation logic with a call to an existing 'DomainValidator' instance. This is a significant functional change that corrects and improves the validation mechanism, aligning with the 'bugfix' category as seen in examples 22 and 26 where logic is simplified or delegated for correctness. Comments within the removed code (lines 4, 6, 7, 39, 45) are classified as documentation.",
+      "labels": {
+        "bugfix": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          40,
+          41,
+          42,
+          43,
+          44,
+          46,
+          47,
+          48,
+          49,
+          50
+        ],
+        "whitespace": [],
+        "documentation": [
+          4,
+          6,
+          7,
+          39,
+          45
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 246,
+      "reasoning": "Lines 2-19 and 26-28 are license headers and Javadoc comments, which are classified as documentation (matching examples 13, 19). Lines 0, 21, 22, 24, 29, 32, 34, 35, 37, 38, 39, 41, 42, 44, 45, 46, 48, 49, 51, 52, 53, 55, 56, 58, 59, 60, 62, 63, 65, 66, 67, 69, 70, 72, 73, 74, 76, 77, 79, 80, 81, 83, 84, 86, 87, 88, 90, 91, 93, 94, 95, 97 are part of a test case, indicated by the 'TestCase' in the class name, '@Test' annotations, and 'assertSame' assertions (matching examples 13, 25). Lines 1, 20, 23, 25, 31, 33, 36, 40, 43, 47, 50, 54, 57, 61, 64, 68, 71, 75, 79, 82, 86, 89, 92, 96 are empty lines or contain only whitespace (matching example 13).",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          1,
+          20,
+          23,
+          25,
+          31,
+          33,
+          36,
+          40,
+          43,
+          47,
+          50,
+          54,
+          57,
+          61,
+          64,
+          68,
+          71,
+          75,
+          79,
+          82,
+          86,
+          89,
+          92,
+          96
+        ],
+        "documentation": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          26,
+          27,
+          28
+        ],
+        "refactoring": [],
+        "test": [
+          0,
+          21,
+          22,
+          24,
+          29,
+          30,
+          32,
+          34,
+          35,
+          37,
+          38,
+          39,
+          41,
+          42,
+          44,
+          45,
+          46,
+          48,
+          49,
+          51,
+          52,
+          53,
+          55,
+          56,
+          58,
+          59,
+          60,
+          62,
+          63,
+          65,
+          66,
+          67,
+          69,
+          70,
+          72,
+          73,
+          74,
+          76,
+          77,
+          79,
+          80,
+          81,
+          83,
+          84,
+          86,
+          87,
+          88,
+          90,
+          91,
+          93,
+          94,
+          95,
+          97
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 247,
+      "reasoning": "Lines 2-19 are license headers, which are classified as documentation (matching examples 13, 19). Lines 0, 21, 23, 24, 25, 26, 27, 29, 30, 31, 32, 33, 34, 36, 37, 39, 40, 42, 44, 46, 48, 49, 50, 52, 54, 55, 56, 59, 60, 62, 63, 64, 66, 67, 68, 69, 70, 74, 77, 78, 79, 80, 83, 84, 85, 90, 91, 93, 94, 95, 96, 97, 99, 100, 101, 102, 103, 104, 107 are part of a test case, indicated by the 'TestCase' in the class name, '@Test' annotation, and 'assertTrue' assertion, including helper classes defined within the test (matching examples 13, 25). Lines 1, 20, 22, 28, 35, 38, 41, 43, 45, 47, 51, 53, 57, 58, 61, 65, 71, 72, 75, 81, 82, 86, 87, 89, 92, 98, 105, 106 are empty lines or contain only whitespace (matching example 13).",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          1,
+          20,
+          22,
+          28,
+          35,
+          38,
+          41,
+          43,
+          45,
+          47,
+          51,
+          53,
+          57,
+          58,
+          61,
+          65,
+          71,
+          72,
+          75,
+          81,
+          82,
+          86,
+          87,
+          89,
+          92,
+          98,
+          105,
+          106
+        ],
+        "documentation": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "refactoring": [],
+        "test": [
+          0,
+          21,
+          23,
+          24,
+          25,
+          26,
+          27,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          36,
+          37,
+          39,
+          40,
+          42,
+          44,
+          46,
+          48,
+          49,
+          50,
+          52,
+          54,
+          55,
+          56,
+          59,
+          60,
+          62,
+          63,
+          64,
+          66,
+          67,
+          68,
+          69,
+          70,
+          73,
+          74,
+          76,
+          77,
+          78,
+          79,
+          80,
+          83,
+          84,
+          85,
+          88,
+          90,
+          91,
+          93,
+          94,
+          95,
+          96,
+          97,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          107
+        ],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 248,
+      "reasoning": "Line 0 is a functional change, clearing a collection. This is a direct code modification that affects behavior, similar to other single-line bugfixes in the examples (e.g., example 21).",
+      "labels": {
+        "bugfix": [
+          0
+        ],
+        "whitespace": [],
+        "documentation": [],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 249,
+      "reasoning": "Lines 0-3 are an XML comment block describing a fix for an issue, which directly matches the pattern for documentation in the examples (e.g., examples 2, 3, 4, 5, 6, 7, 16, 17, 24). Line 4 is an empty line, classified as whitespace (matching example 6).",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [
+          4
+        ],
+        "documentation": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    },
+    {
+      "hunk_number": 250,
+      "reasoning": "Lines 0-5 are Javadoc-style comments providing an explanation of semantics, which is classified as documentation (matching example 13).",
+      "labels": {
+        "bugfix": [],
+        "whitespace": [],
+        "documentation": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "refactoring": [],
+        "test": [],
+        "unrelated": []
+      }
+    }
+  ]
+}

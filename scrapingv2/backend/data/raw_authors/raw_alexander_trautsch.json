@@ -1,0 +1,687 @@
+{
+  "name": "Alexander Trautsch",
+  "scholar_id": "VlSBMuIAAAAJ",
+  "affiliation": "University of Passau",
+  "scraped_at": "2026-04-20T11:50:35.172057Z",
+  "papers": [
+    {
+      "title": "A comparative study to benchmark cross-project defect prediction approaches",
+      "authors": "S Herbold, A Trautsch, J Grabowski",
+      "year": "2017",
+      "venue": "IEEE Transactions on Software Engineering 44 (9), 811-833, 2017",
+      "citation_count": 284,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:d1gkVwhDpl0C",
+      "abstract": "Cross-Project Defect Prediction (CPDP) as a means to focus quality assurance of software projects was under heavy investigation in recent years. However, within the current state-of-the-art it is unclear which of the many proposals performs best due to a lack of replication of results and diverse experiment setups that utilize different performance metrics and are based on different underlying data. Within this article [2, 3], we provide a benchmark for CPDP. Our benchmark replicates 24 CPDP approaches proposed by researchers between 2008 and 2015. Through our benchmark, we answer the following research questions:\n• RQ1: Which CPDP approaches perform best in terms of F-measure, G-measure, AUC, and MCC?\n• RQ2: Does any CPDP approach consistently fulfill the performance criteria for successful predictions postulated by Zimmermann et al. [4], i.e., have at least 0.75 recall, 0.75 precision, and 0.75 …"
+    },
+    {
+      "title": "On the validity of pre-trained transformers for natural language processing in the software engineering domain",
+      "authors": "J Von der Mosel, A Trautsch, S Herbold",
+      "year": "2022",
+      "venue": "IEEE Transactions on Software Engineering 49 (4), 1487-1507, 2022",
+      "citation_count": 139,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:LkGwnXOMwfcC",
+      "abstract": "Transformers are the current state-of-the-art of natural language processing in many domains and are using traction within software engineering research as well. Such models are pre-trained on large amounts of data, usually from the general domain. However, we only have a limited understanding regarding the validity of transformers within the software engineering domain, i.e., how good such models are at understanding words and sentences within a software engineering context and how this improves the state-of-the-art. Within this article, we shed light on this complex, but crucial issue. We compare BERT transformer models trained with software engineering data with transformers based on general domain data in multiple dimensions: their vocabulary, their ability to understand which words are missing, and their performance in classification tasks. Our results show that for tasks that require understanding of …"
+    },
+    {
+      "title": "Global vs. local models for cross-project defect prediction: A replication study",
+      "authors": "S Herbold, A Trautsch, J Grabowski",
+      "year": "2017",
+      "venue": "Empirical software engineering 22, 1866-1902, 2017",
+      "citation_count": 91,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:u5HHmVD_uO8C",
+      "abstract": "Although researchers invested significant effort, the performance of defect prediction in a cross-project setting, i.e., with data that does not come from the same project, is still unsatisfactory. A recent proposal for the improvement of defect prediction is using local models. With local models, the available data is first clustered into homogeneous regions and afterwards separate classifiers are trained for each homogeneous region. Since the main problem of cross-project defect prediction is data heterogeneity, the idea of local models is promising. Therefore, we perform a conceptual replication of the previous studies on local models with a focus on cross-project defect prediction. In a large case study, we evaluate the performance of local models and investigate their advantages and drawbacks for cross-project predictions. To this aim, we also compare the performance with a global model and a transfer learning …"
+    },
+    {
+      "title": "A fine-grained data set and analysis of tangling in bug fixing commits",
+      "authors": "S Herbold, A Trautsch, B Ledel, A Aghamohammadi, TA Ghaleb, ...",
+      "year": "2022",
+      "venue": "Empirical Software Engineering 27 (6), 125, 2022",
+      "citation_count": 78,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:_FxGoFyzp5QC",
+      "abstract": "Context\nTangled commits are changes to software that address multiple concerns at once. For researchers interested in bugs, tangled commits mean that they actually study not only bugs, but also other concerns irrelevant for the study of bugs.\nObjective\nWe want to improve our understanding of the prevalence of tangling and the types of changes that are tangled within bug fixing commits.\nMethods\nWe use a crowd sourcing approach for manual labeling to validate which changes contribute to bug fixes for each line in bug fixing commits. Each line is labeled by four participants. If at least three participants agree on the same label, we have consensus.\nResults\nWe estimate that between 17% and 32% of all changes in bug fixing commits modify the source code to fix the underlying problem. However, when we only consider changes to the production code files this ratio increases to 66% to 87%. We find that about 11% of …"
+    },
+    {
+      "title": "Problems with SZZ and features: An empirical study of the state of practice of defect prediction data collection",
+      "authors": "S Herbold, A Trautsch, F Trautsch, B Ledel",
+      "year": "2022",
+      "venue": "Empirical Software Engineering 27 (2), 42, 2022",
+      "citation_count": 73,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:UebtZRa9Y70C",
+      "abstract": "Context\nThe SZZ algorithm is the de facto standard for labeling bug fixing commits and finding inducing changes for defect prediction data. Recent research uncovered potential problems in different parts of the SZZ algorithm. Most defect prediction data sets provide only static code metrics as features, while research indicates that other features are also important.\nObjective\nWe provide an empirical analysis of the defect labels created with the SZZ algorithm and the impact of commonly used features on results.\nMethod\nWe used a combination of manual validation and adopted or improved heuristics for the collection of defect data. We conducted an empirical study on 398 releases of 38 Apache projects.\nResults\nWe found that only half of the bug fixing commits determined by SZZ are actually bug fixing. If a six-month time frame is used in combination with SZZ to determine which bugs affect a release, one file is incorrectly …"
+    },
+    {
+      "title": "On the feasibility of automated prediction of bug and non-bug issues",
+      "authors": "S Herbold, A Trautsch, F Trautsch",
+      "year": "2020",
+      "venue": "Empirical Software Engineering 25, 5333-5369, 2020",
+      "citation_count": 58,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:eQOLeE2rZwMC",
+      "abstract": "Context\nIssue tracking systems are used to track and describe tasks in the development process, e.g., requested feature improvements or reported bugs. However, past research has shown that the reported issue types often do not match the description of the issue.\nObjective\nWe want to understand the overall maturity of the state of the art of issue type prediction with the goal to predict if issues are bugs and evaluate if we can improve existing models by incorporating manually specified knowledge about issues.\nMethod\nWe train different models for the title and description of the issue to account for the difference in structure between these fields, e.g., the length. Moreover, we manually detect issues whose description contains a null pointer exception, as these are strong indicators that issues are bugs.\nResults\nOur approach performs best overall, but not significantly different from an approach from the literature based on …"
+    },
+    {
+      "title": "A longitudinal study of static analysis warning evolution and the effects of PMD on software quality in Apache open source projects",
+      "authors": "A Trautsch, S Herbold, J Grabowski",
+      "year": "2020",
+      "venue": "Empirical Software Engineering 25 (6), 5137-5192, 2020",
+      "citation_count": 49,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:W7OEmFMy1HYC",
+      "abstract": "Automated static analysis tools (ASATs) have become a major part of the software development workflow. Acting on the generated warnings, i.e., changing the code indicated in the warning, should be part of, at latest, the code review phase. Despite this being a best practice in software development, there is still a lack of empirical research regarding the usage of ASATs in the wild. In this work, we want to study ASAT warning trends in software via the example of PMD as an ASAT and its usage in open source projects. We analyzed the commit history of 54 projects (with 112,266 commits in total), taking into account 193 PMD rules and 61 PMD releases. We investigate trends of ASAT warnings over up to 17 years for the selected study subjects regarding changes of warning types, short and long term impact of ASAT use, and changes in warning severities. We found that large global changes in ASAT warnings are …"
+    },
+    {
+      "title": "Static source code metrics and static analysis warnings for fine-grained just-in-time defect prediction",
+      "authors": "A Trautsch, S Herbold, J Grabowski",
+      "year": "2020",
+      "venue": "2020 IEEE International Conference on Software Maintenance and Evolution …, 2020",
+      "citation_count": 47,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:YsMSGLbcyi4C",
+      "abstract": "Software quality evolution and predictive models to support decisions about resource distribution in software quality assurance tasks are an important part of software engineering research. Recently, a fine-grained just-in-time defect prediction approach was proposed which has the ability to find bug-inducing files within changes instead of only complete changes. In this work, we utilize this approach and improve it in multiple places: data collection, labeling and features. We include manually validated issue types, an improved SZZ algorithm which discards comments, whitespaces and refactorings. Additionally, we include static source code metrics as well as static analysis warnings and warning density derived metrics as features. To assess whether we can save cost we incorporate a specialized defect prediction cost model. To evaluate our proposed improvements of the fine-grained just-in-time defect prediction …"
+    },
+    {
+      "title": "The smartshark ecosystem for software repository mining",
+      "authors": "A Trautsch, F Trautsch, S Herbold, B Ledel, J Grabowski",
+      "year": "2020",
+      "venue": "Proceedings of the ACM/IEEE 42nd International Conference on Software …, 2020",
+      "citation_count": 33,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:zYLM7Y9cAGgC",
+      "abstract": "Software repository mining is the foundation for many empirical software engineering studies. The collection and analysis of detailed data can be challenging, especially if data shall be shared to enable replicable research and open science practices. SmartSHARK is an ecosystem that supports replicable and reproducible research based on software repository mining."
+    },
+    {
+      "title": "Issues with SZZ: An empirical assessment of the state of practice of defect prediction data collection",
+      "authors": "S Herbold, A Trautsch, F Trautsch, B Ledel",
+      "year": "2019",
+      "venue": "arXiv preprint arXiv:1911.08938, 2019",
+      "citation_count": 32,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:Y0pCki6q_DkC",
+      "abstract": null
+    },
+    {
+      "title": "Predicting issue types with sebert",
+      "authors": "A Trautsch, S Herbold",
+      "year": "2022",
+      "venue": "2022 IEEE/ACM 1st International Workshop on Natural Language-Based Software …, 2022",
+      "citation_count": 28,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:0EnyYjriUFMC",
+      "abstract": "Pre-trained transformer models are the current state-of-the-art for natural language models processing. seBERT is such a model, that was developed based on the BERT architecture, but trained from scratch with software engineering data. We fine-tuned this model for the NLBSE challenge for the task of issue type prediction. Our model dominates the baseline fastText for all three issue types in both recall and precision to achieve an overall F1-score of 85.7%, which is an increase of 4.1% over the baseline."
+    },
+    {
+      "title": "What really changes when developers intend to improve their source code: a commit-level study of static metric value and static analysis warning changes",
+      "authors": "A Trautsch, J Erbel, S Herbold, J Grabowski",
+      "year": "2023",
+      "venue": "Empirical Software Engineering 28 (2), 30, 2023",
+      "citation_count": 26,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:8k81kl-MbHgC",
+      "abstract": "Many software metrics are designed to measure aspects that are believed to be related to software quality. Static software metrics, e.g., size, complexity and coupling are used in defect prediction research as well as software quality models to evaluate software quality. Static analysis tools also include boundary values for complexity and size that generate warnings for developers. While this indicates a relationship between quality and software metrics, the extent of it is not well understood. Moreover, recent studies found that complexity metrics may be unreliable indicators for understandability of the source code. To explore this relationship, we leverage the intent of developers about what constitutes a quality improvement in their own code base. We manually classify a randomized sample of 2,533 commits from 54 Java open source projects as quality improving depending on the intent of the developer by inspecting …"
+    },
+    {
+      "title": "MSR Mining Challenge: The SmartSHARK Repository Mining Data",
+      "authors": "A Trautsch, F Trautsch, S Herbold",
+      "year": "2021",
+      "venue": "arXiv preprint arXiv:2102.11540, 2021",
+      "citation_count": 17,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:ufrVoPGSRksC",
+      "abstract": "The SmartSHARK repository mining data is a collection of rich and detailed information about the evolution of software projects. The data is unique in its diversity and contains detailed information about each change, issue tracking data, continuous integration data, as well as pull request and code review data. Moreover, the data does not contain only raw data scraped from repositories, but also annotations in form of labels determined through a combination of manual analysis and heuristics, as well as links between the different parts of the data set. The SmartSHARK data set provides a rich source of data that enables us to explore research questions that require data from different sources and/or longitudinal data over time."
+    },
+    {
+      "title": "Large-scale manual validation of bug fixing commits: A fine-grained analysis of tangling",
+      "authors": "S Herbold, A Trautsch, B Ledel, A Aghamohammadi, TA Ghaleb, ...",
+      "year": "2020",
+      "venue": "arXiv preprint arXiv:2011.06244, 2020",
+      "citation_count": 15,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:WF5omc3nYNoC",
+      "abstract": "Context: Tangled commits are changes to software that address multiple concerns at once. For researchers interested in bugs, tangled commits mean that they actually study not only bugs, but also other concerns irrelevant for the study of bugs.\nObjective: We want to improve our understanding of the prevalence of tangling and the types of changes that are tangled within bug fixing commits.\nMethods: We use a crowd sourcing approach for manual labeling to validate which changes contribute to bug fixes for each line in bug fixing commits. Each line is labeled by four participants. If at least three participants agree on the same label, we have consensus."
+    },
+    {
+      "title": "Large-Scale Manual Validation of Bugfixing Changes",
+      "authors": "S Herbold, A Trautsch, B Ledel",
+      "year": "2020",
+      "venue": "Proceedings of the 17th International Conference on Mining Software …, 2020",
+      "citation_count": 13,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:UeHWp8X0CEIC",
+      "abstract": "Context Accurate data about bug fixes is important for different venues of research, e.g., program repair. While automated procedures are able to identify bug fixing activities, they cannot distinguish between the bug fix and other activities that are happening in parallel, e.g., refactorings or the addition of features. Objective The creation of a large corpus of manually validated bug fixes and to gain insights into the limitations of manual validation. Method We use a crowd working approach to manually validate bug fixing commit and analyze the limitations. Limitations Insights limited to the Java programming language and possibly by the participants in the crowd working.\nContext\n\nObjective\n\nMethod\n\nLimitations\n"
+    },
+    {
+      "title": "Are automated static analysis tools worth it? An investigation into relative warning density and external software quality on the example of Apache open source projects",
+      "authors": "A Trautsch, S Herbold, J Grabowski",
+      "year": "2023",
+      "venue": "Empirical Software Engineering 28 (3), 66, 2023",
+      "citation_count": 9,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:MXK_kJrjxJIC",
+      "abstract": "Automated Static Analysis Tools (ASATs) are part of software development best practices. ASATs are able to warn developers about potential problems in the code. On the one hand, ASATs are based on best practices so there should be a noticeable effect on software quality. On the other hand, ASATs suffer from false positive warnings, which developers have to inspect and then ignore or mark as invalid. In this article, we ask whether ASATs have a measurable impact on external software quality, using the example of PMD for Java. We investigate the relationship between ASAT warnings emitted by PMD on defects per change and per file. Our case study includes data for the history of each file as well as the differences between changed files and the project in which they are contained. We investigate whether files that induce a defect have more static analysis warnings than the rest of the project. Moreover, we …"
+    },
+    {
+      "title": "Effects of automated static analysis tools: a multidimensional view on quality evolution",
+      "authors": "A Trautsch",
+      "year": "2019",
+      "venue": "2019 IEEE/ACM 41st International Conference on Software Engineering …, 2019",
+      "citation_count": 3,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:2osOgNQ5qMEC",
+      "abstract": "Leveraging and acting on the results of static analysis is a well-known best practice. Static analysis also is an integral part of software quality assurance which is highlighted by the inclusion of static analysis results in software quality models like ColumbusQM and Quamoco. Although there are studies that explore if tools for static analysis are used and how they are configured, few publications explore the longitudinal effects of acting on static analysis results on software and on the evolution of software. Especially effects on quality criteria, e.g., software quality metrics, defects, or readability are missing. With our research, we will bridge this gap and measure the effects of static analysis on software quality evolution. We will measure the effect the removal of code that generates static analysis warnings has on software quality metrics. Furthermore, we will measure long term effects on external quality attributes, e.g …"
+    },
+    {
+      "title": "Are automated static analysis tools worth it? An investigation into relative warning density and external software quality",
+      "authors": "A Trautsch, S Herbold, J Grabowski",
+      "year": "2021",
+      "venue": "arXiv preprint arXiv:2111.09188, 2021",
+      "citation_count": 2,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:Se3iqnhoufwC",
+      "abstract": "Automated Static Analysis Tools (ASATs) are part of software development best practices. ASATs are able to warn developers about potential problems in the code. On the one hand, ASATs are based on best practices so there should be a noticeable effect on software quality. On the other hand, ASATs suffer from false positive warnings, which developers have to inspect and then ignore or mark as invalid. In this article, we ask the question if ASATs have a measurable impact on external software quality, using the example of PMD for Java. We investigate the relationship between ASAT warnings emitted by PMD on defects per change and per file. Our case study includes data for the history of each file as well as the differences between changed files and the project in which they are contained. We investigate whether files that induce a defect have more static analysis warnings than the rest of the project. Moreover, we investigate the impact of two different sets of ASAT rules. We find that, bug inducing files contain less static analysis warnings than other files of the project at that point in time. However, this can be explained by the overall decreasing warning density. When compared with all other changes, we find a statistically significant difference in one metric for all rules and two metrics for a subset of rules. However, the effect size is negligible in all cases, showing that the actual difference in warning density between bug inducing changes and other changes is small at best."
+    },
+    {
+      "title": "[Journal First] A Comparative Study to Benchmark Cross-Project Defect Prediction Approaches",
+      "authors": "S Herbold, A Trautsch, J Grabowski",
+      "year": "2018",
+      "venue": "2018 IEEE/ACM 40th International Conference on Software Engineering (ICSE …, 2018",
+      "citation_count": 2,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:qjMakFHDy7sC",
+      "abstract": "Cross-Project Defect Prediction (CPDP) as a means to focus quality assurance of software projects was under heavy investigation in recent years. However, within the current state-of-the-art it is unclear which of the many proposals performs best due to a lack of replication of results and diverse experiment setups that utilize different performance metrics and are based on different underlying data. Within this article, we provide a benchmark for CPDP. We replicate 24 approaches proposed by researchers between 2008 and 2015 and evaluate their performance on software products from five different data sets. Based on our benchmark, we determined that an approach proposed by Camargo Cruz and Ochimizu (2009) based on data standardization performs best and is always ranked among the statistically significant best results for all metrics and data sets. Approaches proposed by Turhan et al. (2009), Menzies et …"
+    },
+    {
+      "title": "On the differences between quality increasing and other changes in open source Java projects",
+      "authors": "A Trautsch, J Erbel, S Herbold, J Grabowski",
+      "year": "2021",
+      "venue": "arXiv preprint arXiv:2109.03544, 2021",
+      "citation_count": 1,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:roLk4NBRz8UC",
+      "abstract": null
+    },
+    {
+      "title": "Simulating Live Cloud Adaptations Prior to a Production Deployment using a Models at Runtime Approach.",
+      "authors": "J Erbel, A Trautsch, J Grabowski",
+      "year": "2021",
+      "venue": "SIMULTECH, 335-343, 2021",
+      "citation_count": null,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:hqOjcs7Dif8C",
+      "abstract": "The utilization of distributed resources, especially in the cloud, has become a best practice in research and industry. However, orchestrating and adapting running cloud infrastructures and applications is still a tedious and error-prone task. Especially live adaptation changes need to be well tested before they can be applied to production systems. Meanwhile, a multitude of approaches exist that support the development of cloud applications, granting developers a lot of insight on possible issues. Nonetheless, not all issues can be discovered without performing an actual deployment. In this paper, we propose a model-driven concept that allows developers to assemble, test, and simulate the deployment and adaptation of cloud compositions without affecting the production system. In our concept, we reflect the production system in a runtime model and simulate all adaptive changes on a locally deployed duplicate of the model. We show the feasibility of the approach by performing a case study which simulates a reconfiguration of a computation cluster deployment. Using the presented approach, developers can easily assess how the planned adaptive steps and the execution of configuration management scripts affect the running system resulting in an early detection of deployment issues."
+    },
+    {
+      "title": "Comparison of local classifiers for cross-project defect prediction",
+      "authors": "A Trautsch",
+      "year": "2014",
+      "venue": null,
+      "citation_count": null,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:9yKSN-GCB0IC",
+      "abstract": "There is a connection between static source code metrics, for example, lines of code or cyclomatic complexity and potential defects in the source code. Obviously, there is no closed formula, but with the field of machine learning and its techniques we have a tool at our disposal that has the ability to infer rules from large amounts of data. In this thesis, we use machine learning techniques to predict defects in software components from source code metrics. We use a subset of a publicly available dataset from open source projects to train and evaluate our machine learning models. As we do cross-project defect prediction, we predict defects in a software project using classifiers trained with the source code metrics of other projects. In this thesis, we evaluate the cross-project defect prediction performance of two local classifier implementations. Local classifiers partition the training data first, then train a classifier for each partition. This leads to more homogeneous data and should yield better prediction results than training one global classifier with the complete data. We run six experiments which compare our two local classifier implementations with an existing global classifier, which already yields a high success rate in cross-project defect prediction. These experiments are conducted using the CrossPare framework for ease of implementation and comparability of results. The experiments make use of two different methods of bias handling: equal weighting and undersampling. This will additionally show how these techniques influence our local classifiers and the prediction performance."
+    },
+    {
+      "title": "NLBSE 2022",
+      "authors": "P Devine, K Blincoe, A Peruma, CD Newman, O Dominik, H Nico, ...",
+      "year": "",
+      "venue": null,
+      "citation_count": null,
+      "paper_url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:5nxA0vEk-isC",
+      "abstract": "Table of Contents Toggle navigation IEEE Computer Society Digital Library Jobs Tech News Resource Center Press Room Advertising About Us IEEE IEEE Computer Society IEEE Computer Society Digital Library My Subscriptions Magazines Journals Conference Proceedings Institutional Subscriptions IEEE IEEE Computer Society More Jobs Tech News Resource Center Press Room Advertising About Us Cart All Advanced Search Conference Cover Image Download 1.Home 2.Proceedings 3.nlbse 2022 Table of Contents 2022, pp. 5-6, DOI Bookmark: Keywords Authors The 1st Intl. Workshop onNatural Language-basedSoftware EngineeringNLBSE 2022 Table of Contents Message from the NLBSE 2022 Program Chairs viiNLBSE 2022 Program Committee ixThe First Intl. Workshop on Natural Language-based SoftwareEngineeringUnsupervised Extreme Multi Label Classification of Stack Overflow Posts 1 Peter …"
+    }
+  ],
+  "filtered_papers": [
+    {
+      "title": "A large-scale comparison of human-written versus ChatGPT-generated essays",
+      "reason": "This paper focuses on comparing human-written and AI-generated essays, which falls under natural language processing or education, not software engineering."
+    },
+    {
+      "title": "On the Impact of Reconstruction and Context for Argument Prediction in Natural Debate",
+      "reason": "This paper discusses argument prediction in natural debate, which belongs to the field of natural language processing or computational linguistics, not software engineering."
+    },
+    {
+      "title": "AI, write an essay for me: A large-scale comparison of human-written versus ChatGPT-generated essays",
+      "reason": "This paper focuses on comparing human-written and AI-generated essays, which falls under natural language processing or education, not software engineering."
+    }
+  ],
+  "raw_data": {
+    "serpapi_profile_response": {
+      "search_metadata": {
+        "id": "69e612c86f1e40a4bdde1f53",
+        "status": "Success",
+        "json_endpoint": "https://serpapi.com/searches/7u3eQ3ulxtn_ayII8Z_ClQ/69e612c86f1e40a4bdde1f53.json",
+        "created_at": "2026-04-20 11:49:28 UTC",
+        "processed_at": "2026-04-20 11:49:28 UTC",
+        "google_scholar_author_url": "https://scholar.google.com/citations?user=VlSBMuIAAAAJ&hl=en&pagesize=100",
+        "raw_html_file": "https://serpapi.com/searches/7u3eQ3ulxtn_ayII8Z_ClQ/69e612c86f1e40a4bdde1f53.html",
+        "total_time_taken": 0.51
+      },
+      "search_parameters": {
+        "engine": "google_scholar_author",
+        "author_id": "VlSBMuIAAAAJ",
+        "hl": "en",
+        "num": "100"
+      },
+      "author": {
+        "name": "Alexander Trautsch",
+        "affiliations": "University of Passau",
+        "email": "Verified email at unipassau.de",
+        "thumbnail": "https://scholar.google.com/citations/images/avatar_scholar_128.png"
+      },
+      "articles": [
+        {
+          "title": "A large-scale comparison of human-written versus ChatGPT-generated essays",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:kNdYIx-mwKoC",
+          "citation_id": "VlSBMuIAAAAJ:kNdYIx-mwKoC",
+          "authors": "S Herbold, A Hautli-Janisz, U Heuer, Z Kikteva, A Trautsch",
+          "publication": "Scientific Reports 13 (1), 18617, 2023",
+          "cited_by": {
+            "value": 531,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=1049420144524191213",
+            "serpapi_link": "https://serpapi.com/search.json?cites=1049420144524191213&engine=google_scholar&hl=en",
+            "cites_id": "1049420144524191213"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "A comparative study to benchmark cross-project defect prediction approaches",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:d1gkVwhDpl0C",
+          "citation_id": "VlSBMuIAAAAJ:d1gkVwhDpl0C",
+          "authors": "S Herbold, A Trautsch, J Grabowski",
+          "publication": "IEEE Transactions on Software Engineering 44 (9), 811-833, 2017",
+          "cited_by": {
+            "value": 284,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=7126230857914753644",
+            "serpapi_link": "https://serpapi.com/search.json?cites=7126230857914753644&engine=google_scholar&hl=en",
+            "cites_id": "7126230857914753644"
+          },
+          "year": "2017"
+        },
+        {
+          "title": "On the validity of pre-trained transformers for natural language processing in the software engineering domain",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:LkGwnXOMwfcC",
+          "citation_id": "VlSBMuIAAAAJ:LkGwnXOMwfcC",
+          "authors": "J Von der Mosel, A Trautsch, S Herbold",
+          "publication": "IEEE Transactions on Software Engineering 49 (4), 1487-1507, 2022",
+          "cited_by": {
+            "value": 139,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=17406017280874427611",
+            "serpapi_link": "https://serpapi.com/search.json?cites=17406017280874427611&engine=google_scholar&hl=en",
+            "cites_id": "17406017280874427611"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "Global vs. local models for cross-project defect prediction: A replication study",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:u5HHmVD_uO8C",
+          "citation_id": "VlSBMuIAAAAJ:u5HHmVD_uO8C",
+          "authors": "S Herbold, A Trautsch, J Grabowski",
+          "publication": "Empirical software engineering 22, 1866-1902, 2017",
+          "cited_by": {
+            "value": 91,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11356141666939074906",
+            "serpapi_link": "https://serpapi.com/search.json?cites=11356141666939074906&engine=google_scholar&hl=en",
+            "cites_id": "11356141666939074906"
+          },
+          "year": "2017"
+        },
+        {
+          "title": "A fine-grained data set and analysis of tangling in bug fixing commits",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:_FxGoFyzp5QC",
+          "citation_id": "VlSBMuIAAAAJ:_FxGoFyzp5QC",
+          "authors": "S Herbold, A Trautsch, B Ledel, A Aghamohammadi, TA Ghaleb, ...",
+          "publication": "Empirical Software Engineering 27 (6), 125, 2022",
+          "cited_by": {
+            "value": 78,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=15367080930623477018",
+            "serpapi_link": "https://serpapi.com/search.json?cites=15367080930623477018&engine=google_scholar&hl=en",
+            "cites_id": "15367080930623477018"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "Problems with SZZ and features: An empirical study of the state of practice of defect prediction data collection",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:UebtZRa9Y70C",
+          "citation_id": "VlSBMuIAAAAJ:UebtZRa9Y70C",
+          "authors": "S Herbold, A Trautsch, F Trautsch, B Ledel",
+          "publication": "Empirical Software Engineering 27 (2), 42, 2022",
+          "cited_by": {
+            "value": 73,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=15094905915435892104",
+            "serpapi_link": "https://serpapi.com/search.json?cites=15094905915435892104&engine=google_scholar&hl=en",
+            "cites_id": "15094905915435892104"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "On the feasibility of automated prediction of bug and non-bug issues",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:eQOLeE2rZwMC",
+          "citation_id": "VlSBMuIAAAAJ:eQOLeE2rZwMC",
+          "authors": "S Herbold, A Trautsch, F Trautsch",
+          "publication": "Empirical Software Engineering 25, 5333-5369, 2020",
+          "cited_by": {
+            "value": 58,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=8775819659294145890",
+            "serpapi_link": "https://serpapi.com/search.json?cites=8775819659294145890&engine=google_scholar&hl=en",
+            "cites_id": "8775819659294145890"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "A longitudinal study of static analysis warning evolution and the effects of PMD on software quality in Apache open source projects",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:W7OEmFMy1HYC",
+          "citation_id": "VlSBMuIAAAAJ:W7OEmFMy1HYC",
+          "authors": "A Trautsch, S Herbold, J Grabowski",
+          "publication": "Empirical Software Engineering 25 (6), 5137-5192, 2020",
+          "cited_by": {
+            "value": 49,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=7345714347739345783",
+            "serpapi_link": "https://serpapi.com/search.json?cites=7345714347739345783&engine=google_scholar&hl=en",
+            "cites_id": "7345714347739345783"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "Static source code metrics and static analysis warnings for fine-grained just-in-time defect prediction",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:YsMSGLbcyi4C",
+          "citation_id": "VlSBMuIAAAAJ:YsMSGLbcyi4C",
+          "authors": "A Trautsch, S Herbold, J Grabowski",
+          "publication": "2020 IEEE International Conference on Software Maintenance and Evolution …, 2020",
+          "cited_by": {
+            "value": 47,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=15674342365101634254",
+            "serpapi_link": "https://serpapi.com/search.json?cites=15674342365101634254&engine=google_scholar&hl=en",
+            "cites_id": "15674342365101634254"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "The smartshark ecosystem for software repository mining",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:zYLM7Y9cAGgC",
+          "citation_id": "VlSBMuIAAAAJ:zYLM7Y9cAGgC",
+          "authors": "A Trautsch, F Trautsch, S Herbold, B Ledel, J Grabowski",
+          "publication": "Proceedings of the ACM/IEEE 42nd International Conference on Software …, 2020",
+          "cited_by": {
+            "value": 33,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=13938385788163788871",
+            "serpapi_link": "https://serpapi.com/search.json?cites=13938385788163788871&engine=google_scholar&hl=en",
+            "cites_id": "13938385788163788871"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "Issues with SZZ: An empirical assessment of the state of practice of defect prediction data collection",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:Y0pCki6q_DkC",
+          "citation_id": "VlSBMuIAAAAJ:Y0pCki6q_DkC",
+          "authors": "S Herbold, A Trautsch, F Trautsch, B Ledel",
+          "publication": "arXiv preprint arXiv:1911.08938, 2019",
+          "cited_by": {
+            "value": 32,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=3450538571134223989",
+            "serpapi_link": "https://serpapi.com/search.json?cites=3450538571134223989&engine=google_scholar&hl=en",
+            "cites_id": "3450538571134223989"
+          },
+          "year": "2019"
+        },
+        {
+          "title": "Predicting issue types with sebert",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:0EnyYjriUFMC",
+          "citation_id": "VlSBMuIAAAAJ:0EnyYjriUFMC",
+          "authors": "A Trautsch, S Herbold",
+          "publication": "2022 IEEE/ACM 1st International Workshop on Natural Language-Based Software …, 2022",
+          "cited_by": {
+            "value": 28,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=5726220627476010917",
+            "serpapi_link": "https://serpapi.com/search.json?cites=5726220627476010917&engine=google_scholar&hl=en",
+            "cites_id": "5726220627476010917"
+          },
+          "year": "2022"
+        },
+        {
+          "title": "What really changes when developers intend to improve their source code: a commit-level study of static metric value and static analysis warning changes",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:8k81kl-MbHgC",
+          "citation_id": "VlSBMuIAAAAJ:8k81kl-MbHgC",
+          "authors": "A Trautsch, J Erbel, S Herbold, J Grabowski",
+          "publication": "Empirical Software Engineering 28 (2), 30, 2023",
+          "cited_by": {
+            "value": 26,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=16504371454498743059",
+            "serpapi_link": "https://serpapi.com/search.json?cites=16504371454498743059&engine=google_scholar&hl=en",
+            "cites_id": "16504371454498743059"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "MSR Mining Challenge: The SmartSHARK Repository Mining Data",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:ufrVoPGSRksC",
+          "citation_id": "VlSBMuIAAAAJ:ufrVoPGSRksC",
+          "authors": "A Trautsch, F Trautsch, S Herbold",
+          "publication": "arXiv preprint arXiv:2102.11540, 2021",
+          "cited_by": {
+            "value": 17,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=882970858296587610,12209240119811658970",
+            "serpapi_link": "https://serpapi.com/search.json?cites=882970858296587610%2C12209240119811658970&engine=google_scholar&hl=en",
+            "cites_id": "882970858296587610,12209240119811658970"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "Large-scale manual validation of bug fixing commits: A fine-grained analysis of tangling",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:WF5omc3nYNoC",
+          "citation_id": "VlSBMuIAAAAJ:WF5omc3nYNoC",
+          "authors": "S Herbold, A Trautsch, B Ledel, A Aghamohammadi, TA Ghaleb, ...",
+          "publication": "arXiv preprint arXiv:2011.06244, 2020",
+          "cited_by": {
+            "value": 15,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=5155294371116315346",
+            "serpapi_link": "https://serpapi.com/search.json?cites=5155294371116315346&engine=google_scholar&hl=en",
+            "cites_id": "5155294371116315346"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "Large-Scale Manual Validation of Bugfixing Changes",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:UeHWp8X0CEIC",
+          "citation_id": "VlSBMuIAAAAJ:UeHWp8X0CEIC",
+          "authors": "S Herbold, A Trautsch, B Ledel",
+          "publication": "Proceedings of the 17th International Conference on Mining Software …, 2020",
+          "cited_by": {
+            "value": 13,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=5664232594759837354",
+            "serpapi_link": "https://serpapi.com/search.json?cites=5664232594759837354&engine=google_scholar&hl=en",
+            "cites_id": "5664232594759837354"
+          },
+          "year": "2020"
+        },
+        {
+          "title": "Are automated static analysis tools worth it? An investigation into relative warning density and external software quality on the example of Apache open source projects",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:MXK_kJrjxJIC",
+          "citation_id": "VlSBMuIAAAAJ:MXK_kJrjxJIC",
+          "authors": "A Trautsch, S Herbold, J Grabowski",
+          "publication": "Empirical Software Engineering 28 (3), 66, 2023",
+          "cited_by": {
+            "value": 9,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=14429268197736263535",
+            "serpapi_link": "https://serpapi.com/search.json?cites=14429268197736263535&engine=google_scholar&hl=en",
+            "cites_id": "14429268197736263535"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "On the Impact of Reconstruction and Context for Argument Prediction in Natural Debate",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:KlAtU1dfN6UC",
+          "citation_id": "VlSBMuIAAAAJ:KlAtU1dfN6UC",
+          "authors": "Z Kikteva, A Trautsch, P Katzer, M Oest, S Herbold, A Hautli",
+          "publication": "Proceedings of the 10th Workshop on Argument Mining, 100-106, 2023",
+          "cited_by": {
+            "value": 5,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11785626020313848754",
+            "serpapi_link": "https://serpapi.com/search.json?cites=11785626020313848754&engine=google_scholar&hl=en",
+            "cites_id": "11785626020313848754"
+          },
+          "year": "2023"
+        },
+        {
+          "title": "Effects of automated static analysis tools: a multidimensional view on quality evolution",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:2osOgNQ5qMEC",
+          "citation_id": "VlSBMuIAAAAJ:2osOgNQ5qMEC",
+          "authors": "A Trautsch",
+          "publication": "2019 IEEE/ACM 41st International Conference on Software Engineering …, 2019",
+          "cited_by": {
+            "value": 3,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=11376286966111965798",
+            "serpapi_link": "https://serpapi.com/search.json?cites=11376286966111965798&engine=google_scholar&hl=en",
+            "cites_id": "11376286966111965798"
+          },
+          "year": "2019"
+        },
+        {
+          "title": "Are automated static analysis tools worth it? An investigation into relative warning density and external software quality",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:Se3iqnhoufwC",
+          "citation_id": "VlSBMuIAAAAJ:Se3iqnhoufwC",
+          "authors": "A Trautsch, S Herbold, J Grabowski",
+          "publication": "arXiv preprint arXiv:2111.09188, 2021",
+          "cited_by": {
+            "value": 2,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=12871719819884598333",
+            "serpapi_link": "https://serpapi.com/search.json?cites=12871719819884598333&engine=google_scholar&hl=en",
+            "cites_id": "12871719819884598333"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "[Journal First] A Comparative Study to Benchmark Cross-Project Defect Prediction Approaches",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:qjMakFHDy7sC",
+          "citation_id": "VlSBMuIAAAAJ:qjMakFHDy7sC",
+          "authors": "S Herbold, A Trautsch, J Grabowski",
+          "publication": "2018 IEEE/ACM 40th International Conference on Software Engineering (ICSE …, 2018",
+          "cited_by": {
+            "value": 2,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=12285984772559905222",
+            "serpapi_link": "https://serpapi.com/search.json?cites=12285984772559905222&engine=google_scholar&hl=en",
+            "cites_id": "12285984772559905222"
+          },
+          "year": "2018"
+        },
+        {
+          "title": "On the differences between quality increasing and other changes in open source Java projects",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:roLk4NBRz8UC",
+          "citation_id": "VlSBMuIAAAAJ:roLk4NBRz8UC",
+          "authors": "A Trautsch, J Erbel, S Herbold, J Grabowski",
+          "publication": "arXiv preprint arXiv:2109.03544, 2021",
+          "cited_by": {
+            "value": 1,
+            "link": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=10315129063870800500",
+            "serpapi_link": "https://serpapi.com/search.json?cites=10315129063870800500&engine=google_scholar&hl=en",
+            "cites_id": "10315129063870800500"
+          },
+          "year": "2021"
+        },
+        {
+          "title": "AI, write an essay for me: A large-scale comparison of human-written versus ChatGPT-generated essays",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:3fE2CSJIrl8C",
+          "citation_id": "VlSBMuIAAAAJ:3fE2CSJIrl8C",
+          "authors": "S Herbold, A Hautli-Janisz, U Heuer, Z Kikteva, A Trautsch",
+          "publication": "arXiv preprint arXiv:2304.14276, 2023",
+          "cited_by": {
+            "value": null
+          },
+          "year": "2023"
+        },
+        {
+          "title": "Simulating Live Cloud Adaptations Prior to a Production Deployment using a Models at Runtime Approach.",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:hqOjcs7Dif8C",
+          "citation_id": "VlSBMuIAAAAJ:hqOjcs7Dif8C",
+          "authors": "J Erbel, A Trautsch, J Grabowski",
+          "publication": "SIMULTECH, 335-343, 2021",
+          "cited_by": {
+            "value": null
+          },
+          "year": "2021"
+        },
+        {
+          "title": "Comparison of local classifiers for cross-project defect prediction",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:9yKSN-GCB0IC",
+          "citation_id": "VlSBMuIAAAAJ:9yKSN-GCB0IC",
+          "authors": "A Trautsch",
+          "cited_by": {
+            "value": null
+          },
+          "year": "2014"
+        },
+        {
+          "title": "NLBSE 2022",
+          "link": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=VlSBMuIAAAAJ&pagesize=100&citation_for_view=VlSBMuIAAAAJ:5nxA0vEk-isC",
+          "citation_id": "VlSBMuIAAAAJ:5nxA0vEk-isC",
+          "authors": "P Devine, K Blincoe, A Peruma, CD Newman, O Dominik, H Nico, ...",
+          "cited_by": {
+            "value": null
+          },
+          "year": ""
+        }
+      ],
+      "cited_by": {
+        "table": [
+          {
+            "citations": {
+              "all": 1536,
+              "since_2021": 1378
+            }
+          },
+          {
+            "h_index": {
+              "all": 15,
+              "since_2021": 14
+            }
+          },
+          {
+            "i10_index": {
+              "all": 16,
+              "since_2021": 16
+            }
+          }
+        ],
+        "graph": [
+          {
+            "year": 2017,
+            "citations": 4
+          },
+          {
+            "year": 2018,
+            "citations": 27
+          },
+          {
+            "year": 2019,
+            "citations": 52
+          },
+          {
+            "year": 2020,
+            "citations": 67
+          },
+          {
+            "year": 2021,
+            "citations": 101
+          },
+          {
+            "year": 2022,
+            "citations": 159
+          },
+          {
+            "year": 2023,
+            "citations": 192
+          },
+          {
+            "year": 2024,
+            "citations": 353
+          },
+          {
+            "year": 2025,
+            "citations": 457
+          },
+          {
+            "year": 2026,
+            "citations": 109
+          }
+        ]
+      },
+      "public_access": {
+        "link": "https://scholar.google.com/citations?view_op=list_mandates&hl=en&user=VlSBMuIAAAAJ",
+        "available": 11,
+        "not_available": 1
+      },
+      "co_authors": [
+        {
+          "name": "Steffen Herbold",
+          "link": "https://scholar.google.com/citations?user=Fac_e58AAAAJ&hl=en",
+          "serpapi_link": "https://serpapi.com/search.json?author_id=Fac_e58AAAAJ&engine=google_scholar_author&hl=en&num=100",
+          "author_id": "Fac_e58AAAAJ",
+          "affiliations": "University of Passau",
+          "email": "Verified email at uni-passau.de",
+          "thumbnail": "https://scholar.googleusercontent.com/citations?view_op=small_photo&user=Fac_e58AAAAJ&citpid=2"
+        }
+      ]
+    }
+  }
+}
