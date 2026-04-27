@@ -9,7 +9,6 @@ import { API_BASE_URL } from "../config";
 import { JudgeConsensus, Persona, PersonaResponse } from "../types";
 import { nanoid } from "../utils/nanoid";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 type RunResponse = {
   personas: PersonaResponse[];

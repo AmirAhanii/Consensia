@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { GradientBackground } from "../components/GradientBackground";
 import { toast, ToastContainer } from "react-toastify";
 import { API_BASE_URL } from "../config";
-import "react-toastify/dist/ReactToastify.css";
 
 type LoginResponse = {
   access_token: string;

@@ -3,7 +3,6 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { GradientBackground } from "../components/GradientBackground";
 import { API_BASE_URL } from "../config";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 type VerifyState = "idle" | "loading" | "success" | "error";
 
