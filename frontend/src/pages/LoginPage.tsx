@@ -2,7 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GradientBackground } from "../components/GradientBackground";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { API_BASE_URL } from "../config";
+
+type LoginResponse = {
+  access_token: string;
+  token_type: string;
+};
+
+type ApiErrorResponse = {
+  detail?: string;
+  message?: string;
+};
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -26,31 +36,43 @@ export default function LoginPage() {
     try {
       setIsSubmitting(true);
 
-      // FRONTEND-ONLY placeholder auth
-      const raw = localStorage.getItem("consensia_user");
-      if (!raw) {
-        toast.error("No registered user found. Please sign up first.");
-        return;
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          password,
+        }),
+      });
+
+      const data = (await response.json().catch(() => null)) as
+        | LoginResponse
+        | ApiErrorResponse
+        | null;
+
+      if (!response.ok) {
+        throw new Error(
+          (data as ApiErrorResponse | null)?.detail ||
+            (data as ApiErrorResponse | null)?.message ||
+            `Login failed (${response.status})`
+        );
       }
 
-      const savedUser = JSON.parse(raw) as {
-        fullName?: string;
-        email?: string;
-        institution?: string;
-        password?: string;
-      };
+      const loginData = data as LoginResponse;
 
-      if (savedUser.email !== email || savedUser.password !== password) {
-        toast.error("Invalid email or password.");
-        return;
-      }
+      localStorage.setItem("consensia_access_token", loginData.access_token);
+      localStorage.setItem("consensia_token_type", loginData.token_type);
+      localStorage.setItem("consensia_user_email", email.trim());
 
-      localStorage.setItem("consensia_session", "true");
       toast.success("Login successful.");
       navigate("/app");
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong during login.");
+      toast.error(
+        error instanceof Error ? error.message : "Something went wrong during login."
+      );
     } finally {
       setIsSubmitting(false);
     }

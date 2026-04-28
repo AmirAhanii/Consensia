@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import DebatePage from "./pages/DebatePage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
+import VerifyEmailPage from "./pages/VerifyEmailPage";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/app" element={<DebatePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
