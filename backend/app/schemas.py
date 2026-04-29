@@ -48,3 +48,21 @@ class ConsensusResponse(BaseModel):
         description="Total token usage for the whole request (sum of persona + judge).",
     )
 
+
+class DebateRound(BaseModel):
+    round_number: int = Field(..., ge=1, description="1-indexed round number.")
+    label: str = Field(..., description="Human-readable label for this round.")
+    persona_answers: list[PersonaAnswer]
+
+
+class DebateRequest(BaseModel):
+    question: str = Field(..., description="The debate question.")
+    personas: list[Persona] = Field(..., description="Personas to debate.")
+    num_rounds: int = Field(default=2, ge=1, le=3, description="Number of debate rounds.")
+
+
+class DebateResponse(BaseModel):
+    rounds: list[DebateRound]
+    judge: JudgeConsensus
+    usage: TokenUsage | None = None
+
