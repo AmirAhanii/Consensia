@@ -8,7 +8,7 @@ from typing import Iterable
 from openai import AsyncAzureOpenAI, AsyncOpenAI
 
 from ..config import Settings
-from ..schemas import JudgeConsensus, Persona, PersonaAnswer, TokenUsage
+from ..schemas import DebateResponse, DebateRound, JudgeConsensus, Persona, PersonaAnswer, TokenUsage
 
 
 class Provider(str, Enum):
@@ -259,6 +259,272 @@ class LLMService:
             reasoning=parsed.get("reasoning", "").strip(),
         )
 
+    async def run_debate(
+        self, question: str, personas: list[Persona], num_rounds: int = 2
+    ) -> DebateResponse:
+        rounds: list[DebateRound] = []
+        all_usage: list[TokenUsage] = []
+
+        round1_answers = list(await asyncio.gather(
+            *(self.generate_persona_answer(persona, question) for persona in personas)
+        ))
+        for a in round1_answers:
+            if a.usage:
+                all_usage.append(a.usage)
+        rounds.append(DebateRound(round_number=1, label="Initial Positions", persona_answers=round1_answers))
+
+        if len(personas) > 1:
+            for round_num in range(2, num_rounds + 1):
+                prev = rounds[-1].persona_answers
+                label = "Final Remarks" if round_num > 2 else "Rebuttals"
+                rebuttal_answers = list(await asyncio.gather(
+                    *(self._generate_rebuttal(
+                        persona, question,
+                        [a for a in prev if a.persona_id != persona.id],
+                    ) for persona in personas)
+                ))
+                for a in rebuttal_answers:
+                    if a.usage:
+                        all_usage.append(a.usage)
+                rounds.append(DebateRound(round_number=round_num, label=label, persona_answers=rebuttal_answers))
+
+        if len(personas) == 1:
+            only = rounds[0].persona_answers[0]
+            judge = JudgeConsensus(
+                summary=only.answer,
+                reasoning="Single-persona mode: consensus derived directly from the persona response.",
+            )
+        else:
+            judge = await self._generate_debate_judge(question, rounds)
+            if judge.usage:
+                all_usage.append(judge.usage)
+
+        total_usage: TokenUsage | None = None
+        if all_usage:
+            total_usage = TokenUsage(
+                prompt_tokens=sum(u.prompt_tokens for u in all_usage),
+                completion_tokens=sum(u.completion_tokens for u in all_usage),
+                total_tokens=sum(u.total_tokens for u in all_usage),
+            )
+
+        return DebateResponse(rounds=rounds, judge=judge, usage=total_usage)
+
+    async def _generate_rebuttal(
+        self, persona: Persona, question: str, other_answers: list[PersonaAnswer]
+    ) -> PersonaAnswer:
+        if self._provider is Provider.OPENAI and self._openai_client:
+            return await self._generate_rebuttal_openai(persona, question, other_answers)
+        if self._provider is Provider.GEMINI and self._gemini_model:
+            return await self._generate_rebuttal_gemini(persona, question, other_answers)
+        return self._simulate_rebuttal(persona, question, other_answers)
+
+    async def _generate_rebuttal_openai(
+        self, persona: Persona, question: str, other_answers: list[PersonaAnswer]
+    ) -> PersonaAnswer:
+        assert self._openai_client is not None
+        others_text = "\n\n".join(f"{a.persona_name}: {a.answer}" for a in other_answers)
+        user_message = (
+            f"The debate question is: {question.strip()}\n\n"
+            f"Other participants have responded:\n{others_text}\n\n"
+            "Now respond as your persona. Engage directly with the other viewpoints — "
+            "agree where you find merit, push back where you disagree, refine your stance. "
+            "Stay strictly within the expertise described in your background. "
+            "If a point raised is outside your domain, acknowledge that and respond only from what you know. "
+            "Keep it concise (2-3 sentences)."
+        )
+
+        response = await self._openai_client.chat.completions.create(
+            model=self._settings.openai_model,
+            temperature=0.7,
+            messages=[
+                {"role": "system", "content": self._build_persona_instruction(persona)},
+                {"role": "user", "content": user_message},
+            ],
+            max_tokens=self._settings.max_output_tokens_persona,
+        )
+
+        usage = getattr(response, "usage", None)
+        token_usage: TokenUsage | None = None
+        if usage:
+            token_usage = TokenUsage(
+                prompt_tokens=usage.prompt_tokens,
+                completion_tokens=usage.completion_tokens,
+                total_tokens=usage.total_tokens,
+            )
+
+        content = response.choices[0].message.content or ""
+        return PersonaAnswer(
+            persona_id=persona.id,
+            persona_name=persona.name,
+            persona_description=persona.description,
+            answer=content.strip(),
+            usage=token_usage,
+        )
+
+    async def _generate_rebuttal_gemini(
+        self, persona: Persona, question: str, other_answers: list[PersonaAnswer]
+    ) -> PersonaAnswer:
+        assert self._gemini_model is not None
+        others_text = "\n\n".join(f"{a.persona_name}: {a.answer}" for a in other_answers)
+        prompt = (
+            f"{self._build_persona_instruction(persona)}\n\n"
+            f"The debate question is: {question.strip()}\n\n"
+            f"Other participants have responded:\n{others_text}\n\n"
+            "Now respond as your persona. Engage directly with the other viewpoints — "
+            "agree where you find merit, push back where you disagree, refine your stance. "
+            "Stay strictly within the expertise described in your background. "
+            "If a point raised is outside your domain, acknowledge that and respond only from what you know. "
+            "Keep it concise (2-3 sentences)."
+        )
+
+        response = await asyncio.to_thread(
+            self._gemini_model.generate_content,
+            [{"role": "user", "parts": [prompt]}],
+        )
+
+        content = (response.text or "").strip()
+        return PersonaAnswer(
+            persona_id=persona.id,
+            persona_name=persona.name,
+            persona_description=persona.description,
+            answer=content,
+        )
+
+    def _simulate_rebuttal(
+        self, persona: Persona, question: str, other_answers: list[PersonaAnswer]
+    ) -> PersonaAnswer:
+        other_names = ", ".join(a.persona_name for a in other_answers)
+        return PersonaAnswer(
+            persona_id=persona.id,
+            persona_name=persona.name,
+            persona_description=persona.description,
+            answer=(
+                f"[Simulated rebuttal for {persona.name}]\n"
+                f"Having read the responses from {other_names}, I agree on some points "
+                f"but would push back on the framing around '{question.strip()[:60]}'."
+            ),
+        )
+
+    async def _generate_debate_judge(self, question: str, rounds: list[DebateRound]) -> JudgeConsensus:
+        if self._provider is Provider.OPENAI and self._openai_client:
+            return await self._generate_debate_judge_openai(question, rounds)
+        if self._provider is Provider.GEMINI and self._gemini_model:
+            return await self._generate_debate_judge_gemini(question, rounds)
+        return self._simulate_debate_judge(question, rounds)
+
+    def _build_debate_transcript(self, question: str, rounds: list[DebateRound]) -> str:
+        parts = [f"Question: {question.strip()}"]
+        for r in rounds:
+            parts.append(f"\n--- Round {r.round_number}: {r.label} ---")
+            for a in r.persona_answers:
+                parts.append(f"{a.persona_name}: {a.answer}")
+        return "\n\n".join(parts)
+
+    async def _generate_debate_judge_openai(self, question: str, rounds: list[DebateRound]) -> JudgeConsensus:
+        assert self._openai_client is not None
+        transcript = self._build_debate_transcript(question, rounds)
+
+        response = await self._openai_client.chat.completions.create(
+            model=self._settings.judge_model,
+            temperature=0.4,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are an impartial judge observing a structured multi-round debate between expert personas.\n"
+                        "Read the full transcript and deliver:\n"
+                        "1. A concise consensus summary capturing key agreements and resolutions.\n"
+                        "2. Reasoning explaining which arguments were most compelling and how positions evolved.\n"
+                        "Return JSON with keys 'summary' and 'reasoning'."
+                    ),
+                },
+                {"role": "user", "content": transcript},
+            ],
+            response_format={"type": "json_object"},
+            max_tokens=self._settings.max_output_tokens_judge,
+        )
+
+        message = response.choices[0].message
+        parsed_message = getattr(message, "parsed", None)
+        if parsed_message and isinstance(parsed_message, dict):
+            parsed = parsed_message
+        else:
+            content = message.content or ""
+            try:
+                parsed = json.loads(content)
+                if not isinstance(parsed, dict):
+                    parsed = {"summary": content, "reasoning": ""}
+            except json.JSONDecodeError:
+                parsed = {"summary": content, "reasoning": ""}
+
+        usage = getattr(response, "usage", None)
+        token_usage: TokenUsage | None = None
+        if usage:
+            token_usage = TokenUsage(
+                prompt_tokens=usage.prompt_tokens,
+                completion_tokens=usage.completion_tokens,
+                total_tokens=usage.total_tokens,
+            )
+
+        return JudgeConsensus(
+            summary=parsed.get("summary", "").strip(),
+            reasoning=parsed.get("reasoning", "").strip(),
+            usage=token_usage,
+        )
+
+    async def _generate_debate_judge_gemini(self, question: str, rounds: list[DebateRound]) -> JudgeConsensus:
+        assert self._gemini_model is not None
+        transcript = self._build_debate_transcript(question, rounds)
+
+        prompt = (
+            "You are an impartial judge observing a structured multi-round debate between expert personas.\n"
+            "Read the full transcript and return JSON with two fields: 'summary' and 'reasoning'.\n"
+            "The summary captures key agreements and resolutions. "
+            "The reasoning explains which arguments were most compelling.\n\n"
+            f"{transcript}"
+        )
+
+        response = await asyncio.to_thread(
+            self._gemini_model.generate_content,
+            [{"role": "user", "parts": [prompt]}],
+        )
+
+        text = (response.text or "").strip()
+        try:
+            parsed = json.loads(text)
+        except json.JSONDecodeError:
+            cleaned = text.strip("` \n")
+            if cleaned.startswith("json"):
+                cleaned = cleaned[4:].strip()
+            try:
+                parsed = json.loads(cleaned)
+            except json.JSONDecodeError:
+                parsed = {"summary": text, "reasoning": "Judge response could not be parsed as JSON."}
+
+        return JudgeConsensus(
+            summary=parsed.get("summary", "").strip(),
+            reasoning=parsed.get("reasoning", "").strip(),
+        )
+
+    def _simulate_debate_judge(self, question: str, rounds: list[DebateRound]) -> JudgeConsensus:
+        all_names: set[str] = set()
+        for r in rounds:
+            for a in r.persona_answers:
+                all_names.add(a.persona_name)
+        names_str = ", ".join(sorted(all_names))
+        return JudgeConsensus(
+            summary=(
+                f"[Simulated debate consensus]\n"
+                f'After {len(rounds)} rounds on "{question.strip()[:80]}", '
+                "the personas reached a nuanced shared understanding."
+            ),
+            reasoning=(
+                f"[Simulated reasoning]\n"
+                f"Participants ({names_str}) engaged across {len(rounds)} rounds. "
+                "In a real run, the judge would synthesize agreements and disagreements from the transcript."
+            ),
+        )
+
     def _simulate_persona_answer(self, persona: Persona, question: str) -> str:
         return (
             f"[Simulated response for {persona.name}]\n"
@@ -270,7 +536,10 @@ class LLMService:
             "You are an AI agent participating in a structured debate.\n"
             f"Your persona name: {persona.name}\n"
             f"Persona background: {persona.description}\n"
-            "Role-play this character faithfully, adopt their tone, priorities, and level of expertise.\n"
+            "Role-play this character faithfully, adopting their tone, priorities, and level of expertise.\n"
+            "KNOWLEDGE BOUNDARIES: Only speak from the expertise described in your background. "
+            "If the question falls outside your domain, explicitly say so (e.g. 'This is outside my area of expertise') "
+            "and contribute only what your background genuinely allows. Never fabricate knowledge you would not have.\n"
             "Keep the response very concise (2-3 sentences). Prefer short, high-signal reasoning."
         )
 

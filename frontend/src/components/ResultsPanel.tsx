@@ -1,14 +1,23 @@
 import React from "react";
-import { JudgeConsensus, PersonaResponse } from "../types";
+import { DebateResult } from "../types";
 
 type ResultsPanelProps = {
-  personas: PersonaResponse[];
-  judge: JudgeConsensus | null;
+  result: DebateResult | null;
+  personaCount: number;
   error: string | null;
   isLoading: boolean;
 };
 
-export const ResultsPanel: React.FC<ResultsPanelProps> = ({ personas, judge, error, isLoading }) => {
+export const ResultsPanel: React.FC<ResultsPanelProps> = ({
+  result,
+  personaCount,
+  error,
+  isLoading,
+}) => {
+  const hasMultiplePersonas = personaCount > 1;
+  const hasRounds = result && result.rounds.length > 0;
+  const showMultipleRounds = result && result.rounds.length > 1;
+
   return (
     <article className="rounded-3xl border border-purple-900/40 bg-black/60 p-6 shadow-xl shadow-purple-950/30 backdrop-blur">
       <div className="flex items-center justify-between">
@@ -27,57 +36,86 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ personas, judge, err
         </p>
       ) : (
         <p className="mt-1 text-sm text-purple-300/70">
-          {judge && personas.length > 1
-            ? "Explore each persona response and review the judge’s synthesized consensus."
-            : judge && personas.length === 1
-              ? "One viewpoint below. Add another persona if you want a multi-perspective debate and judge synthesis."
-              : "Run a debate to populate persona answers and the judge consensus."}
+          {hasRounds && hasMultiplePersonas
+            ? "Each round shows how personas responded and refined their positions."
+            : hasRounds
+              ? "One viewpoint below. Add another persona for a multi-round debate."
+              : "Run a debate to see how personas argue and reach consensus."}
         </p>
       )}
 
-      {personas.length > 0 && (
-        <div className="mt-6 space-y-5">
-          <section className="space-y-4">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-purple-200">Persona Answers</h3>
-            <div className="grid gap-4">
-              {personas.map((persona) => (
-                <div
-                  key={persona.personaId}
-                  className="group relative overflow-hidden rounded-2xl border border-purple-900/40 bg-gradient-to-br from-purple-950/50 to-black/60 p-4 shadow-inner shadow-black/40"
-                >
-                  <div className="absolute inset-0 opacity-0 transition group-hover:opacity-100">
-                    <div className="h-full w-full bg-[radial-gradient(circle_at_top_left,rgba(168,85,247,0.18),transparent_60%)]" />
-                  </div>
-                  <div className="relative flex flex-col gap-2">
-                    <div className="flex items-center justify-between">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-fuchsia-300">
-                        {persona.personaName}
-                      </p>
-                      <span className="rounded-full border border-purple-800/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-purple-300/70">
-                        Persona
-                      </span>
-                    </div>
-                    <p className="text-xs text-purple-300/70">{persona.personaDescription}</p>
-                    <p className="whitespace-pre-wrap text-sm text-purple-100">{persona.answer}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+      {hasRounds && (
+        <div className="mt-6 space-y-8">
+          {result.rounds.map((round, roundIdx) => (
+            <section key={round.roundNumber} className="space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-800/60 text-xs font-bold text-purple-200">
+                  {round.roundNumber}
+                </span>
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-purple-200">
+                  {showMultipleRounds ? `Round ${round.roundNumber} — ${round.label}` : round.label}
+                </h3>
+                {roundIdx > 0 && (
+                  <span className="rounded-full border border-fuchsia-700/40 bg-fuchsia-900/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-fuchsia-300">
+                    Rebuttal
+                  </span>
+                )}
+              </div>
 
-          {/* With one persona the API echoes the same text as “consensus” — hide to avoid confusion */}
-          {judge && personas.length > 1 && (
+              <div className="grid gap-4">
+                {round.personaAnswers.map((persona) => (
+                  <div
+                    key={persona.personaId}
+                    className="group relative overflow-hidden rounded-2xl border border-purple-900/40 bg-gradient-to-br from-purple-950/50 to-black/60 p-4 shadow-inner shadow-black/40"
+                  >
+                    <div className="absolute inset-0 opacity-0 transition group-hover:opacity-100">
+                      <div className="h-full w-full bg-[radial-gradient(circle_at_top_left,rgba(168,85,247,0.18),transparent_60%)]" />
+                    </div>
+                    <div className="relative flex flex-col gap-2">
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-fuchsia-300">
+                          {persona.personaName}
+                        </p>
+                        <span className="rounded-full border border-purple-800/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-purple-300/70">
+                          {roundIdx === 0 ? "Initial" : "Rebuttal"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-purple-300/70">{persona.personaDescription}</p>
+                      <p className="whitespace-pre-wrap text-sm text-purple-100">{persona.answer}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {roundIdx < result.rounds.length - 1 && (
+                <div className="flex items-center gap-3 pt-2">
+                  <div className="h-px flex-1 bg-purple-900/40" />
+                  <span className="text-[10px] uppercase tracking-widest text-purple-500">↓ rebuttals</span>
+                  <div className="h-px flex-1 bg-purple-900/40" />
+                </div>
+              )}
+            </section>
+          ))}
+
+          {result.judge && hasMultiplePersonas && (
             <section className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="h-px flex-1 bg-fuchsia-900/40" />
+                <span className="text-[10px] uppercase tracking-widest text-fuchsia-500">consensus</span>
+                <div className="h-px flex-1 bg-fuchsia-900/40" />
+              </div>
               <h3 className="text-sm font-semibold uppercase tracking-wide text-purple-200">Judge Consensus</h3>
               <div className="overflow-hidden rounded-2xl border border-fuchsia-500/30 bg-gradient-to-br from-fuchsia-900/60 to-black/70 p-5 shadow-lg shadow-purple-900/40">
                 <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-fuchsia-200">
                   <span className="h-2 w-2 rounded-full bg-fuchsia-400 shadow-[0_0_12px_rgba(236,72,153,0.7)]" />
                   Consensus summary
                 </div>
-                <p className="mt-2 whitespace-pre-wrap text-sm text-purple-100">{judge.summary}</p>
+                <p className="mt-2 whitespace-pre-wrap text-sm text-purple-100">{result.judge.summary}</p>
                 <div className="mt-4 rounded-xl border border-fuchsia-500/30 bg-black/40 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-fuchsia-200">Reasoning</p>
-                  <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-purple-100">{judge.reasoning}</p>
+                  <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-purple-100">
+                    {result.judge.reasoning}
+                  </p>
                 </div>
               </div>
             </section>
@@ -87,4 +125,3 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ personas, judge, err
     </article>
   );
 };
-

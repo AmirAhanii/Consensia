@@ -10,15 +10,30 @@ from pathlib import Path
 from typing import Any
 
 from .auth.router import router as auth_router
+from .sessions.router import router as sessions_router
 
 import pdfplumber
 from docx import Document
 from fastapi import Depends, FastAPI, HTTPException, status, UploadFile, File
+from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import Settings, get_settings, resolve_research_raw_authors_dir
-from .schemas import ConsensusRequest, ConsensusResponse, JudgeConsensus, TokenUsage
+from .schemas import ConsensusRequest, ConsensusResponse, DebateRequest, DebateResponse, JudgeConsensus, TokenUsage
 from .services.llm import LLMService, Provider
+from openai import AzureOpenAI as SyncAzureOpenAI, OpenAI as SyncOpenAI
+from .services.scraping_service import search_google_scholar_by_name, scrape_google_scholar_author
+from .services.persona_pipeline import generate_persona_from_raw
+
+
+def _build_sync_openai_client(settings: Settings):
+    if settings.openai_api_version and settings.openai_base_url and settings.openai_api_key:
+        return SyncAzureOpenAI(
+            api_key=settings.openai_api_key,
+            azure_endpoint=settings.openai_base_url,
+            api_version=settings.openai_api_version,
+        )
+    return SyncOpenAI(api_key=settings.openai_api_key)
 
 
 _APP_DIR = Path(__file__).resolve().parent
@@ -28,6 +43,13 @@ _BUNDLED_RAW_AUTHORS_DIR = _APP_DIR / "bundled_raw_authors"
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    from alembic.config import Config as AlembicConfig
+    from alembic import command as alembic_command
+    try:
+        cfg = AlembicConfig("alembic.ini")
+        alembic_command.upgrade(cfg, "head")
+    except Exception as exc:
+        logger.warning("Alembic migration skipped: %s", exc)
     yield
 
 
@@ -40,6 +62,7 @@ app = FastAPI(
 )
 
 app.include_router(auth_router)
+app.include_router(sessions_router)
 
 logger = logging.getLogger(__name__)
 
@@ -146,6 +169,95 @@ async def generate_consensus(
         judge=judge_consensus,
         usage=total_usage,
     )
+
+
+# ------------------------------------------------------------------------------------
+# DEBATE ENDPOINT
+# ------------------------------------------------------------------------------------
+@app.post(
+    "/api/debate",
+    response_model=DebateResponse,
+    tags=["debate"],
+    summary="Run a multi-round debate with persona rebuttals and judge consensus",
+)
+async def run_debate(
+    payload: DebateRequest,
+    service: LLMService = Depends(get_llm_service),
+    settings: Settings = Depends(get_settings),
+) -> DebateResponse:
+    if not payload.personas:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="At least one persona is required.",
+        )
+    if len(payload.personas) > settings.max_personas_per_request:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Too many personas. Max is {settings.max_personas_per_request}.",
+        )
+    try:
+        return await service.run_debate(payload.question, payload.personas, payload.num_rounds)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Debate generation failed: {exc}",
+        ) from exc
+
+
+# ------------------------------------------------------------------------------------
+# RESEARCHER SEARCH -> PERSONA ENDPOINT
+# ------------------------------------------------------------------------------------
+
+class _ResearcherSearchRequest(BaseModel):
+    name: str
+
+
+@app.post("/api/persona/from-researcher", tags=["persona"])
+async def persona_from_researcher_name(
+    payload: _ResearcherSearchRequest,
+    settings: Settings = Depends(get_settings),
+) -> dict:
+    """Search Google Scholar by researcher name, scrape profile, and run persona pipeline."""
+    if not settings.serpapi_api_key:
+        raise HTTPException(status_code=503, detail="SERPAPI_API_KEY is not configured.")
+    if not settings.openai_api_key:
+        raise HTTPException(status_code=503, detail="OPENAI_API_KEY is required for the persona pipeline.")
+
+    name = payload.name.strip()
+    if not name:
+        raise HTTPException(status_code=400, detail="Researcher name must not be empty.")
+
+    sync_client = _build_sync_openai_client(settings)
+
+    try:
+        author_id = await asyncio.to_thread(
+            search_google_scholar_by_name, name, settings.serpapi_api_key
+        )
+        raw_author = await asyncio.to_thread(
+            scrape_google_scholar_author,
+            author_id,
+            settings.serpapi_api_key,
+            sync_client,
+            settings.openai_model,
+        )
+        author_name = raw_author.get("name") or name
+        persona = await asyncio.to_thread(
+            generate_persona_from_raw,
+            raw_author,
+            author_name,
+            sync_client,
+            settings.openai_model,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Researcher scraping failed: {exc}") from exc
+
+    return {
+        "name": persona["name"],
+        "title": f"Software Engineering Researcher ({persona['name']})",
+        "description": persona["inference_summary"],
+    }
 
 
 # ------------------------------------------------------------------------------------

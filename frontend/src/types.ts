@@ -2,7 +2,7 @@ export type Persona = {
   id: string;
   name: string;
   description: string;
-  icon: string;  
+  icon: string;
 };
 
 export type PersonaResponse = {
@@ -15,5 +15,16 @@ export type PersonaResponse = {
 export type JudgeConsensus = {
   summary: string;
   reasoning: string;
+};
+
+export type DebateRound = {
+  roundNumber: number;
+  label: string;
+  personaAnswers: PersonaResponse[];
+};
+
+export type DebateResult = {
+  rounds: DebateRound[];
+  judge: JudgeConsensus;
 };
 

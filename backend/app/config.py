@@ -33,6 +33,9 @@ class Settings(BaseModel):
     gemini_api_key: str | None = Field(
         default_factory=lambda: (os.getenv("GEMINI_API_KEY") or "").strip() or None
     )
+    serpapi_api_key: str | None = Field(
+        default_factory=lambda: (os.getenv("SERPAPI_API_KEY") or "").strip() or None
+    )
     gemini_model: str = Field(default_factory=lambda: os.getenv("GEMINI_MODEL", "gemini-1.5-flash-latest"))
     cors_allow_origins: list[str] = Field(
         default_factory=lambda: os.getenv("CORS_ALLOW_ORIGINS", "http://localhost:5173").split(",")

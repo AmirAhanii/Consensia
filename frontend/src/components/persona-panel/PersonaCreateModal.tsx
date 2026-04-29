@@ -1,24 +1,15 @@
-// src/components/persona-panel/PersonaCreateModal.tsx
-
-import React from "react";
+import React, { useState } from "react";
 import { Modal } from "../Modal";
-import { ICON_OPTIONS } from "../../constants/icons";
-import type { ResearchSnapshotRow } from "../../data/bundledResearchers";
 
-export type { ResearchSnapshotRow };
-
-export function iconNameForScholarId(scholarId: string): string {
-  let h = 0;
-  for (let i = 0; i < scholarId.length; i++) {
-    h = (h * 31 + scholarId.charCodeAt(i)) >>> 0;
-  }
-  return ICON_OPTIONS[h % ICON_OPTIONS.length]!.name;
-}
-
-/** Same primary style as Modal Close + main persona actions */
 const btnPrimary =
   "w-full rounded-xl bg-purple-700 hover:bg-purple-600 text-white py-2 font-medium transition-colors";
 const btnPrimaryLabel = `${btnPrimary} block text-center cursor-pointer`;
+
+type SearchState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "done"; name: string; title: string; description: string }
+  | { status: "error"; message: string };
 
 type Props = {
   open: boolean;
@@ -34,16 +25,8 @@ type Props = {
   setDescription: (v: string) => void;
 
   handleAdd: () => void;
-
   handleCVUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-
-  /** Researcher snapshot file → persona (same flow as CV). */
-  handleResearchJsonUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  researchSnapshots: ResearchSnapshotRow[];
-  savedResearchersOpen: boolean;
-  onToggleSavedResearchers: () => void;
-  onSelectResearchSnapshot: (scholarId: string) => void;
-  renderIcon: (key: string, className?: string) => React.ReactElement;
+  onSearchResearcher: (name: string) => Promise<void>;
 };
 
 export const PersonaCreateModal: React.FC<Props> = ({
@@ -57,36 +40,105 @@ export const PersonaCreateModal: React.FC<Props> = ({
   setDescription,
   handleAdd,
   handleCVUpload,
-  handleResearchJsonUpload,
-  researchSnapshots,
-  savedResearchersOpen,
-  onToggleSavedResearchers,
-  onSelectResearchSnapshot,
-  renderIcon,
+  onSearchResearcher,
 }) => {
+  const [showSearchForm, setShowSearchForm] = useState(false);
+  const [searchName, setSearchName] = useState("");
+  const [searchState, setSearchState] = useState<SearchState>({ status: "idle" });
+
+  const resetSearch = () => {
+    setShowSearchForm(false);
+    setSearchName("");
+    setSearchState({ status: "idle" });
+  };
+
+  const handleClose = () => {
+    onClose();
+    setShowManualForm(false);
+    resetSearch();
+  };
+
+  const handleSearch = async () => {
+    if (!searchName.trim()) return;
+    setSearchState({ status: "loading" });
+    try {
+      await onSearchResearcher(searchName.trim());
+      handleClose();
+    } catch (err) {
+      setSearchState({
+        status: "error",
+        message: err instanceof Error ? err.message : "Search failed.",
+      });
+    }
+  };
+
+  if (showSearchForm) {
+    return (
+      <Modal open={open} onClose={handleClose}>
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-purple-100">Search Researcher</h3>
+          <p className="text-xs text-purple-300/70">
+            Enter a researcher's name to search Google Scholar, scrape their publications, and build a persona automatically.
+          </p>
+
+          <input
+            className="w-full rounded-xl border border-purple-900/50 bg-black/70 px-3 py-2 text-sm text-purple-100 placeholder:text-purple-500"
+            placeholder="e.g. Steffen Herbold"
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            disabled={searchState.status === "loading"}
+          />
+
+          {searchState.status === "loading" && (
+            <div className="rounded-xl border border-purple-800/40 bg-black/40 p-4 text-center space-y-2">
+              <span className="flex items-center justify-center gap-2 text-sm text-fuchsia-200">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-fuchsia-400" />
+                Scraping publications and building persona…
+              </span>
+              <p className="text-xs text-purple-400/70">This may take a minute.</p>
+            </div>
+          )}
+
+          {searchState.status === "error" && (
+            <p className="rounded-xl border border-rose-500/40 bg-rose-500/10 p-3 text-xs text-rose-200">
+              {searchState.message}
+            </p>
+          )}
+
+          <div className="flex gap-2 pt-1">
+            <button
+              type="button"
+              onClick={handleSearch}
+              disabled={!searchName.trim() || searchState.status === "loading"}
+              className="w-full rounded-xl bg-purple-700 hover:bg-purple-600 disabled:opacity-50 text-white py-2 font-medium transition-colors"
+            >
+              {searchState.status === "loading" ? "Searching…" : "Search"}
+            </button>
+            <button
+              type="button"
+              onClick={resetSearch}
+              disabled={searchState.status === "loading"}
+              className="w-full rounded-xl bg-black/40 border border-purple-800 hover:border-purple-600 text-purple-200 py-2 font-medium transition-colors"
+            >
+              Back
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+
   return (
-    <Modal
-      open={open}
-      onClose={() => {
-        onClose();
-        setShowManualForm(false);
-      }}
-    >
+    <Modal open={open} onClose={handleClose}>
       {!showManualForm ? (
         <div className="text-center space-y-4">
-          <h3 className="text-lg font-semibold text-purple-100 mb-2">
-            Create a Persona
-          </h3>
+          <h3 className="text-lg font-semibold text-purple-100 mb-2">Create a Persona</h3>
 
-          <button
-            type="button"
-            className={btnPrimary}
-            onClick={() => setShowManualForm(true)}
-          >
+          <button type="button" className={btnPrimary} onClick={() => setShowManualForm(true)}>
             Add Manually
           </button>
 
-          {/* CV Upload */}
           <input
             id="cv-upload"
             type="file"
@@ -98,82 +150,24 @@ export const PersonaCreateModal: React.FC<Props> = ({
             Upload CV
           </label>
 
-          <input
-            id="research-json-upload"
-            type="file"
-            accept=".json,application/json"
-            className="hidden"
-            onChange={handleResearchJsonUpload}
-          />
-          <label htmlFor="research-json-upload" className={btnPrimaryLabel}>
-            Upload researcher file
-          </label>
-
           <button
             type="button"
             className={btnPrimary}
-            onClick={onToggleSavedResearchers}
+            onClick={() => setShowSearchForm(true)}
           >
-            {savedResearchersOpen ? "Hide saved researchers" : "Saved researchers"}
+            Search Researcher
           </button>
-
-          {savedResearchersOpen ? (
-            <div className="text-left rounded-xl border border-purple-800/50 bg-black/40 p-3 space-y-3">
-              <p className="text-sm text-purple-200/90 font-medium">
-                Choose a researcher
-              </p>
-              {researchSnapshots.length === 0 ? (
-                <p className="text-sm text-purple-400/90 py-4 text-center">
-                  No researchers to show.
-                </p>
-              ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[min(52vh,22rem)] overflow-y-auto pr-1">
-                  {researchSnapshots.map((row) => {
-                    const iconKey = iconNameForScholarId(row.scholar_id);
-                    const displayName = row.name?.trim() || "Researcher";
-                    return (
-                      <button
-                        type="button"
-                        key={row.scholar_id}
-                        onClick={() => onSelectResearchSnapshot(row.scholar_id)}
-                        className="flex flex-col items-center gap-2 rounded-xl border border-purple-900/50 bg-black/50 hover:bg-purple-900/35 p-3 text-center transition shadow-md min-h-[7.5rem]"
-                      >
-                        {renderIcon(iconKey, "w-9 h-9 text-purple-200 shrink-0")}
-                        <span className="text-xs font-semibold text-purple-100 leading-tight line-clamp-2 w-full">
-                          {displayName}
-                        </span>
-                        {row.affiliation ? (
-                          <span className="text-[10px] text-purple-300/85 leading-snug line-clamp-2 w-full">
-                            {row.affiliation}
-                          </span>
-                        ) : null}
-                        {row.preview ? (
-                          <span className="text-[10px] text-purple-400/75 leading-snug line-clamp-2 w-full text-left">
-                            {row.preview}
-                          </span>
-                        ) : null}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          ) : null}
         </div>
       ) : (
         <div className="max-h-[70vh] flex flex-col space-y-3 overflow-y-auto">
           <div className="flex-1 space-y-3">
-            <h3 className="text-lg font-semibold text-purple-100 mb-4">
-              Add Persona Manually
-            </h3>
-
+            <h3 className="text-lg font-semibold text-purple-100 mb-4">Add Persona Manually</h3>
             <input
               className="w-full rounded-xl border border-purple-900/50 bg-black/70 px-3 py-2 text-sm text-purple-100"
               placeholder="Persona name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-
             <textarea
               className="w-full h-24 rounded-xl border border-purple-900/50 bg-black/70 px-3 py-2 text-sm text-purple-100"
               placeholder="Persona description"
@@ -181,16 +175,10 @@ export const PersonaCreateModal: React.FC<Props> = ({
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
-
           <div className="sticky bottom-0 bg-black/80 pt-3 flex gap-2">
-            <button
-              type="button"
-              onClick={handleAdd}
-              className={btnPrimary}
-            >
+            <button type="button" onClick={handleAdd} className={btnPrimary}>
               Add Persona
             </button>
-
             <button
               type="button"
               onClick={() => setShowManualForm(false)}

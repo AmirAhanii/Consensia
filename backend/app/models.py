@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from uuid import uuid4
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .db import Base
@@ -24,6 +24,7 @@ class User(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False)
 
     auth_identities = relationship("AuthIdentity", back_populates="user", cascade="all, delete-orphan")
+    debate_sessions = relationship("DebateSession", back_populates="user", cascade="all, delete-orphan")
     email_verification_codes = relationship(
         "EmailVerificationCode",
         back_populates="user",
@@ -55,3 +56,18 @@ class EmailVerificationCode(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
 
     user = relationship("User", back_populates="email_verification_codes")
+
+
+class DebateSession(Base):
+    __tablename__ = "debate_sessions"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid4()))
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    title: Mapped[str] = mapped_column(String(120), nullable=False, default="New Debate")
+    question: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    personas: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    result: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False)
+
+    user = relationship("User", back_populates="debate_sessions")
