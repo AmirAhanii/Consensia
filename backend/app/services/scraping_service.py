@@ -6,7 +6,17 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 from pydantic import BaseModel, Field
-from serpapi import GoogleSearch
+
+
+def _google_search(params: dict) -> Any:
+    """Lazy import so the rest of the API can start without `google-search-results` installed."""
+    try:
+        from serpapi import GoogleSearch
+    except ImportError as exc:
+        raise ImportError(
+            "SerpAPI client missing. Install: pip install google-search-results"
+        ) from exc
+    return GoogleSearch(params)
 
 
 class _FilteredPaperReason(BaseModel):
@@ -72,7 +82,7 @@ def search_google_scholar_by_name(name: str, serpapi_key: str) -> str:
         "api_key": serpapi_key,
         "num": "10",
     }
-    results = GoogleSearch(params).get_dict()
+    results = _google_search(params).get_dict()
     if "error" in results:
         raise ValueError(f"SerpAPI error: {results['error']}")
 
@@ -98,7 +108,7 @@ def scrape_google_scholar_author(
         "num": "100",
         "no_cache": "true",
     }
-    profile_results = GoogleSearch(profile_params).get_dict()
+    profile_results = _google_search(profile_params).get_dict()
 
     if "error" in profile_results:
         raise ValueError(f"SerpAPI profile error: {profile_results['error']}")
@@ -118,7 +128,7 @@ def scrape_google_scholar_author(
                 "api_key": serpapi_key,
                 "no_cache": "true",
             }
-            cite_results = GoogleSearch(cite_params).get_dict()
+            cite_results = _google_search(cite_params).get_dict()
             abstract = cite_results.get("citation", {}).get("description")
 
         papers.append({

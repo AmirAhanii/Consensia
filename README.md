@@ -19,11 +19,13 @@ npm install
 npm run dev
 ```
 
-The app runs on `http://localhost:5173` by default. Configure the API target via `.env`:
+The app runs on `http://localhost:5173` by default. By **omitting** `VITE_API_BASE_URL`, the UI calls same-origin `/api/...` and Vite proxies to the backend (see `vite.config.ts`). Only add a `.env` entry if the API is on another origin, for example:
 
 ```
-VITE_API_BASE_URL=http://localhost:8000
+VITE_API_BASE_URL=https://your-api.example.com
 ```
+
+If login hangs and the error mentions `http://localhost:8000`, your shell or a `.env` file may still be setting `VITE_API_BASE_URL` — remove it or run `unset VITE_API_BASE_URL` before `npm run dev`. Docker Compose sets `VITE_API_BASE_URL=""` on the frontend service so the proxy is always used there.
 
 ### Backend (FastAPI)
 
@@ -91,7 +93,31 @@ Tail logs (optional):
 docker compose logs -f
 ```
 
+**Database / register errors (`relation "users" does not exist`):** Postgres was empty or migrations had not run. The app runs `alembic upgrade heads` on startup (this repo has two migration heads). To run migrations manually:
+
+```bash
+docker compose exec backend alembic upgrade heads
+```
+
 If you want to provide real API keys, create `backend/.env` locally (and do not commit it), or pass environment variables in `docker-compose.yml`.
+
+## GitHub Pages (same site as `*.github.io`)
+
+The frontend is set up for **project pages** (`https://<user>.github.io/<repo>/`) or **user/org pages** (repo named `<user>.github.io`, base path `/`).
+
+**Important:** the path in the URL is always the **GitHub repository name**. For example [https://amirahanii.github.io/Consensia-webpage/](https://amirahanii.github.io/Consensia-webpage/) is served from the repo **`amirahanii/Consensia-webpage`**, not from a differently named repo. The build sets `VITE_BASE_PATH` to `/<repo>/` automatically, so that URL only works if this project (including `.github/workflows/deploy-pages.yml` and the `frontend/` folder) lives in **`Consensia-webpage`** and Pages is turned on there. You do not need two separate “sites” in two repos unless you want two URLs.
+
+1. Put this codebase in the repo that matches your desired URL (e.g. merge or push into **`Consensia-webpage`**), then push to `main` (or run **Actions → Deploy GitHub Pages → Run workflow**).
+2. In the GitHub repo: **Settings → Pages → Build and deployment → Source: GitHub Actions** (pick the “GitHub Pages” environment the first time it prompts).
+3. After the workflow finishes, open the **Pages URL** shown in the run summary. Routes like `/app` work because the build copies `index.html` to `404.html`.
+
+**API from Pages:** set a repository secret `VITE_API_BASE_URL` to your public backend URL (for example `https://api.example.com`). Update backend `CORS_ALLOW_ORIGINS` to include your `https://<user>.github.io` origin.
+
+**Local check with a subpath** (replace with your repo name):  
+`cd frontend && VITE_BASE_PATH=/Consensia-webpage/ npm run build:pages && npx vite preview`  
+Then open `http://localhost:4173/Consensia-webpage/` (preview serves the built `base` from `dist`).
+
+If you keep developing in a repo named differently from the Pages URL, either **rename** the GitHub repo, or **move the default branch** of `Consensia-webpage` to contain this tree; publishing from `Consensia` alone would give `https://amirahanii.github.io/Consensia/` instead.
 
 ## Next steps
 

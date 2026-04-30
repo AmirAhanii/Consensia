@@ -43,63 +43,68 @@ export const SessionSidebar: React.FC<Props> = ({
 
   return (
     <aside
-      className={`relative flex-shrink-0 flex flex-col border-r border-purple-900/40 bg-black/50 backdrop-blur transition-all duration-200 ${
+      className={`relative z-30 flex min-h-0 shrink-0 flex-col border-r border-[color:var(--c-border)] bg-[var(--c-surface-panel)] backdrop-blur transition-all duration-200 ${
         collapsed ? "w-10" : "w-60"
       }`}
     >
-      {/* Collapse toggle */}
       <button
+        type="button"
         onClick={() => setCollapsed((c) => !c)}
-        className="absolute -right-3 top-6 z-20 flex h-6 w-6 items-center justify-center rounded-full border border-purple-800/60 bg-black text-purple-400 hover:text-white transition-colors"
+        className="absolute -right-4 top-16 z-40 flex h-8 w-8 items-center justify-center rounded-full border border-[color:var(--c-border-strong)] bg-[var(--c-surface-chip)] text-[var(--c-fg-hint)] shadow-md shadow-black/20 transition-colors hover:bg-[var(--c-surface-chip-hover)] hover:text-[var(--c-fg)] light:text-[var(--c-fg)] light:shadow-[color:var(--c-shadow-card)] light:hover:bg-[var(--c-surface-chip-hover)]"
+        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
-        {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
+        {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
       </button>
 
       {!collapsed && (
         <>
-          {/* New debate button */}
-          <div className="p-3 border-b border-purple-900/40">
+          <div className="border-b border-[color:var(--c-border)] p-3">
             <button
+              type="button"
               onClick={onNew}
-              className="flex w-full items-center gap-2 rounded-xl border border-purple-800/50 bg-purple-900/20 px-3 py-2 text-sm text-purple-100 hover:bg-purple-800/40 transition-colors"
+              className="flex w-full items-center gap-2 rounded-xl border border-[color:var(--c-border)] bg-purple-900/20 px-3 py-2 text-sm text-[var(--c-fg)] transition-colors hover:bg-purple-800/40 light:border-[color:var(--c-border-strong)] light:bg-[var(--c-surface-chip)] light:hover:bg-[var(--c-surface-chip-hover)]"
             >
-              <MessageSquarePlus className="w-4 h-4 shrink-0" />
+              <MessageSquarePlus className="h-4 w-4 shrink-0" />
               New Debate
             </button>
           </div>
 
-          {/* Session list */}
           <div className="flex-1 overflow-y-auto py-2">
             {!isLoggedIn ? (
-              <p className="px-3 py-4 text-xs text-purple-500 text-center leading-relaxed">
-                Log in to save and<br />switch between debates
+              <p className="px-3 py-4 text-center text-xs leading-relaxed text-[var(--c-fg-hint)]">
+                Log in to save and<br />
+                switch between debates
               </p>
             ) : sessions.length === 0 ? (
-              <p className="px-3 py-4 text-xs text-purple-500 text-center">
+              <p className="px-3 py-4 text-center text-xs text-[var(--c-fg-hint)]">
                 No saved debates yet
               </p>
             ) : (
               sessions.map((s) => (
                 <div
                   key={s.id}
-                  className={`group relative mx-2 mb-1 rounded-xl px-3 py-2 cursor-pointer transition-colors ${
+                  className={`group relative mx-2 mb-1 cursor-pointer rounded-xl px-3 py-2 transition-colors ${
                     s.id === currentSessionId
-                      ? "bg-purple-900/50 border border-purple-700/50"
-                      : "hover:bg-purple-900/30"
+                      ? "border border-[color:var(--c-border-strong)] bg-purple-900/50 light:bg-[var(--c-surface-nav-active)]"
+                      : "hover:bg-[var(--c-surface-nav-hover)]"
                   }`}
                   onClick={() => onSelect(s)}
                 >
-                  <p className="text-xs font-medium text-purple-100 truncate pr-5 leading-snug">
+                  <p className="truncate pr-5 text-xs font-medium leading-snug text-[var(--c-fg)]">
                     {s.title}
                   </p>
-                  <p className="text-[10px] text-purple-500 mt-0.5">
+                  <p className="mt-0.5 text-[10px] text-[var(--c-fg-hint)]">
                     {relativeTime(s.updated_at)}
                   </p>
                   <button
-                    onClick={(e) => { e.stopPropagation(); onDelete(s.id); }}
-                    className="absolute right-2 top-2 hidden group-hover:flex items-center justify-center rounded p-0.5 text-purple-500 hover:text-rose-400 transition-colors"
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete(s.id);
+                    }}
+                    className="absolute right-2 top-2 hidden items-center justify-center rounded p-0.5 text-[var(--c-fg-hint)] transition-colors hover:text-rose-400 group-hover:flex light:hover:text-rose-600"
                   >
-                    <Trash2 className="w-3 h-3" />
+                    <Trash2 className="h-3 w-3" />
                   </button>
                 </div>
               ))

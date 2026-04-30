@@ -13,11 +13,23 @@ DATABASE_URL = os.getenv(
 )
 
 
+def _with_connect_timeout(url: str, seconds: int = 10) -> str:
+    if "connect_timeout=" in url:
+        return url
+    joiner = "&" if "?" in url else "?"
+    return f"{url}{joiner}connect_timeout={seconds}"
+
+
 class Base(DeclarativeBase):
     pass
 
 
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(
+    _with_connect_timeout(DATABASE_URL),
+    echo=True,
+    pool_pre_ping=True,
+    pool_timeout=30,
+)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, class_=Session)
 
 

@@ -1,18 +1,66 @@
+@import "./theme/colors.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  @keyframes debaters-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-debaters-reveal {
+    animation: debaters-reveal 0.4s cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+
+  @keyframes composer-dock {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-composer-dock {
+    animation: composer-dock 0.4s cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+}
 
 html {
   font-size: 16px;
   scroll-behavior: smooth;
 }
 
+/**
+ * Dark default: atmospheric purple-black (radial glow + deep base).
+ * Light theme overrides via html[data-theme="light"] (see colors.css).
+ */
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: #0d0618;
-  color: white;
+  color: var(--c-fg);
+  background-color: #05020c;
+  background-image:
+    radial-gradient(ellipse 115% 90% at 50% 100%, rgb(88 28 135 / 0.42) 0%, transparent 50%),
+    radial-gradient(ellipse 85% 65% at 50% 8%, rgb(79 70 229 / 0.16) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 45% at 80% 60%, rgb(168 85 247 / 0.1) 0%, transparent 45%),
+    linear-gradient(180deg, #0a0514 0%, #06020e 45%, #05020c 100%);
+  background-attachment: fixed;
+}
+
+html[data-theme="light"] body {
+  background-color: var(--c-canvas);
+  background-image: none;
+  background-attachment: scroll;
 }
 
 #root {

@@ -30,6 +30,11 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+    favorite_personas = relationship(
+        "FavoritePersona",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
 
 
 class AuthIdentity(Base):
@@ -71,3 +76,16 @@ class DebateSession(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False)
 
     user = relationship("User", back_populates="debate_sessions")
+
+
+class FavoritePersona(Base):
+    __tablename__ = "favorite_personas"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid4()))
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    icon: Mapped[str] = mapped_column(String(64), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+
+    user = relationship("User", back_populates="favorite_personas")

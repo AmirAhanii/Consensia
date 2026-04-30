@@ -1,15 +1,25 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
+import { authHeaders, getAccessToken } from "../authHeaders";
+import { DebateUserMenu } from "../components/DebateUserMenu";
 import { GradientBackground } from "../components/GradientBackground";
-import { Header } from "../components/Header";
+import { DebateChatThread } from "../components/DebateChatThread";
+import { DebateComposer } from "../components/DebateComposer";
 import { PersonaPanel } from "../components/PersonaPanel";
-import { QuestionPanel } from "../components/QuestionPanel";
-import { ResultsPanel } from "../components/ResultsPanel";
 import { SessionSidebar, type DebateSessionItem } from "../components/SessionSidebar";
 import { API_BASE_URL } from "../config";
-import { DebateResult, Persona } from "../types";
+import { DebateResult, Persona, PersonaCalibrationScore } from "../types";
 import { nanoid } from "../utils/nanoid";
-import { ToastContainer } from "react-toastify";
+import { ThemedToastContainer } from "../components/ThemedToastContainer";
+import {
+  debateDebatersPanel,
+  debateDebatersPanelHeader,
+  debateDebatersToggleBtn,
+  debateDockStrip,
+  formHeading,
+  pageShell,
+  stickyHeader,
+} from "../theme/themeClasses";
 
 type ApiPersonaAnswer = {
   persona_id: string;
@@ -18,14 +28,33 @@ type ApiPersonaAnswer = {
   answer: string;
 };
 
+type ApiQaRow = {
+  persona_id: string;
+  persona_name: string;
+  score: number;
+  rationale: string;
+};
+
 type ApiDebateResponse = {
   rounds: {
     round_number: number;
     label: string;
     persona_answers: ApiPersonaAnswer[];
   }[];
+  topic_relevance_qa?: ApiQaRow[];
+  reasoning_quality_qa?: ApiQaRow[];
   judge: { summary: string; reasoning: string };
 };
+
+function mapCalibrationRows(rows: ApiQaRow[] | undefined): PersonaCalibrationScore[] {
+  if (!Array.isArray(rows)) return [];
+  return rows.map((row) => ({
+    personaId: row.persona_id,
+    personaName: row.persona_name,
+    score: Number.isFinite(row.score) ? Math.max(0, Math.min(9, Math.round(row.score))) : 0,
+    rationale: typeof row.rationale === "string" ? row.rationale : "",
+  }));
+}
 
 const DEFAULT_PERSONAS: Persona[] = [
   {
@@ -42,28 +71,98 @@ const DEFAULT_PERSONAS: Persona[] = [
   },
 ];
 
-function getToken(): string | null {
-  return localStorage.getItem("consensia_access_token");
-}
-
-function authHeaders(): Record<string, string> {
-  const token = getToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
-
 function sessionTitle(question: string): string {
   const q = question.trim();
   return q.length > 60 ? q.slice(0, 60) + "…" : q || "New Debate";
 }
 
-export default function DebatePage() {
-  const navigate = useNavigate();
+type DebatersBlockProps = {
+  debatersOpen: boolean;
+  setDebatersOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoggedIn: boolean;
+  personas: Persona[];
+  onAddPersona: (persona: Omit<Persona, "id">) => void;
+  onRemovePersona: (id: string) => void;
+  onUpdatePersona: (persona: Persona) => void;
+};
 
+function DebatersBlock({
+  debatersOpen,
+  setDebatersOpen,
+  isLoggedIn,
+  personas,
+  onAddPersona,
+  onRemovePersona,
+  onUpdatePersona,
+}: DebatersBlockProps) {
+  return (
+    <div className="mx-auto w-full max-w-3xl px-3 sm:px-4">
+      <div className="flex justify-center py-2">
+        <button
+          type="button"
+          aria-expanded={debatersOpen}
+          onClick={() => setDebatersOpen((o) => !o)}
+          className={debateDebatersToggleBtn}
+        >
+          Debaters · {personas.length} persona{personas.length !== 1 ? "s" : ""}
+          <ChevronDown
+            className={`h-3.5 w-3.5 shrink-0 text-purple-500 transition-transform duration-300 ease-out motion-reduce:transition-none light:text-violet-600 ${
+              debatersOpen ? "rotate-180" : ""
+            }`}
+            aria-hidden
+          />
+        </button>
+      </div>
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
+          debatersOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="min-h-0 overflow-hidden">
+          <div
+            className={`${debateDebatersPanel} motion-reduce:animate-none ${
+              debatersOpen ? "animate-debaters-reveal" : ""
+            }`}
+          >
+            <div
+              className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl"
+              aria-hidden
+            >
+              <div className="absolute -left-4 top-0 h-40 w-40 rounded-full bg-purple-400/12 blur-2xl" />
+              <div className="absolute -right-8 top-1/4 h-36 w-36 -translate-y-1/2 rounded-full bg-fuchsia-500/10 blur-2xl" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(167,139,250,0.08),transparent_50%)]" />
+            </div>
+            <div className={debateDebatersPanelHeader}>
+              <p className="bg-gradient-to-r from-[#F5F3FF] to-[#C7B8FF] bg-clip-text text-sm font-bold tracking-tight text-transparent light:from-violet-800 light:to-fuchsia-700">
+                Debaters
+              </p>
+              <p className="mt-0.5 text-xs text-purple-300/70 light:text-violet-600/85">
+                {personas.length} active · presets, favorites, CV, or researcher
+              </p>
+            </div>
+            <div className="relative px-4 pb-4 pt-2 sm:px-5 sm:pb-5">
+              <PersonaPanel
+                embedInShell
+                isLoggedIn={isLoggedIn}
+                personas={personas}
+                onAddPersona={onAddPersona}
+                onRemovePersona={onRemovePersona}
+                onUpdatePersona={onUpdatePersona}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function DebatePage() {
   useEffect(() => {
     document.title = "Consensia App — Debate Workspace";
   }, []);
 
-  const isLoggedIn = Boolean(getToken());
+  const isLoggedIn = Boolean(getAccessToken());
 
   const [personas, setPersonas] = useState<Persona[]>(DEFAULT_PERSONAS);
   const [question, setQuestion] = useState("");
@@ -73,19 +172,26 @@ export default function DebatePage() {
 
   const [sessions, setSessions] = useState<DebateSessionItem[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [debatersOpen, setDebatersOpen] = useState(false);
 
-  // Load sessions on mount
+  // Load sessions on mount (and when login state changes)
   useEffect(() => {
     if (!isLoggedIn) return;
     fetch(`${API_BASE_URL}/api/sessions`, { headers: authHeaders() })
       .then((r) => r.ok ? r.json() : [])
       .then((data) => { if (Array.isArray(data)) setSessions(data); })
       .catch(() => {});
-  }, []);
+  }, [isLoggedIn]);
 
   const canRun = useMemo(
     () => personas.length > 0 && question.trim().length > 0 && !isLoading,
     [personas.length, question, isLoading]
+  );
+
+  /** After first send (or restoring a session), composer docks to the bottom like ChatGPT. */
+  const hasActiveDebate = useMemo(
+    () => isLoading || result !== null || Boolean(error),
+    [isLoading, result, error]
   );
 
   const handleAddPersona = (persona: Omit<Persona, "id">) => {
@@ -106,7 +212,13 @@ export default function DebatePage() {
       const body = {
         title: sessionTitle(q),
         question: q,
-        personas: ps.map(({ id, name, description, icon }) => ({ id, name, description, icon })),
+        personas: ps.map(({ id, name, description, icon, personaBasis }) => ({
+          id,
+          name,
+          description,
+          icon,
+          ...(personaBasis?.trim() ? { persona_basis: personaBasis.trim() } : {}),
+        })),
         result: r,
       };
       if (sessionId) {
@@ -148,7 +260,12 @@ export default function DebatePage() {
       const payload = {
         question,
         num_rounds: 2,
-        personas: personas.map(({ id, name, description }) => ({ id, name, description })),
+        personas: personas.map((p) => ({
+          id: p.id,
+          name: p.name,
+          description: p.description,
+          ...(p.personaBasis?.trim() ? { persona_basis: p.personaBasis.trim() } : {}),
+        })),
       };
 
       const response = await fetch(`${API_BASE_URL}/api/debate`, {
@@ -157,7 +274,19 @@ export default function DebatePage() {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+      if (!response.ok) {
+        const errJson = (await response.json().catch(() => null)) as {
+          detail?: unknown;
+        } | null;
+        const detail = errJson?.detail;
+        const msg =
+          typeof detail === "string"
+            ? detail
+            : Array.isArray(detail)
+              ? detail.map((d) => JSON.stringify(d)).join("; ")
+              : `Request failed (${response.status})`;
+        throw new Error(msg);
+      }
 
       const raw: ApiDebateResponse = await response.json();
       const data: DebateResult = {
@@ -172,6 +301,8 @@ export default function DebatePage() {
             answer: a.answer,
           })),
         })),
+        topicRelevanceQa: mapCalibrationRows(raw.topic_relevance_qa),
+        reasoningQualityQa: mapCalibrationRows(raw.reasoning_quality_qa),
       };
 
       setResult(data);
@@ -189,9 +320,21 @@ export default function DebatePage() {
   const handleSelectSession = (session: DebateSessionItem) => {
     setCurrentSessionId(session.id);
     setQuestion(session.question);
+    const raw = session.personas as Persona[];
     setPersonas(
-      (session.personas as Persona[]).length > 0
-        ? (session.personas as Persona[])
+      Array.isArray(raw) && raw.length > 0
+        ? raw.map((p) => ({
+            id: typeof p.id === "string" ? p.id : nanoid(),
+            name: typeof p.name === "string" ? p.name : "",
+            description: typeof p.description === "string" ? p.description : "",
+            icon: typeof p.icon === "string" ? p.icon : "User",
+            personaBasis:
+              typeof (p as { personaBasis?: unknown }).personaBasis === "string"
+                ? (p as { personaBasis: string }).personaBasis
+                : typeof (p as { persona_basis?: unknown }).persona_basis === "string"
+                  ? (p as { persona_basis: string }).persona_basis
+                  : undefined,
+          }))
         : DEFAULT_PERSONAS
     );
     setResult((session.result as DebateResult) ?? null);
@@ -236,9 +379,11 @@ export default function DebatePage() {
   return (
     <>
       <GradientBackground />
-      <ToastContainer position="top-center" autoClose={5000} theme="dark" />
+      <ThemedToastContainer position="top-center" autoClose={5000} />
 
-      <div className="relative z-10 flex min-h-screen text-purple-50">
+      <div
+        className={`relative z-10 flex h-[100dvh] min-h-0 max-h-[100dvh] overflow-hidden ${pageShell}`}
+      >
         <SessionSidebar
           sessions={sessions}
           currentSessionId={currentSessionId}
@@ -248,44 +393,77 @@ export default function DebatePage() {
           onDelete={handleDeleteSession}
         />
 
-        <div className="flex-1 min-w-0">
-          <div className="px-6 pt-6">
-            <button
-              type="button"
-              onClick={() => navigate("/")}
-              className="rounded-xl border border-purple-800/40 bg-black/40 px-4 py-2 text-sm text-purple-200 transition hover:border-purple-600 hover:text-white"
-            >
-              ← Back to Homepage
-            </button>
-          </div>
-
-          <Header
-            onRun={handleRun}
-            canRun={canRun}
-            isLoading={isLoading}
-            personaCount={personas.length}
-            questionLength={question.length}
-          />
-
-          <main className="px-6 py-10">
-            <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
-              <div className="space-y-6">
-                <QuestionPanel question={question} onChange={setQuestion} />
-                <PersonaPanel
-                  personas={personas}
-                  onAddPersona={handleAddPersona}
-                  onRemovePersona={handleRemovePersona}
-                  onUpdatePersona={handleUpdatePersona}
-                />
-              </div>
-
-              <ResultsPanel
-                result={result}
-                personaCount={personas.length}
-                error={error}
-                isLoading={isLoading}
-              />
+        <div className="relative z-10 flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+          <header
+            className={`flex shrink-0 items-center justify-between gap-3 px-4 py-3 backdrop-blur-sm sm:px-6 ${stickyHeader}`}
+          >
+            <div className="min-w-0 flex-1" aria-hidden />
+            <div className="shrink-0 text-center">
+              <h1 className={`text-sm font-semibold tracking-tight sm:text-base ${formHeading}`}>
+                Consensia
+              </h1>
+              <p className="hidden text-[10px] text-[var(--c-fg-hint)] sm:block">
+                {personas.length} debater{personas.length !== 1 ? "s" : ""}
+              </p>
             </div>
+            <div className="flex min-w-0 flex-1 justify-end">
+              <DebateUserMenu isLoggedIn={isLoggedIn} />
+            </div>
+          </header>
+
+          <main className="flex min-h-0 flex-1 flex-col">
+            {!hasActiveDebate ? (
+              <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-1 px-3 py-10 sm:px-4">
+                  <DebateComposer
+                    question={question}
+                    onChange={setQuestion}
+                    onRun={handleRun}
+                    canRun={canRun}
+                    isLoading={isLoading}
+                  />
+                  <DebatersBlock
+                    debatersOpen={debatersOpen}
+                    setDebatersOpen={setDebatersOpen}
+                    isLoggedIn={isLoggedIn}
+                    personas={personas}
+                    onAddPersona={handleAddPersona}
+                    onRemovePersona={handleRemovePersona}
+                    onUpdatePersona={handleUpdatePersona}
+                  />
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+                  <DebateChatThread
+                    question={question}
+                    result={result}
+                    error={error}
+                    isLoading={isLoading}
+                    personaCount={personas.length}
+                  />
+                </div>
+                <div className={debateDockStrip}>
+                  <DebateComposer
+                    question={question}
+                    onChange={setQuestion}
+                    onRun={handleRun}
+                    canRun={canRun}
+                    isLoading={isLoading}
+                  />
+                  <DebatersBlock
+                    debatersOpen={debatersOpen}
+                    setDebatersOpen={setDebatersOpen}
+                    isLoggedIn={isLoggedIn}
+                    personas={personas}
+                    onAddPersona={handleAddPersona}
+                    onRemovePersona={handleRemovePersona}
+                    onUpdatePersona={handleUpdatePersona}
+                  />
+                </div>
+              </>
+            )}
           </main>
         </div>
       </div>

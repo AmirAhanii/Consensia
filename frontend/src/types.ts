@@ -3,6 +3,20 @@ export type Persona = {
   name: string;
   description: string;
   icon: string;
+  /**
+   * Optional raw material used to build this persona (CV text, researcher scrape, etc.).
+   * Sent to the judge for topic-fit calibration; falls back to description only when empty.
+   */
+  personaBasis?: string;
+};
+
+/** Server-backed favorite persona (same shape as Persona except `id` is stable across debates). */
+export type SavedFavoritePersona = {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  created_at: string;
 };
 
 export type PersonaResponse = {
@@ -17,6 +31,14 @@ export type JudgeConsensus = {
   reasoning: string;
 };
 
+/** One row from judge QA (topic fit 0–9 or reasoning quality 0–9). */
+export type PersonaCalibrationScore = {
+  personaId: string;
+  personaName: string;
+  score: number;
+  rationale: string;
+};
+
 export type DebateRound = {
   roundNumber: number;
   label: string;
@@ -25,6 +47,7 @@ export type DebateRound = {
 
 export type DebateResult = {
   rounds: DebateRound[];
+  topicRelevanceQa?: PersonaCalibrationScore[];
+  reasoningQualityQa?: PersonaCalibrationScore[];
   judge: JudgeConsensus;
 };
-

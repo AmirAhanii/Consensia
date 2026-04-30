@@ -7,6 +7,14 @@ class Persona(BaseModel):
     id: str = Field(..., description="Unique identifier for the persona.")
     name: str = Field(..., description="Display name for the persona.")
     description: str = Field(..., description="Background traits and context for the persona.")
+    persona_basis: str | None = Field(
+        default=None,
+        max_length=32000,
+        description=(
+            "Optional source material used to construct this persona (CV text, researcher profile, etc.). "
+            "When set, judge calibration uses it together with the description."
+        ),
+    )
 
 
 class TokenUsage(BaseModel):
@@ -31,6 +39,24 @@ class PersonaAnswer(BaseModel):
     )
 
 
+class PersonaTopicRelevanceQa(BaseModel):
+    """Pre-debate: how well the question matches each persona's domain (0–9)."""
+
+    persona_id: str
+    persona_name: str
+    score: int = Field(..., ge=0, le=9, description="Topic relevance 0 unrelated … 9 highly aligned.")
+    rationale: str = ""
+
+
+class PersonaReasoningQualityQa(BaseModel):
+    """Post-debate: argument quality vs persona standards (0–9)."""
+
+    persona_id: str
+    persona_name: str
+    score: int = Field(..., ge=0, le=9, description="Reasoning quality after their answers.")
+    rationale: str = ""
+
+
 class JudgeConsensus(BaseModel):
     summary: str = Field(..., description="Concise summary of the consensus.")
     reasoning: str = Field(..., description="Judge reasoning that justifies the summary.")
@@ -42,6 +68,14 @@ class JudgeConsensus(BaseModel):
 
 class ConsensusResponse(BaseModel):
     personas: list[PersonaAnswer]
+    topic_relevance_qa: list[PersonaTopicRelevanceQa] = Field(
+        default_factory=list,
+        description="Per-persona topic fit scores (empty for single-persona runs).",
+    )
+    reasoning_quality_qa: list[PersonaReasoningQualityQa] = Field(
+        default_factory=list,
+        description="Per-persona argument quality after answers (empty for single-persona runs).",
+    )
     judge: JudgeConsensus
     usage: TokenUsage | None = Field(
         default=None,
@@ -63,6 +97,7 @@ class DebateRequest(BaseModel):
 
 class DebateResponse(BaseModel):
     rounds: list[DebateRound]
+    topic_relevance_qa: list[PersonaTopicRelevanceQa] = Field(default_factory=list)
+    reasoning_quality_qa: list[PersonaReasoningQualityQa] = Field(default_factory=list)
     judge: JudgeConsensus
     usage: TokenUsage | None = None
-

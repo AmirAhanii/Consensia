@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from .auth.router import router as auth_router
+from .persona_favorites.router import router as persona_favorites_router
 from .sessions.router import router as sessions_router
 
 import pdfplumber
@@ -45,11 +46,17 @@ _BUNDLED_RAW_AUTHORS_DIR = _APP_DIR / "bundled_raw_authors"
 async def lifespan(_: FastAPI):
     from alembic.config import Config as AlembicConfig
     from alembic import command as alembic_command
+
+    cfg = AlembicConfig("alembic.ini")
     try:
-        cfg = AlembicConfig("alembic.ini")
-        alembic_command.upgrade(cfg, "head")
+        # Repo has divergent migration branches; "heads" applies every leaf revision.
+        alembic_command.upgrade(cfg, "heads")
     except Exception as exc:
-        logger.warning("Alembic migration skipped: %s", exc)
+        logger.exception(
+            "Alembic migrations failed — the API cannot run without tables (e.g. users). "
+            "Fix DATABASE_URL / Postgres, then run: alembic upgrade head"
+        )
+        raise RuntimeError("Database migrations failed") from exc
     yield
 
 
@@ -63,6 +70,7 @@ app = FastAPI(
 
 app.include_router(auth_router)
 app.include_router(sessions_router)
+app.include_router(persona_favorites_router)
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +109,6 @@ async def health_check() -> dict[str, str]:
 async def generate_consensus(
     payload: ConsensusRequest,
     service: LLMService = Depends(get_llm_service),
-    settings: Settings = Depends(get_settings),
 ) -> ConsensusResponse:
     if not payload.personas:
         raise HTTPException(
@@ -109,23 +116,11 @@ async def generate_consensus(
             detail="At least one persona is required.",
         )
 
-    if len(payload.personas) > settings.max_personas_per_request:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=(
-                f"Too many personas in one request. "
-                f"Max is {settings.max_personas_per_request}."
-            ),
-        )
-
     try:
-        persona_answers = await asyncio.gather(
-            *(service.generate_persona_answer(persona, payload.question)
-              for persona in payload.personas)
-        )
-        if len(persona_answers) == 1:
-            # Cost optimization: in single-persona research mode, avoid an extra LLM judge call.
-            # Reuse the persona answer as consensus and provide local reasoning text.
+        if len(payload.personas) == 1:
+            persona_answers = [
+                await service.generate_persona_answer(payload.personas[0], payload.question)
+            ]
             only = persona_answers[0]
             judge_consensus = JudgeConsensus(
                 summary=only.answer,
@@ -135,40 +130,28 @@ async def generate_consensus(
                 ),
                 usage=None,
             )
-        else:
-            judge_consensus = await service.generate_judge_consensus(persona_answers, payload.question)
+            total_usage: TokenUsage | None = None
+            if only.usage:
+                total_usage = TokenUsage(
+                    prompt_tokens=only.usage.prompt_tokens,
+                    completion_tokens=only.usage.completion_tokens,
+                    total_tokens=only.usage.total_tokens,
+                )
+            return ConsensusResponse(
+                personas=persona_answers,
+                topic_relevance_qa=[],
+                reasoning_quality_qa=[],
+                judge=judge_consensus,
+                usage=total_usage,
+            )
+
+        return await service.run_consensus_multi(payload.question, payload.personas)
 
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=f"Consensus generation failed: {exc}",
         ) from exc
-
-    total_usage: TokenUsage | None = None
-    if judge_consensus.usage or any((p.usage is not None) for p in persona_answers):
-        prompt_tokens = 0
-        completion_tokens = 0
-        total_tokens = 0
-        for p in persona_answers:
-            if p.usage:
-                prompt_tokens += p.usage.prompt_tokens
-                completion_tokens += p.usage.completion_tokens
-                total_tokens += p.usage.total_tokens
-        if judge_consensus.usage:
-            prompt_tokens += judge_consensus.usage.prompt_tokens
-            completion_tokens += judge_consensus.usage.completion_tokens
-            total_tokens += judge_consensus.usage.total_tokens
-        total_usage = TokenUsage(
-            prompt_tokens=prompt_tokens,
-            completion_tokens=completion_tokens,
-            total_tokens=total_tokens,
-        )
-
-    return ConsensusResponse(
-        personas=list(persona_answers),
-        judge=judge_consensus,
-        usage=total_usage,
-    )
 
 
 # ------------------------------------------------------------------------------------
@@ -183,17 +166,11 @@ async def generate_consensus(
 async def run_debate(
     payload: DebateRequest,
     service: LLMService = Depends(get_llm_service),
-    settings: Settings = Depends(get_settings),
 ) -> DebateResponse:
     if not payload.personas:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="At least one persona is required.",
-        )
-    if len(payload.personas) > settings.max_personas_per_request:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Too many personas. Max is {settings.max_personas_per_request}.",
         )
     try:
         return await service.run_debate(payload.question, payload.personas, payload.num_rounds)
@@ -250,6 +227,14 @@ async def persona_from_researcher_name(
         )
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ImportError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "SerpAPI client is missing. Rebuild the backend image or run: "
+                "`pip install google-search-results` (declared in pyproject.toml)."
+            ),
+        ) from exc
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"Researcher scraping failed: {exc}") from exc
 

@@ -1,5 +1,43 @@
 import React from "react";
-import { DebateResult } from "../types";
+import { DebateResult, PersonaCalibrationScore } from "../types";
+
+function QaTable({ title, rows }: { title: string; rows: PersonaCalibrationScore[] }) {
+  if (!rows.length) return null;
+  return (
+    <section className="space-y-2">
+      <h3 className="text-xs font-semibold uppercase tracking-wide text-purple-300 light:text-violet-700">
+        {title}
+      </h3>
+      <div className="overflow-hidden rounded-xl border border-purple-800/40 bg-black/35 light:border-[color:var(--c-border)] light:bg-[var(--c-surface-inline)]">
+        <table className="w-full text-left text-xs text-purple-100 light:text-[var(--c-fg)]">
+          <thead>
+            <tr className="border-b border-purple-800/50 bg-purple-950/40 text-[10px] uppercase tracking-wide text-purple-400 light:border-[color:var(--c-border)] light:bg-[var(--c-surface-hint)] light:text-violet-700">
+              <th className="px-3 py-2 font-semibold">Persona</th>
+              <th className="w-12 px-2 py-2 text-center font-semibold">0–9</th>
+              <th className="px-3 py-2 font-semibold">Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr
+                key={row.personaId}
+                className="border-b border-purple-900/30 last:border-0 light:border-violet-200/40"
+              >
+                <td className="px-3 py-2 font-medium text-fuchsia-200/95 light:text-violet-800">
+                  {row.personaName}
+                </td>
+                <td className="px-2 py-2 text-center tabular-nums font-semibold text-purple-50 light:text-[var(--c-fg)]">
+                  {row.score}
+                </td>
+                <td className="px-3 py-2 text-purple-300/90 light:text-violet-700/90">{row.rationale}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
 
 type ResultsPanelProps = {
   result: DebateResult | null;
@@ -96,6 +134,13 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
               )}
             </section>
           ))}
+
+          {result.topicRelevanceQa && result.topicRelevanceQa.length > 0 && (
+            <QaTable title="Topic relevance (0–9, before debate)" rows={result.topicRelevanceQa} />
+          )}
+          {result.reasoningQualityQa && result.reasoningQualityQa.length > 0 && (
+            <QaTable title="Reasoning quality (0–9, after debate)" rows={result.reasoningQualityQa} />
+          )}
 
           {result.judge && hasMultiplePersonas && (
             <section className="space-y-4">

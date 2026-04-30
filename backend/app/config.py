@@ -60,9 +60,6 @@ class Settings(BaseModel):
         default_factory=lambda: os.getenv("MAIL_FROM", "").strip()
     )
 
-    max_personas_per_request: int = Field(
-        default_factory=lambda: int(os.getenv("MAX_PERSONAS_PER_REQUEST", "4"))
-    )
     max_output_tokens_persona: int = Field(
         default_factory=lambda: int(os.getenv("MAX_OUTPUT_TOKENS_PERSONA", "180"))
     )

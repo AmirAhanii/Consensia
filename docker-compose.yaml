@@ -11,6 +11,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U consensia -d consensia"]
+      interval: 3s
+      timeout: 5s
+      retries: 15
+      start_period: 5s
 
   backend:
     build:
@@ -21,7 +27,8 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      CORS_ALLOW_ORIGINS: "http://localhost:5173"
+      # Browser must match exactly; include 127.0.0.1 if you open the app that way.
+      CORS_ALLOW_ORIGINS: "http://localhost:5173,http://127.0.0.1:5173"
       RESEARCH_RAW_AUTHORS_DIR: "/app/backend/data/raw_authors"
       DATABASE_URL: "postgresql+psycopg://consensia:consensia_password@db:5432/consensia"
     volumes:
@@ -31,7 +38,8 @@ services:
       - ./backend/alembic.ini:/app/backend/alembic.ini
     command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   frontend:
     build:
@@ -40,7 +48,10 @@ services:
     ports:
       - "5173:5173"
     environment:
-      VITE_API_BASE_URL: "http://localhost:8000"
+      # Force empty so the browser never calls localhost:8000 from inside Docker (that hits the container itself).
+      # Same-origin `/api` → Vite proxy → backend service.
+      VITE_API_BASE_URL: ""
+      VITE_DEV_PROXY_TARGET: "http://backend:8000"
       VITE_OPEN: "false"
     volumes:
       - ./frontend/src:/app/frontend/src

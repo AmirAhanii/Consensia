@@ -4,29 +4,14 @@ import json
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
 from sqlalchemy.orm import Session as DBSession
 
-from ..auth.security import decode_access_token
-from ..config import Settings, get_settings
+from ..auth.deps import get_current_user_id
 from ..db import get_db
 from ..models import DebateSession
 
 router = APIRouter(prefix="/api/sessions", tags=["sessions"])
-_bearer = HTTPBearer(auto_error=False)
-
-
-async def get_current_user_id(
-    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
-    settings: Settings = Depends(get_settings),
-) -> str:
-    if not credentials:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    try:
-        return decode_access_token(credentials.credentials, settings.jwt_secret)
-    except Exception:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
 
 
 class SessionCreate(BaseModel):

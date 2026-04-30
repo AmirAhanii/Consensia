@@ -7,7 +7,8 @@ from sqlalchemy.orm import Session
 
 from ..config import Settings, get_settings
 from ..db import get_db
-from .emailer import send_verification_email
+from .deps import get_current_user_id
+from .emailer import send_verification_email_if_configured
 from .google_auth import verify_google_credential
 from .repository import (
     create_email_verification_code,
@@ -18,15 +19,20 @@ from .repository import (
     get_local_identity,
     get_user_by_email,
     get_user_by_google_sub,
+    get_user_by_id,
     invalidate_unused_verification_codes,
     mark_email_verified,
 )
 from .schemas import (
+    ChangePasswordRequest,
+    DeleteAccountRequest,
     GoogleLoginRequest,
     LoginRequest,
     RegisterRequest,
     ResendVerificationRequest,
     TokenResponse,
+    UpdateProfileRequest,
+    UserResponse,
     VerifyEmailCodeRequest,
 )
 from .security import (
@@ -38,6 +44,15 @@ from .security import (
 )
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
+
+
+def _primary_auth_provider(user) -> str:
+    identities = list(user.auth_identities or [])
+    if any(i.provider == "local" and i.password_hash for i in identities):
+        return "local"
+    if any(i.provider == "google" for i in identities):
+        return "google"
+    return "unknown"
 
 
 def utcnow() -> datetime:
@@ -75,7 +90,7 @@ async def register(
         db.commit()
 
         try:
-            send_verification_email(
+            sent = send_verification_email_if_configured(
                 settings.smtp_host,
                 settings.smtp_port,
                 settings.smtp_user,
@@ -90,9 +105,14 @@ async def register(
                 detail=f"Account exists but verification email could not be sent: {exc}",
             ) from exc
 
-        return {
-            "message": "Account already exists but is not verified. A new verification code has been sent."
-        }
+        if sent:
+            msg = "Account already exists but is not verified. A new verification code has been sent."
+        else:
+            msg = (
+                "Account exists but is not verified. SMTP is not configured — "
+                "check backend logs for your new verification code, then verify on the next page."
+            )
+        return {"message": msg}
 
     password_hash = hash_password(payload.password)
     raw_code, code_hash = new_email_verification_code()
@@ -121,7 +141,7 @@ async def register(
     db.commit()
 
     try:
-        send_verification_email(
+        sent = send_verification_email_if_configured(
             settings.smtp_host,
             settings.smtp_port,
             settings.smtp_user,
@@ -136,7 +156,14 @@ async def register(
             detail=f"User was created, but verification email could not be sent: {exc}",
         ) from exc
 
-    return {"message": "Registration successful. Check your email for the verification code."}
+    if sent:
+        msg = "Registration successful. Check your email for the verification code."
+    else:
+        msg = (
+            "Registration successful. SMTP is not configured — "
+            "check backend logs for your verification code, then continue to the verify page."
+        )
+    return {"message": msg}
 
 
 @router.post("/verify-email")
@@ -202,7 +229,7 @@ async def resend_verification(
     db.commit()
 
     try:
-        send_verification_email(
+        sent = send_verification_email_if_configured(
             settings.smtp_host,
             settings.smtp_port,
             settings.smtp_user,
@@ -217,7 +244,14 @@ async def resend_verification(
             detail=f"Verification email could not be sent: {exc}",
         ) from exc
 
-    return {"message": "A new verification code has been sent."}
+    if sent:
+        msg = "A new verification code has been sent."
+    else:
+        msg = (
+            "SMTP is not configured — check backend logs for your new verification code "
+            "and enter it on the verify page."
+        )
+    return {"message": msg}
 
 
 @router.post("/login", response_model=TokenResponse)
@@ -299,3 +333,88 @@ async def google_login(
         settings.access_token_expire_minutes,
     )
     return TokenResponse(access_token=token)
+
+
+@router.get("/me", response_model=UserResponse)
+async def read_profile(
+    user_id: str = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    user = get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return UserResponse(
+        id=user.id,
+        email=user.email,
+        full_name=user.full_name,
+        is_email_verified=user.is_email_verified,
+        auth_provider=_primary_auth_provider(user),
+    )
+
+
+@router.patch("/me", response_model=UserResponse)
+async def update_profile(
+    payload: UpdateProfileRequest,
+    user_id: str = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    user = get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    user.full_name = payload.full_name.strip()
+    user.updated_at = utcnow()
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return UserResponse(
+        id=user.id,
+        email=user.email,
+        full_name=user.full_name,
+        is_email_verified=user.is_email_verified,
+        auth_provider=_primary_auth_provider(user),
+    )
+
+
+@router.post("/change-password")
+async def change_password(
+    payload: ChangePasswordRequest,
+    user_id: str = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    user = get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    local_identity = get_local_identity(db, user.id)
+    if not local_identity or not local_identity.password_hash:
+        raise HTTPException(
+            status_code=400,
+            detail="Password change is only available for email/password sign-in.",
+        )
+    if not verify_password(payload.current_password, local_identity.password_hash):
+        raise HTTPException(status_code=401, detail="Current password is incorrect")
+    local_identity.password_hash = hash_password(payload.new_password)
+    db.add(local_identity)
+    db.commit()
+    return {"message": "Password updated"}
+
+
+@router.post("/delete-account")
+async def delete_account(
+    payload: DeleteAccountRequest,
+    user_id: str = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    user = get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    local_identity = get_local_identity(db, user.id)
+    if not local_identity or not local_identity.password_hash:
+        raise HTTPException(
+            status_code=400,
+            detail="Account deletion with password is only supported for email/password accounts.",
+        )
+    if not verify_password(payload.password, local_identity.password_hash):
+        raise HTTPException(status_code=401, detail="Password is incorrect")
+    db.delete(user)
+    db.commit()
+    return {"message": "Account deleted"}
