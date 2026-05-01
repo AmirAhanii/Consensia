@@ -196,6 +196,14 @@ export default function LoginPage() {
                     placeholder="Enter your password"
                     className={`w-full px-4 py-3 text-sm ${inputField}`}
                   />
+                  <div className="mt-2 text-right">
+                    <Link
+                      to="/forgot-password"
+                      className="text-sm text-purple-200 underline underline-offset-4 light:text-violet-700"
+                    >
+                      Forgot password?
+                    </Link>
+                  </div>
                 </div>
 
                 <button

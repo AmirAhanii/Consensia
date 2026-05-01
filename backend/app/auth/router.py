@@ -6,35 +6,43 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from ..config import Settings, get_settings
+from ..models import AuthIdentity, PasswordResetCode, User
 from ..debate_quota import effective_is_admin, upgrade_user_if_listed_admin
 from ..db import get_db
 from .deps import get_current_user_id
-from .emailer import send_verification_email_if_configured
+from .emailer import send_password_reset_email_if_configured, send_verification_email_if_configured
 from .google_auth import verify_google_credential
 from .repository import (
     create_email_verification_code,
     create_google_identity,
     create_local_identity,
+    create_password_reset_code,
     create_user,
+    get_active_password_reset_code,
     get_active_verification_code,
     get_local_identity,
     get_user_by_email,
     get_user_by_google_sub,
     get_user_by_id,
+    invalidate_unused_password_reset_codes,
     invalidate_unused_verification_codes,
     mark_email_verified,
+    mark_password_reset_code_used,
 )
 from .schemas import (
     ChangePasswordRequest,
     DeleteAccountRequest,
+    ForgotPasswordRequest,
     GoogleLoginRequest,
     LoginRequest,
     RegisterRequest,
     ResendVerificationRequest,
+    ResetPasswordRequest,
     TokenResponse,
     UpdateProfileRequest,
     UserResponse,
     VerifyEmailCodeRequest,
+    VerifyPasswordResetCodeRequest,
 )
 from .security import (
     create_access_token,
@@ -254,6 +262,128 @@ async def resend_verification(
             "and enter it on the verify page."
         )
     return {"message": msg}
+
+
+_FORGOT_PASSWORD_GENERIC_MESSAGE = (
+    "If an account with that email exists and supports password reset, "
+    "we sent a 6-digit code to that address."
+)
+
+
+def _active_password_reset_for_code(
+    db: Session,
+    *,
+    email: str,
+    code: str,
+) -> tuple[User, AuthIdentity, PasswordResetCode] | None:
+    user = get_user_by_email(db, email)
+    if not user:
+        return None
+    local_identity = get_local_identity(db, user.id)
+    if not local_identity or not local_identity.password_hash:
+        return None
+    code_hash = hash_verification_code(code)
+    reset_row = get_active_password_reset_code(db, code_hash=code_hash)
+    if not reset_row or reset_row.user_id != user.id:
+        return None
+    return user, local_identity, reset_row
+
+
+@router.post("/forgot-password")
+async def forgot_password(
+    payload: ForgotPasswordRequest,
+    db: Session = Depends(get_db),
+    settings: Settings = Depends(get_settings),
+):
+    user = get_user_by_email(db, payload.email)
+    if not user:
+        return {"message": _FORGOT_PASSWORD_GENERIC_MESSAGE}
+
+    local_identity = get_local_identity(db, user.id)
+    if not local_identity or not local_identity.password_hash:
+        return {"message": _FORGOT_PASSWORD_GENERIC_MESSAGE}
+
+    raw_code, code_hash = new_email_verification_code()
+    expires_at = utcnow() + timedelta(hours=24)
+
+    invalidate_unused_password_reset_codes(
+        db,
+        user_id=user.id,
+        invalidated_at=utcnow(),
+    )
+
+    create_password_reset_code(
+        db,
+        user_id=user.id,
+        code_hash=code_hash,
+        expires_at=expires_at,
+    )
+
+    db.commit()
+
+    try:
+        send_password_reset_email_if_configured(
+            settings.smtp_host,
+            settings.smtp_port,
+            settings.smtp_user,
+            settings.smtp_password,
+            settings.mail_from,
+            user.email,
+            raw_code,
+        )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Password reset email could not be sent: {exc}",
+        ) from exc
+
+    return {"message": _FORGOT_PASSWORD_GENERIC_MESSAGE}
+
+
+@router.post("/verify-password-reset-code")
+async def verify_password_reset_code(
+    payload: VerifyPasswordResetCodeRequest,
+    db: Session = Depends(get_db),
+):
+    resolved = _active_password_reset_for_code(
+        db,
+        email=str(payload.email),
+        code=payload.code,
+    )
+    if not resolved:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid or expired reset code",
+        )
+    return {"message": "Code verified"}
+
+
+@router.post("/reset-password")
+async def reset_password(
+    payload: ResetPasswordRequest,
+    db: Session = Depends(get_db),
+):
+    resolved = _active_password_reset_for_code(
+        db,
+        email=str(payload.email),
+        code=payload.code,
+    )
+    if not resolved:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid or expired reset code",
+        )
+    user, local_identity, reset_row = resolved
+
+    now = utcnow()
+    local_identity.password_hash = hash_password(payload.new_password)
+    user.updated_at = now
+    mark_password_reset_code_used(db, code=reset_row, used_at=now)
+    db.add(local_identity)
+    db.add(user)
+    db.commit()
+
+    return {"message": "Password reset successful. You can log in with your new password."}
 
 
 @router.post("/login", response_model=TokenResponse)
