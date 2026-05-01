@@ -15,13 +15,19 @@ from .sessions.router import router as sessions_router
 
 import pdfplumber
 from docx import Document
-from fastapi import Depends, FastAPI, HTTPException, status, UploadFile, File
+from fastapi import Depends, FastAPI, HTTPException, Request, status, UploadFile, File
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import Settings, get_settings, resolve_research_raw_authors_dir
 from .schemas import ConsensusRequest, ConsensusResponse, DebateRequest, DebateResponse, JudgeConsensus, TokenUsage
 from .services.llm import LLMService, Provider
+from .auth.deps import get_optional_user_id
+from .auth.repository import get_user_by_id
+from .debate_quota import assert_debate_quota_allowed, record_successful_debate, sync_admin_flags_from_env
+from .db import get_db
+from .models import DebateMessage, DebateSession, User
+from sqlalchemy.orm import Session as DBSession
 from openai import AzureOpenAI as SyncAzureOpenAI, OpenAI as SyncOpenAI
 from .services.scraping_service import search_google_scholar_by_name, scrape_google_scholar_author
 from .services.persona_pipeline import generate_persona_from_raw
@@ -57,6 +63,7 @@ async def lifespan(_: FastAPI):
             "Fix DATABASE_URL / Postgres, then run: alembic upgrade head"
         )
         raise RuntimeError("Database migrations failed") from exc
+    sync_admin_flags_from_env()
     yield
 
 
@@ -109,11 +116,20 @@ async def health_check() -> dict[str, str]:
 async def generate_consensus(
     payload: ConsensusRequest,
     service: LLMService = Depends(get_llm_service),
+    settings: Settings = Depends(get_settings),
 ) -> ConsensusResponse:
     if not payload.personas:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="At least one persona is required.",
+        )
+    if len(payload.personas) > settings.max_personas_per_session:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                f"At most {settings.max_personas_per_session} personas per session "
+                "(set MAX_PERSONA_LIMIT in the API environment)."
+            ),
         )
 
     try:
@@ -164,20 +180,116 @@ async def generate_consensus(
     summary="Run a multi-round debate with persona rebuttals and judge consensus",
 )
 async def run_debate(
+    request: Request,
     payload: DebateRequest,
     service: LLMService = Depends(get_llm_service),
+    settings: Settings = Depends(get_settings),
+    user_id: str | None = Depends(get_optional_user_id),
+    db: DBSession = Depends(get_db),
 ) -> DebateResponse:
     if not payload.personas:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="At least one persona is required.",
         )
+    if len(payload.personas) > settings.max_personas_per_session:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                f"At most {settings.max_personas_per_session} personas per session "
+                "(set MAX_PERSONA_LIMIT in the API environment)."
+            ),
+        )
+
+    user: User | None = None
+    if user_id:
+        user = get_user_by_id(db, user_id)
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid or expired session")
+
+    quota_bucket = assert_debate_quota_allowed(db, settings, user=user, request=request)
+
     try:
-        return await service.run_debate(payload.question, payload.personas, payload.num_rounds)
+        res = await service.run_debate(payload.question, payload.personas, payload.num_rounds)
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=f"Debate generation failed: {exc}",
+        ) from exc
+
+    record_successful_debate(db, quota_bucket)
+
+    try:
+        # If session_id is provided, append to that session's message log (requires auth).
+        if payload.session_id:
+            if not user_id:
+                raise HTTPException(status_code=401, detail="Not authenticated")
+            session = (
+                db.query(DebateSession)
+                .filter(DebateSession.id == payload.session_id, DebateSession.user_id == user_id)
+                .first()
+            )
+            if not session:
+                raise HTTPException(status_code=404, detail="Session not found")
+
+            from datetime import timezone, datetime
+
+            now = datetime.now(timezone.utc)
+            db.add(
+                DebateMessage(
+                    user_id=user_id,
+                    session_id=session.id,
+                    role="user",
+                    author=(user.full_name.strip() if user and user.full_name else "You"),
+                    content=payload.question.strip(),
+                    created_at=now,
+                )
+            )
+
+            for r in res.rounds:
+                for a in r.persona_answers:
+                    db.add(
+                        DebateMessage(
+                            user_id=user_id,
+                            session_id=session.id,
+                            role="persona",
+                            author=a.persona_name,
+                            content=a.answer,
+                            round_number=r.round_number,
+                            round_label=r.label,
+                            persona_id=a.persona_id,
+                            persona_description=a.persona_description,
+                        )
+                    )
+
+            if res.judge:
+                db.add(
+                    DebateMessage(
+                        user_id=user_id,
+                        session_id=session.id,
+                        role="judge",
+                        author="Judge",
+                        content=(res.judge.summary or "").strip()
+                        + ("\n\nReasoning:\n" + res.judge.reasoning.strip() if res.judge.reasoning else ""),
+                    )
+                )
+
+            session.updated_at = now
+            session.question = payload.question
+            session.personas = json.dumps([p.model_dump() for p in payload.personas])
+            session.result = json.dumps(res.model_dump())
+            db.commit()
+        elif quota_bucket is not None:
+            db.commit()
+
+        return res
+    except HTTPException:
+        raise
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to persist debate session: {exc}",
         ) from exc
 
 

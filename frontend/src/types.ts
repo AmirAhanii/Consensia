@@ -51,3 +51,15 @@ export type DebateResult = {
   reasoningQualityQa?: PersonaCalibrationScore[];
   judge: JudgeConsensus;
 };
+
+export type DebateMessage = {
+  id: string;
+  role: "user" | "persona" | "judge" | "system";
+  author: string | null;
+  content: string;
+  roundNumber: number | null;
+  roundLabel: string | null;
+  personaId: string | null;
+  personaDescription: string | null;
+  createdAt: string;
+};

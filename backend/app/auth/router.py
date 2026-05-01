@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from ..config import Settings, get_settings
+from ..debate_quota import effective_is_admin, upgrade_user_if_listed_admin
 from ..db import get_db
 from .deps import get_current_user_id
 from .emailer import send_verification_email_if_configured
@@ -124,6 +125,7 @@ async def register(
         email=payload.email,
         is_email_verified=False,
     )
+    upgrade_user_if_listed_admin(user, settings)
 
     create_local_identity(
         db,
@@ -274,6 +276,11 @@ async def login(
     if not verify_password(payload.password, local_identity.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
+    upgrade_user_if_listed_admin(user, settings)
+    if user.email.strip().lower() in settings.admin_emails:
+        db.add(user)
+        db.commit()
+
     token = create_access_token(
         str(user.id),
         settings.jwt_secret,
@@ -325,6 +332,7 @@ async def google_login(
             google_sub=google_sub,
         )
 
+    upgrade_user_if_listed_admin(user, settings)
     db.commit()
 
     token = create_access_token(
@@ -339,6 +347,7 @@ async def google_login(
 async def read_profile(
     user_id: str = Depends(get_current_user_id),
     db: Session = Depends(get_db),
+    settings: Settings = Depends(get_settings),
 ):
     user = get_user_by_id(db, user_id)
     if not user:
@@ -349,6 +358,7 @@ async def read_profile(
         full_name=user.full_name,
         is_email_verified=user.is_email_verified,
         auth_provider=_primary_auth_provider(user),
+        is_admin=effective_is_admin(user, settings),
     )
 
 
@@ -357,6 +367,7 @@ async def update_profile(
     payload: UpdateProfileRequest,
     user_id: str = Depends(get_current_user_id),
     db: Session = Depends(get_db),
+    settings: Settings = Depends(get_settings),
 ):
     user = get_user_by_id(db, user_id)
     if not user:
@@ -372,6 +383,7 @@ async def update_profile(
         full_name=user.full_name,
         is_email_verified=user.is_email_verified,
         auth_provider=_primary_auth_provider(user),
+        is_admin=effective_is_admin(user, settings),
     )
 
 

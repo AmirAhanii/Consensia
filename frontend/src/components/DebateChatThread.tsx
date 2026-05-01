@@ -1,9 +1,21 @@
 import React, { useEffect, useRef } from "react";
-import { DebateResult } from "../types";
+import { DebateMessage, DebateResult } from "../types";
+
+function localUserLabel(): string | null {
+  try {
+    const name = localStorage.getItem("consensia_user_name");
+    if (name && name.trim()) return name.trim();
+    const email = localStorage.getItem("consensia_user_email");
+    return email && email.trim() ? email.trim() : null;
+  } catch {
+    return null;
+  }
+}
 
 type Props = {
   question: string;
   result: DebateResult | null;
+  messages?: DebateMessage[] | null;
   error: string | null;
   isLoading: boolean;
   personaCount: number;
@@ -34,32 +46,40 @@ function initials(name: string): string {
 export const DebateChatThread: React.FC<Props> = ({
   question,
   result,
+  messages,
   error,
   isLoading,
   personaCount,
 }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
-  const prevRef = useRef({ loading: isLoading, rounds: 0 });
+  const prevRef = useRef({ loading: isLoading, rounds: 0, msgLen: 0 });
 
   // Pin to bottom when a run finishes or new rounds appear — not on every question keystroke
   // (that prevented scrolling up to read earlier messages).
   useEffect(() => {
     const roundsLen = result?.rounds?.length ?? 0;
+    const msgLen = messages?.length ?? 0;
     const loadingEnded = prevRef.current.loading && !isLoading;
     const roundsGrew = roundsLen > prevRef.current.rounds;
-    prevRef.current = { loading: isLoading, rounds: roundsLen };
+    const messagesGrew = msgLen > prevRef.current.msgLen;
+    prevRef.current = { loading: isLoading, rounds: roundsLen, msgLen };
 
-    if (loadingEnded || roundsGrew) {
-      queueMicrotask(() =>
-        bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" })
-      );
+    if (loadingEnded || roundsGrew || messagesGrew) {
+      const defer =
+        typeof queueMicrotask === "function"
+          ? queueMicrotask
+          : (fn: () => void) => window.setTimeout(fn, 0);
+      defer(() => bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" }));
     }
-  }, [isLoading, result]);
+  }, [isLoading, result, messages]);
 
   const showUserBubble =
     question.trim().length > 0 &&
     (Boolean(result) || isLoading || Boolean(error));
-  const hasThread = Boolean(result?.rounds?.length);
+  const fallbackRounds = result?.rounds ?? [];
+  const hasThread = Boolean(fallbackRounds.length);
+  const safeMessages = Array.isArray(messages) ? messages : [];
+  const hasDbThread = safeMessages.length > 0;
 
   return (
     <div className="mx-auto w-full max-w-3xl px-3 py-6 sm:px-4">
@@ -81,14 +101,118 @@ export const DebateChatThread: React.FC<Props> = ({
           </div>
         )}
 
-        {showUserBubble && (
+        {/* DB-backed thread (WhatsApp style): render full message log when available */}
+        {hasDbThread &&
+          (() => {
+            const nodes: React.ReactNode[] = [];
+            let lastRound: number | null = null;
+            let inRun = false;
+
+            for (const m of safeMessages) {
+              if (m.role === "user") {
+                inRun = true;
+                lastRound = null;
+                nodes.push(
+                  <div key={m.id} className="flex justify-end">
+                    <div className="max-w-[88%] rounded-2xl rounded-br-md border border-fuchsia-500/30 bg-gradient-to-br from-fuchsia-600/90 to-purple-700/90 px-4 py-3 text-sm text-white shadow-lg shadow-purple-950/40 light:from-fuchsia-500 light:to-violet-600 light:shadow-violet-300/40">
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-fuchsia-100/80 light:text-fuchsia-900/90">
+                        {m.author || localUserLabel() || "You"}
+                      </p>
+                      <p className="mt-1.5 whitespace-pre-wrap leading-relaxed">{m.content}</p>
+                    </div>
+                  </div>
+                );
+                continue;
+              }
+
+              if (m.role === "persona") {
+                const rn = typeof m.roundNumber === "number" ? m.roundNumber : null;
+                if (inRun && rn !== null && rn !== lastRound) {
+                  lastRound = rn;
+                  nodes.push(
+                    <div key={`${m.id}-round`} className="flex items-center gap-3 py-2">
+                      <div className="h-px flex-1 bg-purple-900/50 light:bg-violet-300/70" />
+                      <span className="shrink-0 text-[10px] font-semibold uppercase tracking-widest text-purple-500 light:text-violet-600">
+                        Round {rn}
+                      </span>
+                      <div className="h-px flex-1 bg-purple-900/50 light:bg-violet-300/70" />
+                    </div>
+                  );
+                }
+
+                const author = m.author || "Persona";
+                nodes.push(
+                  <div key={m.id} className="flex justify-start">
+                    <div
+                      className={`flex max-w-[88%] gap-2.5 rounded-2xl rounded-bl-md border px-3.5 py-3 shadow-md ${bubbleStyleForAuthor(
+                        author
+                      )}`}
+                    >
+                      <div
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/30 text-[11px] font-bold text-white/90 light:border-violet-400/50 light:bg-violet-300/60 light:text-violet-950"
+                        aria-hidden
+                      >
+                        {initials(author)}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[11px] font-semibold text-white/90 light:text-violet-950">
+                          {author}
+                        </p>
+                        {m.personaDescription ? (
+                          <p className="mt-0.5 line-clamp-2 text-[10px] leading-snug text-white/55 light:text-violet-800/85">
+                            {m.personaDescription}
+                          </p>
+                        ) : null}
+                        <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-white/95 light:text-violet-950">
+                          {m.content}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+                continue;
+              }
+
+              if (m.role === "judge") {
+                inRun = false;
+                lastRound = null;
+                nodes.push(
+                  <div key={m.id} className="mt-2 flex justify-center">
+                    <div className="w-full max-w-[95%] rounded-2xl border border-fuchsia-500/35 bg-gradient-to-b from-fuchsia-950/50 to-black/60 p-4 shadow-xl shadow-purple-950/30 light:border-fuchsia-400/45 light:from-[var(--c-judge-from)] light:to-[var(--c-judge-to)] light:shadow-[color:var(--c-shadow-card)]">
+                      <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-fuchsia-300/90 light:text-fuchsia-800">
+                        <span className="h-2 w-2 rounded-full bg-fuchsia-400" />
+                        Judge
+                      </div>
+                      <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-purple-50 light:text-[var(--c-fg)]">
+                        {m.content}
+                      </p>
+                    </div>
+                  </div>
+                );
+                continue;
+              }
+
+              // system/unknown
+              nodes.push(
+                <div key={m.id} className="flex justify-center">
+                  <div className="max-w-[95%] rounded-2xl border border-[color:var(--c-border-soft)] bg-black/20 px-4 py-2 text-xs text-[var(--c-fg-hint)] light:bg-[var(--c-surface-inline)]">
+                    {m.content}
+                  </div>
+                </div>
+              );
+            }
+            return nodes;
+          })()}
+
+        {/* Fallback (non-logged-in): old single-run rendering */}
+        {!hasDbThread && showUserBubble && (
           <div className="flex justify-end">
             <div
               className="max-w-[88%] rounded-2xl rounded-br-md border border-fuchsia-500/30 bg-gradient-to-br from-fuchsia-600/90 to-purple-700/90 px-4 py-3 text-sm text-white shadow-lg shadow-purple-950/40 light:from-fuchsia-500 light:to-violet-600 light:shadow-violet-300/40"
               role="status"
             >
               <p className="text-[10px] font-semibold uppercase tracking-wider text-fuchsia-100/80 light:text-fuchsia-900/90">
-                You
+                {localUserLabel() || "You"}
               </p>
               <p className="mt-1.5 whitespace-pre-wrap leading-relaxed">
                 {question.trim()}
@@ -114,7 +238,8 @@ export const DebateChatThread: React.FC<Props> = ({
           </div>
         )}
 
-        {result?.rounds.map((round, roundIdx) => (
+        {!hasDbThread &&
+          fallbackRounds.map((round, roundIdx) => (
           <React.Fragment key={round.roundNumber}>
             {roundIdx > 0 && (
               <div className="flex items-center gap-3 py-2">
@@ -125,7 +250,7 @@ export const DebateChatThread: React.FC<Props> = ({
                 <div className="h-px flex-1 bg-purple-900/50 light:bg-violet-300/70" />
               </div>
             )}
-            {roundIdx === 0 && result.rounds.length > 1 && (
+            {roundIdx === 0 && fallbackRounds.length > 1 && (
               <div className="flex justify-center py-1">
                 <span className="rounded-full border border-[color:var(--c-border-soft)] bg-purple-950/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-purple-300/90 light:border-[color:var(--c-border-strong)] light:bg-[var(--c-surface-chip)] light:text-[var(--c-fg)]">
                   {round.label}
@@ -133,7 +258,7 @@ export const DebateChatThread: React.FC<Props> = ({
               </div>
             )}
 
-            {round.personaAnswers.map((persona) => (
+            {(round.personaAnswers ?? []).map((persona) => (
               <div key={`${round.roundNumber}-${persona.personaId}`} className="flex justify-start">
                 <div
                   className={`flex max-w-[88%] gap-2.5 rounded-2xl rounded-bl-md border px-3.5 py-3 shadow-md ${bubbleStyleForAuthor(
@@ -163,8 +288,9 @@ export const DebateChatThread: React.FC<Props> = ({
           </React.Fragment>
         ))}
 
-        {result &&
-          result.rounds.length > 0 &&
+        {!hasDbThread &&
+          result &&
+          fallbackRounds.length > 0 &&
           personaCount > 1 &&
           result.judge && (
             <div className="mt-4 flex justify-center">

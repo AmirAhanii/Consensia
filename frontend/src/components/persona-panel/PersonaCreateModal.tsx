@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Modal } from "../Modal";
 
 const btnPrimary =
-  "w-full rounded-xl bg-purple-700 hover:bg-purple-600 text-white py-2 font-medium transition-colors";
-const btnPrimaryLabel = `${btnPrimary} block text-center cursor-pointer`;
+  "rounded-xl bg-purple-700 hover:bg-purple-600 text-white py-2 font-medium transition-colors";
+const btnPrimaryLabel = `${btnPrimary} w-full block text-center cursor-pointer`;
 
 type SearchState =
   | { status: "idle" }
@@ -111,7 +111,7 @@ export const PersonaCreateModal: React.FC<Props> = ({
               type="button"
               onClick={handleSearch}
               disabled={!searchName.trim() || searchState.status === "loading"}
-              className="w-full rounded-xl bg-purple-700 hover:bg-purple-600 disabled:opacity-50 text-white py-2 font-medium transition-colors"
+              className="flex-1 rounded-xl bg-purple-700 hover:bg-purple-600 disabled:opacity-50 text-white py-2 font-medium transition-colors"
             >
               {searchState.status === "loading" ? "Searching…" : "Search"}
             </button>
@@ -119,7 +119,7 @@ export const PersonaCreateModal: React.FC<Props> = ({
               type="button"
               onClick={resetSearch}
               disabled={searchState.status === "loading"}
-              className="w-full rounded-xl bg-black/40 border border-purple-800 hover:border-purple-600 text-purple-200 py-2 font-medium transition-colors"
+              className="flex-1 rounded-xl bg-black/40 border border-purple-800 hover:border-purple-600 text-purple-200 py-2 font-medium transition-colors"
             >
               Back
             </button>
@@ -135,7 +135,7 @@ export const PersonaCreateModal: React.FC<Props> = ({
         <div className="text-center space-y-4">
           <h3 className="text-lg font-semibold text-purple-100 mb-2">Create a Persona</h3>
 
-          <button type="button" className={btnPrimary} onClick={() => setShowManualForm(true)}>
+          <button type="button" className={`${btnPrimary} w-full`} onClick={() => setShowManualForm(true)}>
             Add Manually
           </button>
 
@@ -152,7 +152,7 @@ export const PersonaCreateModal: React.FC<Props> = ({
 
           <button
             type="button"
-            className={btnPrimary}
+            className={`${btnPrimary} w-full`}
             onClick={() => setShowSearchForm(true)}
           >
             Search Researcher
@@ -176,13 +176,13 @@ export const PersonaCreateModal: React.FC<Props> = ({
             />
           </div>
           <div className="sticky bottom-0 bg-black/80 pt-3 flex gap-2">
-            <button type="button" onClick={handleAdd} className={btnPrimary}>
+            <button type="button" onClick={handleAdd} className={`${btnPrimary} flex-1`}>
               Add Persona
             </button>
             <button
               type="button"
               onClick={() => setShowManualForm(false)}
-              className="w-full rounded-xl bg-black/40 border border-purple-800 hover:border-purple-600 text-purple-200 hover:text-purple-100 py-2 font-medium transition-colors"
+              className="flex-1 rounded-xl bg-black/40 border border-purple-800 hover:border-purple-600 text-purple-200 hover:text-purple-100 py-2 font-medium transition-colors"
             >
               Cancel
             </button>

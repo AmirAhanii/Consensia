@@ -24,6 +24,10 @@ type LoginResponse = {
   token_type: string;
 };
 
+type MeResponse = {
+  full_name: string;
+};
+
 type ApiErrorResponse = {
   detail?: string;
   message?: string;
@@ -79,6 +83,21 @@ export default function LoginPage() {
       localStorage.setItem("consensia_access_token", loginData.access_token);
       localStorage.setItem("consensia_token_type", loginData.token_type);
       localStorage.setItem("consensia_user_email", email.trim());
+
+      // Best-effort: load profile to show the user's name in chat UI.
+      try {
+        const meRes = await fetch(`${API_BASE_URL}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${loginData.access_token}` },
+        });
+        if (meRes.ok) {
+          const me = (await readResponseJson<MeResponse>(meRes).catch(() => null)) as MeResponse | null;
+          if (me?.full_name && me.full_name.trim()) {
+            localStorage.setItem("consensia_user_name", me.full_name.trim());
+          }
+        }
+      } catch {
+        // ignore
+      }
 
       toast.success("Login successful.");
       navigate("/app");

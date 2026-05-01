@@ -22,6 +22,7 @@ class UserResponse(BaseModel):
     full_name: str
     is_email_verified: bool
     auth_provider: str
+    is_admin: bool = False
 
 class VerifyEmailCodeRequest(BaseModel):
     email: EmailStr

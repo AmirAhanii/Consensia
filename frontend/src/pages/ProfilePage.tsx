@@ -29,6 +29,7 @@ type MeResponse = {
   full_name: string;
   is_email_verified: boolean;
   auth_provider: string;
+  is_admin?: boolean;
 };
 
 type ApiErrorResponse = {
@@ -85,6 +86,9 @@ export default function ProfilePage() {
       const profile = data as MeResponse;
       setMe(profile);
       setFullName(profile.full_name);
+      if (profile.full_name?.trim()) {
+        localStorage.setItem("consensia_user_name", profile.full_name.trim());
+      }
     } catch (e) {
       console.error(e);
       toast.error(e instanceof Error ? e.message : "Could not load profile.");
@@ -126,6 +130,9 @@ export default function ProfilePage() {
       const updated = data as MeResponse;
       setMe(updated);
       setFullName(updated.full_name);
+      if (updated.full_name?.trim()) {
+        localStorage.setItem("consensia_user_name", updated.full_name.trim());
+      }
       toast.success("Display name updated.");
     } catch (err) {
       console.error(err);
@@ -263,39 +270,6 @@ export default function ProfilePage() {
           ) : me ? (
             <div className="mt-10 space-y-8">
               <section className={formCard}>
-                <h2 className={`text-lg font-semibold ${formHeading}`}>Appearance</h2>
-                <p className={`mt-1 text-sm ${formSub}`}>
-                  Choose a calm dark workspace or a light, whitish-purple theme.
-                </p>
-                <div className={`mt-4 ${appearanceSegmentTrack}`}>
-                  <button
-                    type="button"
-                    onClick={() => setTheme("dark")}
-                    className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition ${
-                      theme === "dark"
-                        ? "bg-purple-900/70 text-white shadow-sm light:bg-violet-700 light:text-white"
-                        : "text-purple-400 hover:text-purple-200 light:text-violet-600 light:hover:text-violet-900"
-                    }`}
-                  >
-                    <Moon className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
-                    Dark
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setTheme("light")}
-                    className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition ${
-                      theme === "light"
-                        ? "bg-purple-900/70 text-white shadow-sm light:bg-violet-600 light:text-white"
-                        : "text-purple-400 hover:text-purple-200 light:text-violet-600 light:hover:text-violet-900"
-                    }`}
-                  >
-                    <Sun className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
-                    Light
-                  </button>
-                </div>
-              </section>
-
-              <section className={formCard}>
                 <h2 className={`text-lg font-semibold ${formHeading}`}>Account</h2>
                 <p className={`mt-1 text-sm ${formSub}`}>
                   Signed in as{" "}
@@ -305,6 +279,11 @@ export default function ProfilePage() {
                   <p className="mt-2 text-sm text-amber-300/90 light:text-amber-800/90">
                     Email not verified — check your inbox or use the verify link from
                     registration.
+                  </p>
+                ) : null}
+                {me.is_admin ? (
+                  <p className="mt-2 text-sm text-emerald-300/90 light:text-emerald-800/90">
+                    Team admin — unlimited daily debates on this workspace.
                   </p>
                 ) : null}
               </section>
@@ -421,6 +400,39 @@ export default function ProfilePage() {
                   </form>
                 </section>
               ) : null}
+
+              <section className={formCard}>
+                <h2 className={`text-lg font-semibold ${formHeading}`}>Appearance</h2>
+                <p className={`mt-1 text-sm ${formSub}`}>
+                  Optional: switch between dark workspace and light, whitish-purple theme.
+                </p>
+                <div className={`mt-4 ${appearanceSegmentTrack}`}>
+                  <button
+                    type="button"
+                    onClick={() => setTheme("dark")}
+                    className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition ${
+                      theme === "dark"
+                        ? "bg-purple-900/70 text-white shadow-sm light:bg-violet-700 light:text-white"
+                        : "text-purple-400 hover:text-purple-200 light:text-violet-600 light:hover:text-violet-900"
+                    }`}
+                  >
+                    <Moon className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
+                    Dark
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTheme("light")}
+                    className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition ${
+                      theme === "light"
+                        ? "bg-purple-900/70 text-white shadow-sm light:bg-violet-600 light:text-white"
+                        : "text-purple-400 hover:text-purple-200 light:text-violet-600 light:hover:text-violet-900"
+                    }`}
+                  >
+                    <Sun className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
+                    Light
+                  </button>
+                </div>
+              </section>
             </div>
           ) : (
             <p className="mt-12 text-center text-purple-400 light:text-violet-600">

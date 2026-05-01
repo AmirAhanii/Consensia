@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session as DBSession
 from ..auth.deps import get_current_user_id
 from ..db import get_db
 from ..models import DebateSession
+from ..models import DebateMessage
 
 router = APIRouter(prefix="/api/sessions", tags=["sessions"])
 
@@ -37,6 +38,20 @@ def _out(s: DebateSession) -> dict:
         "result": json.loads(s.result) if s.result else None,
         "created_at": s.created_at.isoformat(),
         "updated_at": s.updated_at.isoformat(),
+    }
+
+
+def _out_msg(m: DebateMessage) -> dict:
+    return {
+        "id": m.id,
+        "role": m.role,
+        "author": m.author,
+        "content": m.content,
+        "round_number": m.round_number,
+        "round_label": m.round_label,
+        "persona_id": m.persona_id,
+        "persona_description": m.persona_description,
+        "created_at": m.created_at.isoformat(),
     }
 
 
@@ -120,3 +135,25 @@ async def delete_session(
     db.delete(session)
     db.commit()
     return {"ok": True}
+
+
+@router.get("/{session_id}/messages")
+async def list_messages(
+    session_id: str,
+    user_id: str = Depends(get_current_user_id),
+    db: DBSession = Depends(get_db),
+):
+    session = (
+        db.query(DebateSession)
+        .filter(DebateSession.id == session_id, DebateSession.user_id == user_id)
+        .first()
+    )
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    rows = (
+        db.query(DebateMessage)
+        .filter(DebateMessage.session_id == session_id, DebateMessage.user_id == user_id)
+        .order_by(DebateMessage.created_at.asc())
+        .all()
+    )
+    return [_out_msg(m) for m in rows]

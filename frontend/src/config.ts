@@ -22,3 +22,11 @@ export const API_BASE_URL: string = (() => {
   return trimSlash(trimmed);
 })();
 
+/** Must match API `MAX_PERSONA_LIMIT` (use `VITE_MAX_PERSONA_LIMIT` in frontend `.env` if you change it). */
+export const MAX_DEBATERS_PER_SESSION: number = (() => {
+  const raw = import.meta.env.VITE_MAX_PERSONA_LIMIT as string | undefined;
+  const n = raw !== undefined && raw !== null ? Number.parseInt(String(raw).trim(), 10) : Number.NaN;
+  if (!Number.isFinite(n) || n < 1) return 5;
+  return Math.min(50, n);
+})();
+

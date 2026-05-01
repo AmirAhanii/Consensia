@@ -21,3 +21,17 @@ async def get_current_user_id(
         return decode_access_token(credentials.credentials, settings.jwt_secret)
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+
+async def get_optional_user_id(
+    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
+    settings: Settings = Depends(get_settings),
+) -> str | None:
+    if not credentials:
+        return None
+    if not settings.jwt_secret:
+        return None
+    try:
+        return decode_access_token(credentials.credentials, settings.jwt_secret)
+    except Exception:
+        return None

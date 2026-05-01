@@ -7,6 +7,7 @@ import { PersonaEditor } from "./persona-panel/PersonaEditor";
 
 import { API_BASE_URL } from "../config.ts";
 import { authApiFetch, readResponseJson } from "../apiFetch";
+import { clearAuthSession } from "../authHeaders";
 import {
   formCard,
   formHeading,
@@ -25,6 +26,8 @@ type Props = {
   onAddPersona: (persona: Omit<Persona, "id">) => void;
   onRemovePersona: (id: string) => void;
   onUpdatePersona: (updated: Persona) => void;
+  /** When set, blocks adding debaters once this count is reached (debate workspace). */
+  maxDebaters?: number;
   /** When true, show favorite star + load saved favorites from the API. */
   isLoggedIn?: boolean;
   /** When true, no outer card chrome (use inside debate page inline shell). */
@@ -89,9 +92,12 @@ export const PersonaPanel: React.FC<Props> = ({
   onAddPersona,
   onRemovePersona,
   onUpdatePersona,
+  maxDebaters,
   isLoggedIn = false,
   embedInShell = false,
 }) => {
+  const atDebateLimit =
+    typeof maxDebaters === "number" && maxDebaters > 0 && personas.length >= maxDebaters;
   const [customPersonas, setCustomPersonas] = useState<Persona[]>([]);
   const [favorites, setFavorites] = useState<SavedFavoritePersona[]>([]);
   const [favoritesLoading, setFavoritesLoading] = useState(false);
@@ -130,6 +136,12 @@ export const PersonaPanel: React.FC<Props> = ({
     try {
       setFavoritesLoading(true);
       const res = await authApiFetch("/api/persona-favorites");
+      if (res.status === 401) {
+        clearAuthSession();
+        toast.info("Session expired. Please sign in again.");
+        setFavorites([]);
+        return;
+      }
       const data = (await readResponseJson<SavedFavoritePersona[] | { detail?: string }>(
         res
       ).catch(() => null)) as SavedFavoritePersona[] | { detail?: string } | null;
@@ -230,6 +242,10 @@ export const PersonaPanel: React.FC<Props> = ({
 
   const handleManualCreate = () => {
     if (!manualName.trim() || !manualDescription.trim()) return;
+    if (atDebateLimit) {
+      toast.info(`You can add up to ${maxDebaters} debaters per session.`);
+      return;
+    }
     const entry: Persona = {
       id: nanoid(),
       name: manualName.trim(),
@@ -253,6 +269,10 @@ export const PersonaPanel: React.FC<Props> = ({
     data: { name?: string; title?: string; description?: string },
     options?: { icon?: string }
   ) => {
+    if (atDebateLimit) {
+      toast.info(`You can add up to ${maxDebaters} debaters per session.`);
+      return;
+    }
     const personaName = data.title || data.name || "Unnamed Persona";
     const personaDescription = data.description || "No description provided.";
     const icon = options?.icon ?? "User";
@@ -276,6 +296,10 @@ export const PersonaPanel: React.FC<Props> = ({
 
   const handleSearchResearcher = async () => {
     if (!searchName.trim()) return;
+    if (atDebateLimit) {
+      toast.info(`You can add up to ${maxDebaters} debaters per session.`);
+      return;
+    }
     setSearchState({ status: "loading" });
     try {
       const res = await fetch(`${API_BASE_URL}/api/persona/from-researcher`, {
@@ -301,6 +325,11 @@ export const PersonaPanel: React.FC<Props> = ({
   const handleCVUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    if (atDebateLimit) {
+      toast.info(`You can add up to ${maxDebaters} debaters per session.`);
+      event.target.value = "";
+      return;
+    }
     const formData = new FormData();
     formData.append("file", file);
     try {
@@ -335,6 +364,10 @@ export const PersonaPanel: React.FC<Props> = ({
   };
 
   const addPreset = (p: Persona) => {
+    if (atDebateLimit) {
+      toast.info(`You can add up to ${maxDebaters} debaters per session.`);
+      return;
+    }
     onAddPersona({ name: p.name, description: p.description, icon: p.icon });
     toast.success(`${p.name.split(" ")[0]} added`);
   };
@@ -360,7 +393,9 @@ export const PersonaPanel: React.FC<Props> = ({
             </p>
           </div>
           <span className="rounded-full border border-purple-800/30 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-purple-300/70 light:border-violet-300/60 light:text-violet-700">
-            {personas.length} in debate
+            {typeof maxDebaters === "number"
+              ? `${personas.length}/${maxDebaters} in debate`
+              : `${personas.length} in debate`}
           </span>
         </div>
       )}
@@ -517,9 +552,14 @@ export const PersonaPanel: React.FC<Props> = ({
               </span>
               <button
                 type="button"
-                title="Add to debate"
+                title={
+                  atDebateLimit
+                    ? `Maximum ${maxDebaters} debaters per session`
+                    : "Add to debate"
+                }
+                disabled={atDebateLimit}
                 onClick={() => addPreset(p)}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-emerald-500/40 text-emerald-300 transition hover:bg-emerald-500/15 hover:text-emerald-100"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-emerald-500/40 text-emerald-300 transition hover:bg-emerald-500/15 hover:text-emerald-100 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Plus className="h-4 w-4" strokeWidth={2.5} />
               </button>
@@ -564,8 +604,12 @@ export const PersonaPanel: React.FC<Props> = ({
                         ) : (
                           <button
                             type="button"
-                            title="Add to debate"
-                            disabled={busy}
+                            title={
+                              atDebateLimit
+                                ? `Maximum ${maxDebaters} debaters per session`
+                                : "Add to debate"
+                            }
+                            disabled={busy || atDebateLimit}
                             onClick={() => {
                               onAddPersona({
                                 name: f.name,
@@ -574,7 +618,7 @@ export const PersonaPanel: React.FC<Props> = ({
                               });
                               toast.success("Added to debate");
                             }}
-                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-emerald-500/40 text-emerald-300 transition hover:bg-emerald-500/15 hover:text-emerald-100 disabled:opacity-40"
+                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-emerald-500/40 text-emerald-300 transition hover:bg-emerald-500/15 hover:text-emerald-100 disabled:cursor-not-allowed disabled:opacity-40"
                           >
                             <Plus className="h-4 w-4" strokeWidth={2.5} />
                           </button>
@@ -618,7 +662,12 @@ export const PersonaPanel: React.FC<Props> = ({
               </span>
               <button
                 type="button"
-                title="Add to debate"
+                title={
+                  atDebateLimit
+                    ? `Maximum ${maxDebaters} debaters per session`
+                    : "Add to debate"
+                }
+                disabled={atDebateLimit}
                 onClick={() =>
                   onAddPersona({
                     name: c.name,
@@ -626,7 +675,7 @@ export const PersonaPanel: React.FC<Props> = ({
                     icon: c.icon,
                   })
                 }
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-emerald-500/40 text-emerald-300 transition hover:bg-emerald-500/15 hover:text-emerald-100"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-emerald-500/40 text-emerald-300 transition hover:bg-emerald-500/15 hover:text-emerald-100 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Plus className="h-4 w-4" strokeWidth={2.5} />
               </button>
@@ -726,7 +775,16 @@ export const PersonaPanel: React.FC<Props> = ({
                 <button
                   type="button"
                   onClick={handleManualCreate}
-                  disabled={!manualName.trim() || !manualDescription.trim()}
+                  disabled={
+                    !manualName.trim() ||
+                    !manualDescription.trim() ||
+                    atDebateLimit
+                  }
+                  title={
+                    atDebateLimit
+                      ? `Maximum ${maxDebaters} debaters per session`
+                      : undefined
+                  }
                   className={`w-full py-2 text-sm ${primaryCta}`}
                 >
                   Add to debate
@@ -744,11 +802,21 @@ export const PersonaPanel: React.FC<Props> = ({
                   type="file"
                   accept=".pdf,.doc,.docx"
                   className="hidden"
+                  disabled={atDebateLimit}
                   onChange={handleCVUpload}
                 />
                 <label
                   htmlFor="cv-upload-inline"
-                  className="block w-full cursor-pointer rounded-xl border border-purple-700/50 bg-purple-900/30 py-2.5 text-center text-sm font-medium text-purple-100 transition hover:border-fuchsia-500/40 hover:bg-purple-800/40 light:border-[color:var(--c-border-strong)] light:bg-[var(--c-surface-cta-hover)] light:text-[var(--c-fg)] light:hover:bg-[var(--c-surface-press)]"
+                  className={`block w-full rounded-xl border border-purple-700/50 bg-purple-900/30 py-2.5 text-center text-sm font-medium text-purple-100 transition hover:border-fuchsia-500/40 hover:bg-purple-800/40 light:border-[color:var(--c-border-strong)] light:bg-[var(--c-surface-cta-hover)] light:text-[var(--c-fg)] light:hover:bg-[var(--c-surface-press)] ${
+                    atDebateLimit
+                      ? "cursor-not-allowed opacity-40"
+                      : "cursor-pointer"
+                  }`}
+                  title={
+                    atDebateLimit
+                      ? `Maximum ${maxDebaters} debaters per session`
+                      : undefined
+                  }
                 >
                   Choose file
                 </label>
@@ -782,7 +850,16 @@ export const PersonaPanel: React.FC<Props> = ({
                 <button
                   type="button"
                   onClick={handleSearchResearcher}
-                  disabled={!searchName.trim() || searchState.status === "loading"}
+                  disabled={
+                    !searchName.trim() ||
+                    searchState.status === "loading" ||
+                    atDebateLimit
+                  }
+                  title={
+                    atDebateLimit
+                      ? `Maximum ${maxDebaters} debaters per session`
+                      : undefined
+                  }
                   className="w-full rounded-xl bg-purple-700 py-2 text-sm font-medium text-white transition hover:bg-purple-600 disabled:opacity-40 light:bg-violet-600 light:hover:bg-violet-700"
                 >
                   {searchState.status === "loading" ? "Searching…" : "Search & add"}

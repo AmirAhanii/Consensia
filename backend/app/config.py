@@ -10,6 +10,13 @@ env_path = backend_dir / ".env"
 load_dotenv(dotenv_path=env_path)
 
 
+def _admin_emails_from_env() -> frozenset[str]:
+    raw = (os.getenv("ADMIN_EMAILS") or "").strip()
+    if not raw:
+        return frozenset()
+    return frozenset(part.strip().lower() for part in raw.split(",") if part.strip())
+
+
 def resolve_research_raw_authors_dir() -> Path:
     override = (os.getenv("RESEARCH_RAW_AUTHORS_DIR") or "").strip()
     if override:
@@ -81,6 +88,13 @@ class Settings(BaseModel):
     research_prompt_max_output_tokens: int = Field(
         default_factory=lambda: int(os.getenv("RESEARCH_PROMPT_MAX_OUTPUT_TOKENS", "320"))
     )
+    max_personas_per_session: int = Field(
+        default_factory=lambda: max(
+            1,
+            min(50, int(os.getenv("MAX_PERSONA_LIMIT", "5").strip() or "5")),
+        ),
+        description="Max personas per debate/consensus request (from MAX_PERSONA_LIMIT env, clamped 1–50).",
+    )
     jwt_secret: str = Field(
     default_factory=lambda: os.getenv("JWT_SECRET", "").strip()
     )
@@ -89,6 +103,24 @@ class Settings(BaseModel):
     )
     google_client_id: str | None = Field(
     default_factory=lambda: (os.getenv("GOOGLE_CLIENT_ID") or "").strip() or None
+    )
+    admin_emails: frozenset[str] = Field(
+        default_factory=_admin_emails_from_env,
+        description="Comma-separated ADMIN_EMAILS; those users are promoted to is_admin on startup and login.",
+    )
+    user_daily_debate_limit: int = Field(
+        default_factory=lambda: max(
+            1,
+            int((os.getenv("USER_DAILY_DEBATE_LIMIT") or "10").strip() or "10"),
+        ),
+        description="Max /api/debate runs per UTC day for signed-in non-admin users.",
+    )
+    anon_daily_debate_limit: int = Field(
+        default_factory=lambda: max(
+            1,
+            int((os.getenv("ANON_DAILY_DEBATE_LIMIT") or "5").strip() or "5"),
+        ),
+        description="Max /api/debate runs per UTC day for guests (no auth).",
     )
 
 @lru_cache

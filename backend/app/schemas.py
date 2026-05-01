@@ -25,7 +25,11 @@ class TokenUsage(BaseModel):
 
 class ConsensusRequest(BaseModel):
     question: str = Field(..., description="The user question to route through personas.")
-    personas: list[Persona] = Field(..., description="Ordered list of personas to respond.")
+    personas: list[Persona] = Field(
+        ...,
+        min_length=1,
+        description="Ordered list of personas to respond (max enforced at request time via MAX_PERSONA_LIMIT).",
+    )
 
 
 class PersonaAnswer(BaseModel):
@@ -91,7 +95,15 @@ class DebateRound(BaseModel):
 
 class DebateRequest(BaseModel):
     question: str = Field(..., description="The debate question.")
-    personas: list[Persona] = Field(..., description="Personas to debate.")
+    session_id: str | None = Field(
+        default=None,
+        description="Optional session id. If provided with authentication, the debate is appended to that session's chat log.",
+    )
+    personas: list[Persona] = Field(
+        ...,
+        min_length=1,
+        description="Personas to debate (max enforced at request time via MAX_PERSONA_LIMIT).",
+    )
     num_rounds: int = Field(default=2, ge=1, le=3, description="Number of debate rounds.")
 
 
