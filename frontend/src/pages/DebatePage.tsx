@@ -191,6 +191,7 @@ export default function DebatePage() {
   const [messages, setMessages] = useState<DebateMessage[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [attachments, setAttachments] = useState<File[]>([]);
 
   const [sessions, setSessions] = useState<DebateSessionItem[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
@@ -342,6 +343,33 @@ export default function DebatePage() {
           ...(p.personaBasis?.trim() ? { persona_basis: p.personaBasis.trim() } : {}),
         })),
       };
+      if (attachments.length > 0) {
+        const totalBytes = attachments.reduce((sum, f) => sum + f.size, 0);
+        if (totalBytes > 12 * 1024 * 1024) {
+          throw new Error("Attachments too large (max 12MB total for demo).");
+        }
+        const encoded = await Promise.all(
+          attachments.slice(0, 8).map(
+            (file) =>
+              new Promise<{ filename: string; mime_type: string; base64: string }>((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onerror = () => reject(new Error(`Could not read attachment: ${file.name}`));
+                reader.onload = () => {
+                  const dataUrl = String(reader.result || "");
+                  const comma = dataUrl.indexOf(",");
+                  const base64 = comma >= 0 ? dataUrl.slice(comma + 1) : "";
+                  resolve({
+                    filename: file.name,
+                    mime_type: file.type || "application/octet-stream",
+                    base64,
+                  });
+                };
+                reader.readAsDataURL(file);
+              })
+          )
+        );
+        (payload as any).attachments = encoded;
+      }
 
       const response = await fetch(`${API_BASE_URL}/api/debate`, {
         method: "POST",
@@ -467,6 +495,7 @@ export default function DebatePage() {
 
       // Clear composer so a new question doesn't overwrite the last run.
       setComposerText("");
+      setAttachments([]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
       setResult(null);
@@ -511,6 +540,7 @@ export default function DebatePage() {
     setCurrentSessionId(session.id);
     // Switching chats should not prefill the composer, but should still display the session question.
     setComposerText("");
+    setAttachments([]);
     setThreadQuestion(session.question || "");
     const raw = session.personas as Persona[];
     if (Array.isArray(raw) && raw.length > 0) {
@@ -544,6 +574,7 @@ export default function DebatePage() {
     setCurrentSessionId(null);
     setComposerText("");
     setThreadQuestion("");
+    setAttachments([]);
     setPersonas(DEFAULT_PERSONAS);
     setResult(null);
     setMessages(isLoggedIn ? null : []);
@@ -605,6 +636,8 @@ export default function DebatePage() {
                   <DebateComposer
                     question={composerText}
                     onChange={setComposerText}
+                    attachments={attachments}
+                    onAttachmentsChange={setAttachments}
                     onRun={handleRun}
                     canRun={canRun}
                     isLoading={isLoading}
@@ -638,6 +671,8 @@ export default function DebatePage() {
                   <DebateComposer
                     question={composerText}
                     onChange={setComposerText}
+                    attachments={attachments}
+                    onAttachmentsChange={setAttachments}
                     onRun={handleRun}
                     canRun={canRun}
                     isLoading={isLoading}

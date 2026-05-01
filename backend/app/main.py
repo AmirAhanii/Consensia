@@ -209,8 +209,137 @@ async def run_debate(
 
     quota_bucket = assert_debate_quota_allowed(db, settings, user=user, request=request)
 
+    conversation_context: str | None = None
+    image_data_urls: list[str] | None = None
+    evidence_text: str | None = None
+    session: DebateSession | None = None
+    if payload.session_id:
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        session = (
+            db.query(DebateSession)
+            .filter(DebateSession.id == payload.session_id, DebateSession.user_id == user_id)
+            .first()
+        )
+        if not session:
+            raise HTTPException(status_code=404, detail="Session not found")
+
+        # Recent-window context: only user + judge messages (skip persona text to control tokens).
+        recent = (
+            db.query(DebateMessage)
+            .filter(
+                DebateMessage.session_id == payload.session_id,
+                DebateMessage.user_id == user_id,
+                DebateMessage.role.in_(["user", "judge"]),
+            )
+            .order_by(DebateMessage.created_at.desc())
+            .limit(settings.debate_recent_window_messages)
+            .all()
+        )
+        recent = list(reversed(recent))
+        lines: list[str] = []
+        if session.session_summary.strip():
+            lines.append("SESSION_MEMORY_SUMMARY:")
+            lines.append(session.session_summary.strip())
+            lines.append("")
+        if recent:
+            lines.append("RECENT_CONTEXT_WINDOW (most recent messages):")
+            for m in recent:
+                speaker = (m.author or m.role or "unknown").strip()
+                content = (m.content or "").strip()
+                if not content:
+                    continue
+                # Keep each message compact.
+                if len(content) > 1200:
+                    content = content[:1199] + "…"
+                lines.append(f"{speaker}: {content}")
+        if lines:
+            conversation_context = "\n".join(lines).strip()
+
+    # Optional file attachments as evidence (demo-friendly, bounded).
+    attachments = payload.attachments if isinstance(payload.attachments, list) else []
+    # Backwards-compat: older clients may send `attachment`.
+    if not attachments and isinstance(getattr(payload, "attachment", None), dict):
+        attachments = [getattr(payload, "attachment")]
+
+    if attachments:
+        import base64
+
+        image_urls: list[str] = []
+        doc_chunks: list[str] = []
+        total_b64_chars = 0
+
+        for att in attachments[:8]:
+            if not isinstance(att, dict):
+                continue
+            filename = str(att.get("filename") or "").strip()
+            mime_type = str(att.get("mime_type") or "").strip().lower()
+            b64 = str(att.get("base64") or "").strip()
+            if not b64:
+                continue
+
+            total_b64_chars += len(b64)
+            if total_b64_chars > 14_000_000:
+                break
+
+            if mime_type.startswith("image/"):
+                image_urls.append(f"data:{mime_type};base64,{b64}")
+                continue
+
+            if mime_type not in {"application/pdf"} and not filename.lower().endswith((".pdf", ".docx")):
+                continue
+
+            try:
+                content = base64.b64decode(b64)
+            except Exception:
+                raise HTTPException(status_code=400, detail="Invalid attachment encoding")
+
+            extracted = ""
+            if filename.lower().endswith(".pdf") or mime_type == "application/pdf":
+                try:
+                    with pdfplumber.open(io.BytesIO(content)) as pdf:
+                        for page in pdf.pages:
+                            extracted += page.extract_text() or ""
+                except Exception:
+                    raise HTTPException(status_code=400, detail=f"Failed to read PDF attachment: {filename}")
+            elif filename.lower().endswith(".docx"):
+                try:
+                    doc = Document(io.BytesIO(content))
+                    extracted = "\n".join(p.text for p in doc.paragraphs)
+                except Exception:
+                    raise HTTPException(status_code=400, detail=f"Failed to read DOCX attachment: {filename}")
+
+            extracted = extracted.strip()
+            if extracted:
+                cap = min(settings.cv_prompt_max_chars, 12000)
+                if len(extracted) > cap:
+                    extracted = extracted[:cap].rstrip() + "\n...[truncated]"
+                doc_chunks.append(f"FILE: {filename or mime_type}\n{extracted}")
+
+        if image_urls:
+            image_data_urls = image_urls
+        if doc_chunks:
+            evidence_text = "\n\n---\n\n".join(doc_chunks)[: min(settings.cv_prompt_max_chars, 20000)]
+
+    question_with_evidence = payload.question
+    if evidence_text:
+        question_with_evidence = (
+            "A document was uploaded as primary evidence.\n"
+            "Prioritize details found in the document. If it conflicts with general knowledge, prefer the document.\n\n"
+            "DOCUMENT_EVIDENCE_TEXT:\n"
+            f"{evidence_text}\n\n"
+            "USER_QUESTION:\n"
+            f"{payload.question.strip()}"
+        )
+
     try:
-        res = await service.run_debate(payload.question, payload.personas, payload.num_rounds)
+        res = await service.run_debate(
+            question_with_evidence,
+            payload.personas,
+            payload.num_rounds,
+            conversation_context=conversation_context,
+            image_data_urls=image_data_urls,
+        )
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
@@ -222,15 +351,7 @@ async def run_debate(
     try:
         # If session_id is provided, append to that session's message log (requires auth).
         if payload.session_id:
-            if not user_id:
-                raise HTTPException(status_code=401, detail="Not authenticated")
-            session = (
-                db.query(DebateSession)
-                .filter(DebateSession.id == payload.session_id, DebateSession.user_id == user_id)
-                .first()
-            )
-            if not session:
-                raise HTTPException(status_code=404, detail="Session not found")
+            assert session is not None
 
             from datetime import timezone, datetime
 
@@ -278,6 +399,13 @@ async def run_debate(
             session.question = payload.question
             session.personas = json.dumps([p.model_dump() for p in payload.personas])
             session.result = json.dumps(res.model_dump())
+            # Rolling summary update (bounded).
+            session.session_summary = await service.update_session_summary(
+                existing_summary=session.session_summary,
+                new_question=payload.question,
+                new_judge_summary=(res.judge.summary or ""),
+                max_chars=settings.debate_summary_max_chars,
+            )
             db.commit()
         elif quota_bucket is not None:
             db.commit()

@@ -122,6 +122,20 @@ class Settings(BaseModel):
         ),
         description="Max /api/debate runs per UTC day for guests (no auth).",
     )
+    debate_recent_window_messages: int = Field(
+        default_factory=lambda: max(
+            4,
+            min(60, int((os.getenv("DEBATE_RECENT_WINDOW_MESSAGES") or "14").strip() or "14")),
+        ),
+        description="How many recent messages (user/judge) to include as conversational context when session_id is used.",
+    )
+    debate_summary_max_chars: int = Field(
+        default_factory=lambda: max(
+            200,
+            min(20000, int((os.getenv("DEBATE_SUMMARY_MAX_CHARS") or "3500").strip() or "3500")),
+        ),
+        description="Max characters for the rolling session summary stored on debate_sessions.session_summary.",
+    )
 
 @lru_cache
 def get_settings() -> Settings:

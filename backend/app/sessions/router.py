@@ -36,6 +36,7 @@ def _out(s: DebateSession) -> dict:
         "question": s.question,
         "personas": json.loads(s.personas or "[]"),
         "result": json.loads(s.result) if s.result else None,
+        "session_summary": getattr(s, "session_summary", ""),
         "created_at": s.created_at.isoformat(),
         "updated_at": s.updated_at.isoformat(),
     }

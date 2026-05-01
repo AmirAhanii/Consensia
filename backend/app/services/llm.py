@@ -28,6 +28,25 @@ class Provider(str, Enum):
 
 
 class LLMService:
+    @staticmethod
+    def _evidence_instruction() -> str:
+        return (
+            "VISUAL_CONTEXT_RULE:\n"
+            "A document/image may be provided as primary evidence.\n"
+            "- Prioritize details found in the provided file(s).\n"
+            "- If general knowledge conflicts with the file, prefer the file and say so.\n"
+            "- When using evidence, cite it briefly (e.g., 'From the uploaded document…').\n"
+        )
+
+    @staticmethod
+    def _openai_user_content(text: str, image_data_urls: list[str] | None) -> str | list[dict]:
+        if not image_data_urls:
+            return text
+        blocks: list[dict] = [{"type": "text", "text": text}]
+        for url in image_data_urls:
+            blocks.append({"type": "image_url", "image_url": {"url": url}})
+        return blocks
+
     """
     Wrapper around OpenAI or Gemini (with a simulated fallback) to generate persona answers and judge consensus.
     """
@@ -532,9 +551,15 @@ class LLMService:
             usage=total_usage,
         )
 
-    async def generate_persona_answer(self, persona: Persona, question: str) -> PersonaAnswer:
+    async def generate_persona_answer(
+        self,
+        persona: Persona,
+        question: str,
+        *,
+        image_data_urls: list[str] | None = None,
+    ) -> PersonaAnswer:
         if self._provider is Provider.OPENAI and self._openai_client:
-            return await self._generate_persona_answer_openai(persona, question)
+            return await self._generate_persona_answer_openai(persona, question, image_data_urls=image_data_urls)
 
         if self._provider is Provider.GEMINI and self._gemini_model:
             return await self._generate_persona_answer_gemini(persona, question)
@@ -565,10 +590,16 @@ class LLMService:
 
         return self._simulate_judge(persona_answers, question)
 
-    async def _generate_persona_answer_openai(self, persona: Persona, question: str) -> PersonaAnswer:
+    async def _generate_persona_answer_openai(
+        self,
+        persona: Persona,
+        question: str,
+        *,
+        image_data_urls: list[str] | None = None,
+    ) -> PersonaAnswer:
         assert self._openai_client is not None  # for type-checkers
 
-        instructions = self._build_persona_instruction(persona)
+        instructions = self._build_persona_instruction(persona) + "\n\n" + self._evidence_instruction()
 
         response = await self._openai_client.chat.completions.create(
             model=self._settings.openai_model,
@@ -578,7 +609,7 @@ class LLMService:
                     "role": "system",
                     "content": instructions,
                 },
-                {"role": "user", "content": question},
+                {"role": "user", "content": self._openai_user_content(question, image_data_urls)},
             ],
             max_tokens=self._settings.max_output_tokens_persona,
         )
@@ -737,21 +768,35 @@ class LLMService:
         )
 
     async def run_debate(
-        self, question: str, personas: list[Persona], num_rounds: int = 2
+        self,
+        question: str,
+        personas: list[Persona],
+        num_rounds: int = 2,
+        *,
+        conversation_context: str | None = None,
+        image_data_urls: list[str] | None = None,
     ) -> DebateResponse:
+        q = question
+        if conversation_context and conversation_context.strip():
+            q = (
+                "You are continuing an ongoing conversation.\n"
+                "Use the provided context to stay consistent with prior decisions and constraints.\n\n"
+                f"{conversation_context.strip()}\n\n"
+                f"CURRENT_QUESTION:\n{question.strip()}"
+            )
         rounds: list[DebateRound] = []
         all_usage: list[TokenUsage] = []
         topic_qa: list[PersonaTopicRelevanceQa] = []
         reasoning_qa: list[PersonaReasoningQualityQa] = []
 
         if len(personas) > 1:
-            t_list, u_t = await self._run_topic_relevance_qa(question, personas)
+            t_list, u_t = await self._run_topic_relevance_qa(q, personas)
             topic_qa = t_list
             if u_t:
                 all_usage.append(u_t)
 
         round1_answers = list(await asyncio.gather(
-            *(self.generate_persona_answer(persona, question) for persona in personas)
+            *(self.generate_persona_answer(persona, q, image_data_urls=image_data_urls) for persona in personas)
         ))
         for a in round1_answers:
             if a.usage:
@@ -764,8 +809,9 @@ class LLMService:
                 label = "Final Remarks" if round_num > 2 else "Rebuttals"
                 rebuttal_answers = list(await asyncio.gather(
                     *(self._generate_rebuttal(
-                        persona, question,
+                        persona, q,
                         [a for a in prev if a.persona_id != persona.id],
+                        image_data_urls=image_data_urls,
                     ) for persona in personas)
                 ))
                 for a in rebuttal_answers:
@@ -780,13 +826,13 @@ class LLMService:
                 reasoning="Single-persona mode: consensus derived directly from the persona response.",
             )
         else:
-            r_list, u_r = await self._run_reasoning_quality_qa_debate(question, personas, rounds)
+            r_list, u_r = await self._run_reasoning_quality_qa_debate(q, personas, rounds)
             reasoning_qa = r_list
             if u_r:
                 all_usage.append(u_r)
             weights = self._normalize_calibration_weights(topic_qa, reasoning_qa)
             cal_block = self._format_calibration_block(topic_qa, reasoning_qa, weights, personas)
-            judge = await self._generate_debate_judge(question, rounds, cal_block)
+            judge = await self._generate_debate_judge(q, rounds, cal_block, image_data_urls=image_data_urls)
             if judge.usage:
                 all_usage.append(judge.usage)
 
@@ -806,17 +852,87 @@ class LLMService:
             usage=total_usage,
         )
 
+    async def update_session_summary(
+        self,
+        *,
+        existing_summary: str,
+        new_question: str,
+        new_judge_summary: str,
+        max_chars: int = 3500,
+    ) -> str:
+        """Update a rolling, compact memory for a debate session."""
+        prior = (existing_summary or "").strip()
+        if len(prior) > max_chars:
+            prior = prior[: max_chars - 1] + "…"
+        q = (new_question or "").strip()
+        j = (new_judge_summary or "").strip()
+        if not q and not j:
+            return prior[:max_chars]
+
+        prompt = (
+            "You maintain a compact, rolling memory of a conversation for later turns.\n"
+            "Update the memory with the new turn.\n\n"
+            "Rules:\n"
+            "- Keep it short and stable.\n"
+            "- Prefer bullet points.\n"
+            "- Preserve decisions, constraints, definitions, user preferences, and open questions.\n"
+            "- Do NOT copy long persona transcripts.\n"
+            f"- Output MUST be <= {max_chars} characters.\n\n"
+            f"EXISTING_MEMORY:\n{prior if prior else '(empty)'}\n\n"
+            f"NEW_USER_QUESTION:\n{q}\n\n"
+            f"NEW_JUDGE_SUMMARY:\n{j}\n\n"
+            "UPDATED_MEMORY:\n"
+        )
+
+        # Provider-specific small generation
+        if self._provider is Provider.OPENAI and self._openai_client:
+            resp = await self._openai_client.chat.completions.create(
+                model=self._settings.judge_model or self._settings.openai_model,
+                temperature=0.2,
+                messages=[
+                    {"role": "system", "content": "You are a concise memory updater."},
+                    {"role": "user", "content": prompt},
+                ],
+                max_tokens=min(350, max(120, self._settings.max_output_tokens_judge)),
+            )
+            out = (resp.choices[0].message.content or "").strip()
+        elif self._provider is Provider.GEMINI and self._gemini_model:
+            response = await asyncio.to_thread(
+                self._gemini_model.generate_content,
+                [{"role": "user", "parts": [prompt]}],
+            )
+            out = (response.text or "").strip()
+        else:
+            # Fallback: simple append + trim.
+            out = (prior + ("\n\n" if prior else "") + f"- Q: {q}\n- Judge: {j}").strip()
+
+        if len(out) > max_chars:
+            out = out[: max_chars - 1] + "…"
+        return out
+
     async def _generate_rebuttal(
-        self, persona: Persona, question: str, other_answers: list[PersonaAnswer]
+        self,
+        persona: Persona,
+        question: str,
+        other_answers: list[PersonaAnswer],
+        *,
+        image_data_urls: list[str] | None = None,
     ) -> PersonaAnswer:
         if self._provider is Provider.OPENAI and self._openai_client:
-            return await self._generate_rebuttal_openai(persona, question, other_answers)
+            return await self._generate_rebuttal_openai(
+                persona, question, other_answers, image_data_urls=image_data_urls
+            )
         if self._provider is Provider.GEMINI and self._gemini_model:
             return await self._generate_rebuttal_gemini(persona, question, other_answers)
         return self._simulate_rebuttal(persona, question, other_answers)
 
     async def _generate_rebuttal_openai(
-        self, persona: Persona, question: str, other_answers: list[PersonaAnswer]
+        self,
+        persona: Persona,
+        question: str,
+        other_answers: list[PersonaAnswer],
+        *,
+        image_data_urls: list[str] | None = None,
     ) -> PersonaAnswer:
         assert self._openai_client is not None
         others_text = "\n\n".join(f"{a.persona_name}: {a.answer}" for a in other_answers)
@@ -834,8 +950,11 @@ class LLMService:
             model=self._settings.openai_model,
             temperature=0.7,
             messages=[
-                {"role": "system", "content": self._build_persona_instruction(persona)},
-                {"role": "user", "content": user_message},
+                {
+                    "role": "system",
+                    "content": self._build_persona_instruction(persona) + "\n\n" + self._evidence_instruction(),
+                },
+                {"role": "user", "content": self._openai_user_content(user_message, image_data_urls)},
             ],
             max_tokens=self._settings.max_output_tokens_persona,
         )
@@ -907,9 +1026,13 @@ class LLMService:
         question: str,
         rounds: list[DebateRound],
         calibration_block: str,
+        *,
+        image_data_urls: list[str] | None = None,
     ) -> JudgeConsensus:
         if self._provider is Provider.OPENAI and self._openai_client:
-            return await self._generate_debate_judge_openai(question, rounds, calibration_block)
+            return await self._generate_debate_judge_openai(
+                question, rounds, calibration_block, image_data_urls=image_data_urls
+            )
         if self._provider is Provider.GEMINI and self._gemini_model:
             return await self._generate_debate_judge_gemini(question, rounds, calibration_block)
         return self._simulate_debate_judge(question, rounds)
@@ -932,7 +1055,12 @@ class LLMService:
         return transcript
 
     async def _generate_debate_judge_openai(
-        self, question: str, rounds: list[DebateRound], calibration_block: str
+        self,
+        question: str,
+        rounds: list[DebateRound],
+        calibration_block: str,
+        *,
+        image_data_urls: list[str] | None = None,
     ) -> JudgeConsensus:
         assert self._openai_client is not None
         user_payload = self._build_debate_judge_user_payload(question, rounds, calibration_block)
@@ -947,6 +1075,9 @@ class LLMService:
                         "You are an impartial judge observing a structured multi-round debate between expert personas.\n"
                         "You receive a calibration block (topic relevance and reasoning quality scores from independent "
                         "QA passes, plus normalized synthesis weights) and the full transcript.\n"
+                        "\n"
+                        + self._evidence_instruction()
+                        + "\n"
                         "Deliver:\n"
                         "1. A concise consensus summary capturing key agreements and resolutions.\n"
                         "2. Reasoning explaining which arguments were most compelling, how positions evolved, and "
@@ -954,7 +1085,7 @@ class LLMService:
                         "Return JSON with keys 'summary' and 'reasoning'."
                     ),
                 },
-                {"role": "user", "content": user_payload},
+                {"role": "user", "content": self._openai_user_content(user_payload, image_data_urls)},
             ],
             response_format={"type": "json_object"},
             max_tokens=self._settings.max_output_tokens_judge,

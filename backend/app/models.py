@@ -73,6 +73,7 @@ class DebateSession(Base):
     question: Mapped[str] = mapped_column(Text, nullable=False, default="")
     personas: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
     result: Mapped[str | None] = mapped_column(Text, nullable=True)
+    session_summary: Mapped[str] = mapped_column(Text, nullable=False, default="")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False)
 

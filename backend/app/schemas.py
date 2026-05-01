@@ -95,6 +95,16 @@ class DebateRound(BaseModel):
 
 class DebateRequest(BaseModel):
     question: str = Field(..., description="The debate question.")
+    attachments: list[dict] | None = Field(
+        default=None,
+        description=(
+            "Optional uploaded files attached to the question. "
+            "Expected item shape: {filename, mime_type, base64}. Images are passed as visual evidence; "
+            "PDF/DOCX text is extracted and injected as evidence text."
+        ),
+    )
+    # Backwards-compat for older frontends.
+    attachment: dict | None = Field(default=None, exclude=True)
     session_id: str | None = Field(
         default=None,
         description="Optional session id. If provided with authentication, the debate is appended to that session's chat log.",
