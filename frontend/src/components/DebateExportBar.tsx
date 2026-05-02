@@ -38,17 +38,24 @@ export const DebateExportBar: React.FC<Props> = ({
     const md = buildDebateMarkdown(buildInput());
     const slug = slugFromQuestion(question);
     const stamp = new Date().toISOString().slice(0, 10);
+
     downloadTextFile(`consensia-${slug}-${stamp}.md`, md, "text/markdown;charset=utf-8");
     toast.success("Markdown downloaded.");
   };
 
   const handlePdf = () => {
-    const opened = printDebateExport(buildInput());
-    if (!opened) {
-      toast.error("Pop-up blocked — allow pop-ups to print / save as PDF.");
-      return;
+    try {
+      const opened = printDebateExport(buildInput());
+
+      if (!opened) {
+        toast.error("Could not open print dialog.");
+        return;
+      }
+
+      toast.info("Use your browser’s print dialog → Save as PDF.");
+    } catch {
+      toast.error("Could not open print dialog.");
     }
-    toast.info("Use your browser’s print dialog → Save as PDF.");
   };
 
   return (
@@ -61,6 +68,7 @@ export const DebateExportBar: React.FC<Props> = ({
         <FileDown className="h-3.5 w-3.5" aria-hidden />
         Markdown
       </button>
+
       <button
         type="button"
         onClick={handlePdf}

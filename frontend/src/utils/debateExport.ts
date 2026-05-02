@@ -285,20 +285,73 @@ export function buildDebatePrintDocument(input: DebateExportInput): string {
 </head>
 <body>
 ${bodyHtml}
-<script>window.onload=function(){window.focus();window.print();}</script>
 </body>
 </html>`;
 }
 
-/** Opens a print dialog so the user can Save as PDF. */
-export function printDebateExport(input: DebateExportInput) {
-  const html = buildDebatePrintDocument(input);
-  const w = window.open("", "_blank", "noopener,noreferrer,width=900,height=1200");
-  if (!w) return false;
-  w.document.open();
-  w.document.write(html);
-  w.document.close();
+function printHtmlWithoutPopup(html: string): boolean {
+  if (typeof document === "undefined") return false;
+
+  const iframe = document.createElement("iframe");
+
+  iframe.style.position = "fixed";
+  iframe.style.left = "0";
+  iframe.style.top = "0";
+  iframe.style.width = "1px";
+  iframe.style.height = "1px";
+  iframe.style.border = "0";
+  iframe.style.opacity = "0";
+  iframe.style.pointerEvents = "none";
+  iframe.setAttribute("aria-hidden", "true");
+
+  document.body.appendChild(iframe);
+
+  const doc = iframe.contentWindow?.document;
+
+  if (!doc) {
+    iframe.remove();
+    return false;
+  }
+
+  let didPrint = false;
+
+  const cleanup = () => {
+    window.setTimeout(() => {
+      iframe.remove();
+    }, 1000);
+  };
+
+  const printFrame = () => {
+    if (didPrint) return;
+    didPrint = true;
+
+    const win = iframe.contentWindow;
+
+    if (!win) {
+      cleanup();
+      return;
+    }
+
+    win.focus();
+    win.print();
+    cleanup();
+  };
+
+  iframe.onload = printFrame;
+
+  doc.open();
+  doc.write(html);
+  doc.close();
+
+  window.setTimeout(printFrame, 250);
+
   return true;
+}
+
+/** Opens the browser print dialog so the user can Save as PDF. */
+export function printDebateExport(input: DebateExportInput): boolean {
+  const html = buildDebatePrintDocument(input);
+  return printHtmlWithoutPopup(html);
 }
 
 export function slugFromQuestion(q: string): string {
