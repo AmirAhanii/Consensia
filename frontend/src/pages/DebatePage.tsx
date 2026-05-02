@@ -7,7 +7,11 @@ import { DebateChatThread } from "../components/DebateChatThread";
 import { DebateComposer } from "../components/DebateComposer";
 import { PersonaPanel } from "../components/PersonaPanel";
 import { SessionSidebar, type DebateSessionItem } from "../components/SessionSidebar";
-import { API_BASE_URL, MAX_DEBATERS_PER_SESSION } from "../config";
+import {
+  API_BASE_URL,
+  MAX_DEBATERS_PER_SESSION,
+  MAX_DEBATE_ATTACHMENT_TOTAL_BYTES,
+} from "../config";
 import { DebateMessage, DebateResult, Persona, PersonaCalibrationScore } from "../types";
 import { nanoid } from "../utils/nanoid";
 import { debateResultFromStored } from "../utils/debateResultFromStored";
@@ -215,9 +219,18 @@ export default function DebatePage() {
       .catch(() => {});
   }, [isLoggedIn]);
 
+  const attachmentTotalBytes = useMemo(
+    () => attachments.reduce((sum, f) => sum + f.size, 0),
+    [attachments]
+  );
+
   const canRun = useMemo(
-    () => personas.length > 0 && composerText.trim().length > 0 && !isLoading,
-    [personas.length, composerText, isLoading]
+    () =>
+      personas.length > 0 &&
+      composerText.trim().length > 0 &&
+      !isLoading &&
+      attachmentTotalBytes <= MAX_DEBATE_ATTACHMENT_TOTAL_BYTES,
+    [personas.length, composerText, isLoading, attachmentTotalBytes]
   );
 
   /** After first send (or restoring a session), composer docks to the bottom like ChatGPT. */
@@ -345,8 +358,10 @@ export default function DebatePage() {
       };
       if (attachments.length > 0) {
         const totalBytes = attachments.reduce((sum, f) => sum + f.size, 0);
-        if (totalBytes > 12 * 1024 * 1024) {
-          throw new Error("Attachments too large (max 12MB total for demo).");
+        if (totalBytes > MAX_DEBATE_ATTACHMENT_TOTAL_BYTES) {
+          throw new Error(
+            `Attachments too large (max ${(MAX_DEBATE_ATTACHMENT_TOTAL_BYTES / (1024 * 1024)).toFixed(0)}MB total).`
+          );
         }
         const encoded = await Promise.all(
           attachments.slice(0, 8).map(
@@ -641,6 +656,8 @@ export default function DebatePage() {
                     onRun={handleRun}
                     canRun={canRun}
                     isLoading={isLoading}
+                    attachmentTotalBytes={attachmentTotalBytes}
+                    maxAttachmentTotalBytes={MAX_DEBATE_ATTACHMENT_TOTAL_BYTES}
                   />
                   <DebatersBlock
                     debatersOpen={debatersOpen}
@@ -676,6 +693,8 @@ export default function DebatePage() {
                     onRun={handleRun}
                     canRun={canRun}
                     isLoading={isLoading}
+                    attachmentTotalBytes={attachmentTotalBytes}
+                    maxAttachmentTotalBytes={MAX_DEBATE_ATTACHMENT_TOTAL_BYTES}
                   />
                   <DebatersBlock
                     debatersOpen={debatersOpen}

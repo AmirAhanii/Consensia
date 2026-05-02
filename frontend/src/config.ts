@@ -30,3 +30,6 @@ export const MAX_DEBATERS_PER_SESSION: number = (() => {
   return Math.min(50, n);
 })();
 
+/** Total attachment payload cap for `/api/debate` (must match backend / product copy). */
+export const MAX_DEBATE_ATTACHMENT_TOTAL_BYTES = 12 * 1024 * 1024;
+
