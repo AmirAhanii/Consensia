@@ -274,6 +274,40 @@ export default function ProfilePage() {
             </p>
           ) : me ? (
             <div className="mt-10 space-y-8">
+
+            <section className={formCard}>
+                <h2 className={`text-lg font-semibold ${formHeading}`}>Appearance</h2>
+                <p className={`mt-1 text-sm ${formSub}`}>
+                  Optional: switch between dark workspace and light, whitish-purple theme.
+                </p>
+                <div className={`mt-4 ${appearanceSegmentTrack}`}>
+                  <button
+                    type="button"
+                    onClick={() => setTheme("dark")}
+                    className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition ${
+                      theme === "dark"
+                        ? "bg-purple-900/70 text-white shadow-sm light:bg-violet-700 light:text-white"
+                        : "text-purple-400 hover:text-purple-200 light:text-violet-600 light:hover:text-violet-900"
+                    }`}
+                  >
+                    <Moon className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
+                    Dark
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTheme("light")}
+                    className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition ${
+                      theme === "light"
+                        ? "bg-purple-900/70 text-white shadow-sm light:bg-violet-600 light:text-white"
+                        : "text-purple-400 hover:text-purple-200 light:text-violet-600 light:hover:text-violet-900"
+                    }`}
+                  >
+                    <Sun className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
+                    Light
+                  </button>
+                </div>
+              </section>
+
               <section className={formCard}>
                 <h2 className={`text-lg font-semibold ${formHeading}`}>Account</h2>
                 <p className={`mt-1 text-sm ${formSub}`}>
@@ -405,39 +439,6 @@ export default function ProfilePage() {
                   </form>
                 </section>
               ) : null}
-
-              <section className={formCard}>
-                <h2 className={`text-lg font-semibold ${formHeading}`}>Appearance</h2>
-                <p className={`mt-1 text-sm ${formSub}`}>
-                  Optional: switch between dark workspace and light, whitish-purple theme.
-                </p>
-                <div className={`mt-4 ${appearanceSegmentTrack}`}>
-                  <button
-                    type="button"
-                    onClick={() => setTheme("dark")}
-                    className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition ${
-                      theme === "dark"
-                        ? "bg-purple-900/70 text-white shadow-sm light:bg-violet-700 light:text-white"
-                        : "text-purple-400 hover:text-purple-200 light:text-violet-600 light:hover:text-violet-900"
-                    }`}
-                  >
-                    <Moon className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
-                    Dark
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setTheme("light")}
-                    className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition ${
-                      theme === "light"
-                        ? "bg-purple-900/70 text-white shadow-sm light:bg-violet-600 light:text-white"
-                        : "text-purple-400 hover:text-purple-200 light:text-violet-600 light:hover:text-violet-900"
-                    }`}
-                  >
-                    <Sun className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
-                    Light
-                  </button>
-                </div>
-              </section>
             </div>
           ) : (
             <p className="mt-12 text-center text-purple-400 light:text-violet-600">
