@@ -1,6 +1,7 @@
 import logging
 import os
 import smtplib
+import sys
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -106,6 +107,10 @@ def send_verification_email_if_configured(
     In those cases the verification code is logged at WARNING so you can still use /verify-email.
     """
     if not smtp_fully_configured(smtp_host, smtp_user, smtp_password, mail_from):
+        sys.stderr.write(
+            f"CONSENSIA_MAIL_SKIP verification to={to_email!r} reason=smtp_incomplete\n"
+        )
+        sys.stderr.flush()
         logger.warning(
             "SMTP not configured (set SMTP_HOST, SMTP_USER, SMTP_PASSWORD, MAIL_FROM). "
             "Verification code for %s: %s",
@@ -113,6 +118,10 @@ def send_verification_email_if_configured(
             verification_code,
         )
         return False
+    sys.stderr.write(
+        f"CONSENSIA_MAIL_ATTEMPT verification to={to_email!r} host={smtp_host!r} port={smtp_port}\n"
+    )
+    sys.stderr.flush()
     try:
         send_verification_email(
             smtp_host,
@@ -123,9 +132,16 @@ def send_verification_email_if_configured(
             to_email,
             verification_code,
         )
+        sys.stderr.write(f"CONSENSIA_MAIL_OK verification sent to={to_email!r}\n")
+        sys.stderr.flush()
+        logger.info("Verification email sent to %s", to_email)
         return True
     except Exception:
         logger.exception("SMTP verification send failed for %s", to_email)
+        sys.stderr.write(
+            f"CONSENSIA_MAIL_FAIL verification to={to_email!r} (see exception above in logs)\n"
+        )
+        sys.stderr.flush()
         logger.warning("Verification code for %s (after SMTP failure): %s", to_email, verification_code)
         return False
 

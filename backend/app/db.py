@@ -37,7 +37,7 @@ class Base(DeclarativeBase):
 
 engine = create_engine(
     _with_connect_timeout(DATABASE_URL),
-    echo=True,
+    echo=os.getenv("SQLALCHEMY_ECHO", "").lower() in ("1", "true", "yes"),
     pool_pre_ping=True,
     pool_timeout=30,
 )

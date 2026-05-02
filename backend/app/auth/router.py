@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
@@ -66,6 +67,8 @@ def _bg_send_verification_email(
     raw_code: str,
 ) -> None:
     """Runs after HTTP response so the client is not blocked on SMTP (slow on Render cold paths)."""
+    sys.stderr.write(f"CONSENSIA_BG_REGISTER_EMAIL begin to={to_email!r}\n")
+    sys.stderr.flush()
     send_verification_email_if_configured(
         smtp_host,
         smtp_port,
