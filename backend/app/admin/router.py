@@ -2,15 +2,22 @@ from __future__ import annotations
 
 from datetime import date, datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends
-from sqlalchemy import Date, cast, func, select
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import Date, cast, func, or_, select
+from sqlalchemy.orm import Session, selectinload
 
 from ..auth.deps import require_admin
 from ..config import Settings, get_settings
 from ..db import get_db
 from ..models import AuthIdentity, DebateMessage, DebateRateBucket, DebateSession, User
-from .schemas import AdminStatsResponse, DailyPoint, QuotaSlice
+from .schemas import (
+    AdminStatsResponse,
+    AdminUserAdminPatch,
+    AdminUserRow,
+    AdminUsersListResponse,
+    DailyPoint,
+    QuotaSlice,
+)
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -183,3 +190,63 @@ def admin_stats(
         debate_volume_by_kind_14d=debate_volume_by_kind_14d,
         series_last_14_days=series,
     )
+
+
+def _admin_user_row(user: User) -> AdminUserRow:
+    providers = sorted({i.provider for i in (user.auth_identities or [])})
+    return AdminUserRow(
+        id=user.id,
+        email=user.email,
+        full_name=user.full_name,
+        is_email_verified=user.is_email_verified,
+        is_admin=user.is_admin,
+        created_at=user.created_at,
+        auth_providers=providers,
+    )
+
+
+@router.get("/users", response_model=AdminUsersListResponse)
+def list_admin_users(
+    _: User = Depends(require_admin),
+    db: Session = Depends(get_db),
+    q: str | None = Query(None, max_length=160, description="Filter by email or display name (case-insensitive)."),
+    limit: int = Query(200, ge=1, le=500),
+) -> AdminUsersListResponse:
+    stmt = (
+        select(User)
+        .options(selectinload(User.auth_identities))
+        .order_by(User.created_at.desc())
+        .limit(limit)
+    )
+    if q and q.strip():
+        term = f"%{q.strip()}%"
+        stmt = stmt.where(or_(User.email.ilike(term), User.full_name.ilike(term)))
+    rows = db.scalars(stmt).unique().all()
+    return AdminUsersListResponse(users=[_admin_user_row(u) for u in rows])
+
+
+@router.patch("/users/{user_id}", response_model=AdminUserRow)
+def patch_user_admin_flag(
+    user_id: str,
+    body: AdminUserAdminPatch,
+    admin_user: User = Depends(require_admin),
+    db: Session = Depends(get_db),
+) -> AdminUserRow:
+    target = db.scalar(
+        select(User).options(selectinload(User.auth_identities)).where(User.id == user_id)
+    )
+    if not target:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    if not body.is_admin and target.id == admin_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="You cannot remove your own admin access.",
+        )
+    target.is_admin = body.is_admin
+    db.commit()
+    reloaded = db.scalar(
+        select(User).options(selectinload(User.auth_identities)).where(User.id == user_id)
+    )
+    if not reloaded:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to reload user")
+    return _admin_user_row(reloaded)

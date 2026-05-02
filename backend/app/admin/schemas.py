@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
 
 from pydantic import BaseModel, Field
 
@@ -46,3 +46,21 @@ class AdminStatsResponse(BaseModel):
     debate_volume_by_kind_14d: dict[str, int]
 
     series_last_14_days: list[DailyPoint]
+
+
+class AdminUserRow(BaseModel):
+    id: str
+    email: str
+    full_name: str
+    is_email_verified: bool
+    is_admin: bool
+    created_at: datetime
+    auth_providers: list[str]
+
+
+class AdminUsersListResponse(BaseModel):
+    users: list[AdminUserRow]
+
+
+class AdminUserAdminPatch(BaseModel):
+    is_admin: bool = Field(..., description="Grant or revoke workspace admin (unlimited debates + admin UI).")
