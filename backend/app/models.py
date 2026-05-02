@@ -131,7 +131,50 @@ class DebateMessage(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
 
     session = relationship("DebateSession", back_populates="messages")
+    attachments = relationship(
+    "DebateMessageAttachment",
+    back_populates="message",
+    cascade="all, delete-orphan",
+    order_by="DebateMessageAttachment.created_at",
+    )
 
+class DebateMessageAttachment(Base):
+    __tablename__ = "debate_message_attachments"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=lambda: str(uuid4()))
+
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    session_id: Mapped[str] = mapped_column(
+        ForeignKey("debate_sessions.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    message_id: Mapped[str] = mapped_column(
+        ForeignKey("debate_messages.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    filename: Mapped[str] = mapped_column(String(255), nullable=False)
+    mime_type: Mapped[str] = mapped_column(String(120), nullable=False)
+
+    # For prototype: image is stored as data:image/...;base64,...
+    # For PDFs/DOCX, this can stay null; we only show the file chip.
+    data_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utcnow,
+        nullable=False,
+    )
+
+    message = relationship("DebateMessage", back_populates="attachments")
 
 class DebateRateBucket(Base):
     __tablename__ = "debate_rate_buckets"

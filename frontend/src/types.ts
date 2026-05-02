@@ -10,6 +10,13 @@ export type Persona = {
   personaBasis?: string;
 };
 
+export type ChatAttachmentPreview = {
+  id?: string;
+  filename: string;
+  mimeType: string;
+  dataUrl?: string | null;
+};
+
 /** Server-backed favorite persona (same shape as Persona except `id` is stable across debates). */
 export type SavedFavoritePersona = {
   id: string;
@@ -62,4 +69,5 @@ export type DebateMessage = {
   personaId: string | null;
   personaDescription: string | null;
   createdAt: string;
+  attachments?: ChatAttachmentPreview[];
 };

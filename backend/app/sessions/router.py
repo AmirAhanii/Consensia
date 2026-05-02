@@ -9,8 +9,8 @@ from sqlalchemy.orm import Session as DBSession
 
 from ..auth.deps import get_current_user_id
 from ..db import get_db
-from ..models import DebateSession
-from ..models import DebateMessage
+from ..models import DebateMessage, DebateSession
+
 
 router = APIRouter(prefix="/api/sessions", tags=["sessions"])
 
@@ -53,6 +53,16 @@ def _out_msg(m: DebateMessage) -> dict:
         "persona_id": m.persona_id,
         "persona_description": m.persona_description,
         "created_at": m.created_at.isoformat(),
+        "attachments": [
+            {
+                "id": a.id,
+                "filename": a.filename,
+                "mime_type": a.mime_type,
+                "data_url": a.data_url,
+                "created_at": a.created_at.isoformat(),
+            }
+            for a in (getattr(m, "attachments", []) or [])
+        ],
     }
 
 

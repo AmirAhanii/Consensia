@@ -27,7 +27,7 @@ from .auth.deps import get_optional_user_id
 from .auth.repository import get_user_by_id
 from .debate_quota import assert_debate_quota_allowed, record_successful_debate, sync_admin_flags_from_env
 from .db import get_db
-from .models import DebateMessage, DebateSession, User
+from .models import DebateMessage,DebateMessageAttachment, DebateSession, User
 from sqlalchemy.orm import Session as DBSession
 from openai import AzureOpenAI as SyncAzureOpenAI, OpenAI as SyncOpenAI
 from .services.scraping_service import search_google_scholar_by_name, scrape_google_scholar_author
@@ -358,16 +358,44 @@ async def run_debate(
             from datetime import timezone, datetime
 
             now = datetime.now(timezone.utc)
-            db.add(
-                DebateMessage(
-                    user_id=user_id,
-                    session_id=session.id,
-                    role="user",
-                    author=(user.full_name.strip() if user and user.full_name else "You"),
-                    content=payload.question.strip(),
-                    created_at=now,
+            user_msg = DebateMessage(
+                user_id=user_id,
+                session_id=session.id,
+                role="user",
+                author=(user.full_name.strip() if user and user.full_name else "You"),
+                content=payload.question.strip(),
+                created_at=now,
+            )   
+
+            db.add(user_msg)
+            db.flush()
+
+            for att in attachments[:8]:
+                if not isinstance(att, dict):
+                    continue
+
+                filename = str(att.get("filename") or "").strip()
+                mime_type = str(att.get("mime_type") or "").strip().lower()
+                b64 = str(att.get("base64") or "").strip()
+
+                if not filename and not mime_type:
+                    continue
+
+                data_url = None
+                if mime_type.startswith("image/") and b64:
+                    data_url = f"data:{mime_type};base64,{b64}"
+
+                db.add(
+                    DebateMessageAttachment(
+                        user_id=user_id,
+                        session_id=session.id,
+                        message_id=user_msg.id,
+                        filename=filename or "attachment",
+                        mime_type=mime_type or "application/octet-stream",
+                        data_url=data_url,
+                        created_at=now,
+                    )   
                 )
-            )
 
             for r in res.rounds:
                 for a in r.persona_answers:
