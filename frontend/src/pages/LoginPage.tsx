@@ -26,6 +26,7 @@ type LoginResponse = {
 
 type MeResponse = {
   full_name: string;
+  is_admin?: boolean;
 };
 
 type ApiErrorResponse = {
@@ -93,6 +94,11 @@ export default function LoginPage() {
           const me = (await readResponseJson<MeResponse>(meRes).catch(() => null)) as MeResponse | null;
           if (me?.full_name && me.full_name.trim()) {
             localStorage.setItem("consensia_user_name", me.full_name.trim());
+          }
+          if (me?.is_admin) {
+            localStorage.setItem("consensia_is_admin", "1");
+          } else {
+            localStorage.removeItem("consensia_is_admin");
           }
         }
       } catch {

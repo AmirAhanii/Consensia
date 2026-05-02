@@ -12,5 +12,6 @@ export function clearAuthSession(): void {
   localStorage.removeItem("consensia_token_type");
   localStorage.removeItem("consensia_user_email");
   localStorage.removeItem("consensia_user_name");
+  localStorage.removeItem("consensia_is_admin");
   window.dispatchEvent(new Event("consensia-auth-changed"));
 }

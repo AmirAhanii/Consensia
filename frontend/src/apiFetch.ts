@@ -23,9 +23,14 @@ export async function apiFetch(
   const url = resolveApiUrl(path);
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), timeoutMs);
-  const hint =
-    API_BASE_URL ||
-    "(same page origin — Vite proxies /api to the backend in dev; set VITE_DEV_PROXY_TARGET in Docker)";
+  const hint = API_BASE_URL
+    ? API_BASE_URL
+    : [
+        "browser calls same-origin /api",
+        "Vite must proxy to a running API (default http://127.0.0.1:8000)",
+        "Docker Compose sets VITE_DEV_PROXY_TARGET=http://backend:8000 on the frontend service",
+        "override with frontend/.env: VITE_DEV_PROXY_TARGET=… or point VITE_API_BASE_URL at the API origin",
+      ].join(" · ");
   try {
     return await fetch(url, {
       ...init,
@@ -39,7 +44,7 @@ export async function apiFetch(
     }
     if (e instanceof TypeError) {
       throw new Error(
-        `Could not reach the API (${hint}). Check the server, CORS, and that you are not mixing https (site) with http (API).`
+        `Could not reach the API (${hint}). If the UI is on https, do not set VITE_API_BASE_URL to http unless the page is also http. Otherwise start the backend (e.g. uvicorn on :8000 or \`docker compose up\`) and wait until /health responds.`
       );
     }
     throw e;

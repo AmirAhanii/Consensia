@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronDown, Home, LogOut, User } from "lucide-react";
+import { ChevronDown, Home, LayoutDashboard, LogOut, User } from "lucide-react";
 import { clearAuthSession } from "../authHeaders";
 
 type Props = {
   isLoggedIn: boolean;
+  isAdmin?: boolean;
 };
 
-export const DebateUserMenu: React.FC<Props> = ({ isLoggedIn }) => {
+export const DebateUserMenu: React.FC<Props> = ({ isLoggedIn, isAdmin = false }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -77,6 +78,20 @@ export const DebateUserMenu: React.FC<Props> = ({ isLoggedIn }) => {
             />
             Profile & settings
           </Link>
+          {isAdmin ? (
+            <Link
+              role="menuitem"
+              to="/admin"
+              onClick={() => setOpen(false)}
+              className="group flex items-center gap-2 px-3 py-2 text-sm text-[var(--c-fg)] transition hover:bg-purple-900/40 light:hover:bg-[var(--c-surface-ghost-hover)]"
+            >
+              <LayoutDashboard
+                className="h-4 w-4 text-[var(--c-fg-hint)] transition-colors group-hover:text-purple-200 light:text-violet-700 light:group-hover:text-violet-900"
+                aria-hidden
+              />
+              Admin statistics
+            </Link>
+          ) : null}
           <Link
             role="menuitem"
             to="/"

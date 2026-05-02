@@ -89,6 +89,11 @@ export default function ProfilePage() {
       if (profile.full_name?.trim()) {
         localStorage.setItem("consensia_user_name", profile.full_name.trim());
       }
+      if (profile.is_admin) {
+        localStorage.setItem("consensia_is_admin", "1");
+      } else {
+        localStorage.removeItem("consensia_is_admin");
+      }
     } catch (e) {
       console.error(e);
       toast.error(e instanceof Error ? e.message : "Could not load profile.");

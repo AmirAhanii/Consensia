@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { authApiFetch, readResponseJson } from "../apiFetch";
 import { authHeaders, clearAuthSession, getAccessToken } from "../authHeaders";
 import { DebateUserMenu } from "../components/DebateUserMenu";
 import { GradientBackground } from "../components/GradientBackground";
@@ -189,6 +190,10 @@ export default function DebatePage() {
   }, []);
 
   const [isLoggedIn, setIsLoggedIn] = useState(Boolean(getAccessToken()));
+  const [isAdmin, setIsAdmin] = useState(
+    () => typeof localStorage !== "undefined" && localStorage.getItem("consensia_is_admin") === "1"
+  );
+
   useEffect(() => {
     const sync = () => setIsLoggedIn(Boolean(getAccessToken()));
     window.addEventListener("storage", sync);
@@ -198,6 +203,41 @@ export default function DebatePage() {
       window.removeEventListener("consensia-auth-changed", sync);
     };
   }, []);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setIsAdmin(false);
+      return;
+    }
+    let cancelled = false;
+    void (async () => {
+      try {
+        const res = await authApiFetch("/api/auth/me");
+        if (res.status === 401) {
+          clearAuthSession();
+          toast.info("Session expired. Please sign in again.");
+          return;
+        }
+        if (!res.ok) return;
+        const me = (await readResponseJson<{ is_admin?: boolean }>(res).catch(() => null)) as {
+          is_admin?: boolean;
+        } | null;
+        if (cancelled || !me) return;
+        const admin = Boolean(me.is_admin);
+        setIsAdmin(admin);
+        if (admin) {
+          localStorage.setItem("consensia_is_admin", "1");
+        } else {
+          localStorage.removeItem("consensia_is_admin");
+        }
+      } catch {
+        // keep cached isAdmin from localStorage
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoggedIn]);
 
   const [personas, setPersonas] = useState<Persona[]>(DEFAULT_PERSONAS);
   // `composerText` is what the user is currently typing.
@@ -663,7 +703,7 @@ export default function DebatePage() {
               </h1>
             </div>
             <div className="flex min-w-0 flex-1 justify-end">
-              <DebateUserMenu isLoggedIn={isLoggedIn} />
+              <DebateUserMenu isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
             </div>
           </header>
 

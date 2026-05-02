@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
+from .admin.router import router as admin_router
 from .auth.router import router as auth_router
 from .persona_favorites.router import router as persona_favorites_router
 from .sessions.router import router as sessions_router
@@ -78,6 +79,7 @@ app = FastAPI(
 app.include_router(auth_router)
 app.include_router(sessions_router)
 app.include_router(persona_favorites_router)
+app.include_router(admin_router)
 
 logger = logging.getLogger(__name__)
 
