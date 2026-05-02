@@ -378,7 +378,7 @@ export const PersonaPanel: React.FC<Props> = ({
       !favorites.some((f) => samePersonaContent(f, c))
   );
 
-  const shellClass = embedInShell ? "space-y-5" : formCard;
+  const shellClass = embedInShell ? "min-w-0 max-w-full space-y-5" : formCard;
 
   const Shell = embedInShell ? "div" : "article";
 
@@ -542,7 +542,7 @@ export const PersonaPanel: React.FC<Props> = ({
           {PRESETS.filter((p) => !inDebate(personas, p.name)).map((p) => (
             <div
               key={p.id}
-              className="flex items-center gap-3 rounded-xl border border-purple-800/30 bg-purple-950/20 px-3 py-2 transition-colors duration-200 hover:border-purple-600/35 light:border-[color:var(--c-border)] light:bg-[var(--c-surface-hint)] light:hover:border-[color:var(--c-border-strong)]"
+              className="flex min-w-0 items-center gap-3 rounded-xl border border-purple-800/30 bg-purple-950/20 px-3 py-2 transition-colors duration-200 hover:border-purple-600/35 light:border-[color:var(--c-border)] light:bg-[var(--c-surface-hint)] light:hover:border-[color:var(--c-border-strong)]"
             >
               <div className={personaSmallIconBox}>
                 {renderIcon(p.icon, "w-4 h-4 text-purple-200 light:text-violet-800")}
@@ -586,7 +586,7 @@ export const PersonaPanel: React.FC<Props> = ({
                     return (
                       <div
                         key={f.id}
-                        className="flex items-center gap-2 rounded-xl border border-amber-500/20 bg-amber-950/15 px-3 py-2 transition-colors duration-200 hover:border-amber-500/35 light:border-amber-400/45 light:bg-[var(--c-surface-amber-row)] light:hover:border-amber-500/55"
+                        className="flex min-w-0 flex-wrap items-center gap-2 rounded-xl border border-amber-500/20 bg-amber-950/15 px-3 py-2 transition-colors duration-200 hover:border-amber-500/35 light:border-amber-400/45 light:bg-[var(--c-surface-amber-row)] light:hover:border-amber-500/55"
                       >
                         <div className={personaSmallIconBox}>
                           {renderIcon(f.icon, "w-4 h-4 text-amber-200/90 light:text-amber-800")}
@@ -597,41 +597,43 @@ export const PersonaPanel: React.FC<Props> = ({
                             {f.description}
                           </p>
                         </div>
-                        {inThis ? (
-                          <span className="shrink-0 rounded-md border border-purple-700/50 bg-black/30 px-2 py-1 text-[10px] font-medium uppercase tracking-wide text-purple-400 light:border-[color:var(--c-border-strong)] light:bg-[var(--c-surface-chip)] light:text-[var(--c-fg)]">
-                            In debate
-                          </span>
-                        ) : (
+                        <div className="ml-auto flex shrink-0 items-center gap-1.5">
+                          {inThis ? (
+                            <span className="rounded-md border border-purple-700/50 bg-black/30 px-2 py-1 text-[10px] font-medium uppercase tracking-wide text-purple-400 light:border-[color:var(--c-border-strong)] light:bg-[var(--c-surface-chip)] light:text-[var(--c-fg)]">
+                              In debate
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              title={
+                                atDebateLimit
+                                  ? `Maximum ${maxDebaters} debaters per session`
+                                  : "Add to debate"
+                              }
+                              disabled={busy || atDebateLimit}
+                              onClick={() => {
+                                onAddPersona({
+                                  name: f.name,
+                                  description: f.description,
+                                  icon: f.icon,
+                                });
+                                toast.success("Added to debate");
+                              }}
+                              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-emerald-500/40 text-emerald-300 transition hover:bg-emerald-500/15 hover:text-emerald-100 disabled:cursor-not-allowed disabled:opacity-40"
+                            >
+                              <Plus className="h-4 w-4" strokeWidth={2.5} />
+                            </button>
+                          )}
                           <button
                             type="button"
-                            title={
-                              atDebateLimit
-                                ? `Maximum ${maxDebaters} debaters per session`
-                                : "Add to debate"
-                            }
-                            disabled={busy || atDebateLimit}
-                            onClick={() => {
-                              onAddPersona({
-                                name: f.name,
-                                description: f.description,
-                                icon: f.icon,
-                              });
-                              toast.success("Added to debate");
-                            }}
-                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-emerald-500/40 text-emerald-300 transition hover:bg-emerald-500/15 hover:text-emerald-100 disabled:cursor-not-allowed disabled:opacity-40"
+                            title="Remove from favorites"
+                            disabled={busy}
+                            onClick={() => void removeFavoriteRow(f.id)}
+                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-rose-500/35 text-rose-300/90 transition hover:bg-rose-500/15 hover:text-rose-100 disabled:opacity-40"
                           >
-                            <Plus className="h-4 w-4" strokeWidth={2.5} />
+                            <Trash2 className="h-4 w-4" strokeWidth={2.25} />
                           </button>
-                        )}
-                        <button
-                          type="button"
-                          title="Remove from favorites"
-                          disabled={busy}
-                          onClick={() => void removeFavoriteRow(f.id)}
-                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-rose-500/35 text-rose-300/90 transition hover:bg-rose-500/15 hover:text-rose-100 disabled:opacity-40"
-                        >
-                          <Trash2 className="h-4 w-4" strokeWidth={2.25} />
-                        </button>
+                        </div>
                       </div>
                     );
                   })}
@@ -652,7 +654,7 @@ export const PersonaPanel: React.FC<Props> = ({
           {poolToShow.map((c) => (
             <div
               key={c.id}
-              className="flex items-center gap-3 rounded-xl border border-purple-800/30 bg-purple-950/20 px-3 py-2 transition-colors duration-200 hover:border-purple-600/35 light:border-[color:var(--c-border)] light:bg-[var(--c-surface-hint)] light:hover:border-[color:var(--c-border-strong)]"
+              className="flex min-w-0 items-center gap-3 rounded-xl border border-purple-800/30 bg-purple-950/20 px-3 py-2 transition-colors duration-200 hover:border-purple-600/35 light:border-[color:var(--c-border)] light:bg-[var(--c-surface-hint)] light:hover:border-[color:var(--c-border-strong)]"
             >
               <div className={personaSmallIconBox}>
                 {renderIcon(c.icon, "w-4 h-4 text-purple-200 light:text-violet-800")}
@@ -785,7 +787,7 @@ export const PersonaPanel: React.FC<Props> = ({
                       ? `Maximum ${maxDebaters} debaters per session`
                       : undefined
                   }
-                  className={`w-full py-2 text-sm ${primaryCta}`}
+                  className={`box-border w-full min-w-0 max-w-full whitespace-normal px-3 py-2 text-center text-sm leading-snug ${primaryCta}`}
                 >
                   Add to debate
                 </button>

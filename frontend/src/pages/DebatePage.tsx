@@ -15,6 +15,7 @@ import {
 import { DebateMessage, DebateResult, Persona, PersonaCalibrationScore } from "../types";
 import { nanoid } from "../utils/nanoid";
 import { debateResultFromStored } from "../utils/debateResultFromStored";
+import type { DebateExportAttachmentMeta } from "../utils/debateExport";
 import { ThemedToastContainer } from "../components/ThemedToastContainer";
 import { toast } from "react-toastify";
 import {
@@ -92,6 +93,8 @@ type DebatersBlockProps = {
   onRemovePersona: (id: string) => void;
   onUpdatePersona: (persona: Persona) => void;
   placement?: "below" | "above";
+  /** Pre-chat: taller panel using free vertical space. Dock: compact cap above keyboard. */
+  debatersLayout?: "workspace" | "dock";
 };
 
 function DebatersBlock({
@@ -104,11 +107,17 @@ function DebatersBlock({
   onRemovePersona,
   onUpdatePersona,
   placement = "below",
+  debatersLayout = "dock",
 }: DebatersBlockProps) {
+  const panelMaxHClass =
+    debatersLayout === "workspace"
+      ? "max-h-[min(calc(100dvh-7.5rem),48rem)]"
+      : "max-h-[min(52svh,26rem)]";
+
   return (
-    <div className="mx-auto w-full max-w-3xl px-3 sm:px-4">
-      <div className={`flex ${placement === "above" ? "flex-col-reverse" : "flex-col"}`}>
-        <div className="flex justify-center py-2">
+    <div className="mx-auto w-full min-w-0 max-w-3xl px-3 sm:px-4">
+      <div className={`flex min-w-0 ${placement === "above" ? "flex-col-reverse" : "flex-col"}`}>
+        <div className="flex shrink-0 justify-center py-2">
           <button
             type="button"
             aria-expanded={debatersOpen}
@@ -125,13 +134,13 @@ function DebatersBlock({
           </button>
         </div>
         <div
-          className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
+          className={`grid min-h-0 transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
             debatersOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
           }`}
         >
-          <div className="min-h-0 overflow-hidden">
+          <div className="min-h-0 overflow-x-hidden overflow-y-hidden">
             <div
-              className={`${debateDebatersPanel} motion-reduce:animate-none ${
+              className={`${debateDebatersPanel} flex min-h-0 flex-col motion-reduce:animate-none ${panelMaxHClass} ${
                 debatersOpen ? "animate-debaters-reveal" : ""
               }`}
             >
@@ -143,7 +152,7 @@ function DebatersBlock({
                 <div className="absolute -right-8 top-1/4 h-36 w-36 -translate-y-1/2 rounded-full bg-fuchsia-500/10 blur-2xl" />
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(167,139,250,0.08),transparent_50%)]" />
               </div>
-              <div className={debateDebatersPanelHeader}>
+              <div className={`relative shrink-0 ${debateDebatersPanelHeader}`}>
                 <p className="bg-gradient-to-r from-[#F5F3FF] to-[#C7B8FF] bg-clip-text text-sm font-bold tracking-tight text-transparent light:from-violet-800 light:to-fuchsia-700">
                   Debaters
                 </p>
@@ -151,7 +160,11 @@ function DebatersBlock({
                   {personas.length} active (max {maxDebaters}) · presets, favorites, CV, or researcher
                 </p>
               </div>
-              <div className="relative px-4 pb-4 pt-2 sm:px-5 sm:pb-5">
+              <div
+                className={`relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-4 pt-2 sm:px-5 ${
+                  debatersLayout === "workspace" ? "pb-6 sm:pb-7" : "pb-4 sm:pb-5"
+                }`}
+              >
                 <PersonaPanel
                   embedInShell
                   isLoggedIn={isLoggedIn}
@@ -200,6 +213,7 @@ export default function DebatePage() {
   const [sessions, setSessions] = useState<DebateSessionItem[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [debatersOpen, setDebatersOpen] = useState(false);
+  const [lastRunAttachmentMeta, setLastRunAttachmentMeta] = useState<DebateExportAttachmentMeta[]>([]);
 
   // Load sessions on mount (and when login state changes)
   useEffect(() => {
@@ -509,6 +523,12 @@ export default function DebatePage() {
       }
 
       // Clear composer so a new question doesn't overwrite the last run.
+      setLastRunAttachmentMeta(
+        attachments.map((f) => ({
+          filename: f.name,
+          mime_type: f.type || "application/octet-stream",
+        })),
+      );
       setComposerText("");
       setAttachments([]);
     } catch (err) {
@@ -556,6 +576,7 @@ export default function DebatePage() {
     // Switching chats should not prefill the composer, but should still display the session question.
     setComposerText("");
     setAttachments([]);
+    setLastRunAttachmentMeta([]);
     setThreadQuestion(session.question || "");
     const raw = session.personas as Persona[];
     if (Array.isArray(raw) && raw.length > 0) {
@@ -590,6 +611,7 @@ export default function DebatePage() {
     setComposerText("");
     setThreadQuestion("");
     setAttachments([]);
+    setLastRunAttachmentMeta([]);
     setPersonas(DEFAULT_PERSONAS);
     setResult(null);
     setMessages(isLoggedIn ? null : []);
@@ -605,6 +627,7 @@ export default function DebatePage() {
       setThreadQuestion("");
       setPersonas(DEFAULT_PERSONAS);
       setResult(null);
+      setLastRunAttachmentMeta([]);
     }
     fetch(`${API_BASE_URL}/api/sessions/${id}`, {
       method: "DELETE",
@@ -646,8 +669,8 @@ export default function DebatePage() {
 
           <main className="flex min-h-0 flex-1 flex-col">
             {!hasActiveDebate ? (
-              <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-                <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-1 px-3 py-10 sm:px-4">
+              <div className="flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto overscroll-contain">
+                <div className="mx-auto flex min-h-0 w-full min-w-0 max-w-3xl flex-col items-stretch gap-4 px-3 py-8 sm:px-4">
                   <DebateComposer
                     question={composerText}
                     onChange={setComposerText}
@@ -669,6 +692,7 @@ export default function DebatePage() {
                     onRemovePersona={handleRemovePersona}
                     onUpdatePersona={handleUpdatePersona}
                     placement="below"
+                    debatersLayout="workspace"
                   />
                 </div>
               </div>
@@ -682,6 +706,8 @@ export default function DebatePage() {
                     error={error}
                     isLoading={isLoading}
                     personaCount={personas.length}
+                    personas={personas}
+                    attachmentMetaForExport={lastRunAttachmentMeta}
                   />
                 </div>
                 <div className={debateDockStrip}>

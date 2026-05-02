@@ -73,19 +73,19 @@ export const debateComposerTextarea =
   "max-h-[200px] min-h-[44px] flex-1 resize-none bg-transparent py-2.5 text-sm leading-relaxed text-[var(--c-fg)] placeholder:text-[var(--c-placeholder)] outline-none";
 
 export const debateDockStrip =
-  "shrink-0 border-t border-[color:var(--c-border)] bg-[var(--c-surface-dock)] pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-md motion-reduce:animate-none animate-composer-dock";
+  "min-w-0 shrink-0 border-t border-[color:var(--c-border)] bg-[var(--c-surface-dock)] pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-md motion-reduce:animate-none animate-composer-dock";
 
 export const debateDebatersToggleBtn =
   "inline-flex items-center gap-2 rounded-full border border-[color:var(--c-border-soft)] bg-purple-950/40 px-4 py-1.5 text-xs font-medium text-purple-200 transition-all duration-300 ease-out hover:border-fuchsia-500/45 hover:bg-purple-900/50 hover:text-fuchsia-100 motion-reduce:transition-none active:scale-[0.98] light:border-[color:var(--c-border-strong)] light:bg-[var(--c-surface-chip)] light:text-[var(--c-fg)] light:hover:bg-[var(--c-surface-chip-hover)] light:hover:border-[color:var(--c-border-strong)]";
 
 export const debateDebatersPanel =
-  "relative mt-2 overflow-hidden rounded-3xl border border-[color:var(--c-border-debaters)] bg-[var(--c-surface-debaters)] shadow-[0_16px_48px_-20px_rgba(0,0,0,0.75)] motion-reduce:animate-none light:shadow-[color:var(--c-shadow-card)]";
+  "relative mt-2 overflow-x-hidden rounded-3xl border border-[color:var(--c-border-debaters)] bg-[var(--c-surface-debaters)] shadow-[0_16px_48px_-20px_rgba(0,0,0,0.75)] motion-reduce:animate-none light:shadow-[color:var(--c-shadow-card)]";
 
 export const debateDebatersPanelHeader =
   "relative border-b border-[color:var(--c-border-debaters)] px-4 py-3 sm:px-5";
 
 export const personaActiveRow =
-  "flex items-center gap-3 rounded-xl border border-[color:var(--c-border-soft)] bg-[var(--c-surface-row)] px-3 py-2.5 transition-colors duration-200 light:border-[color:var(--c-border)]";
+  "flex min-w-0 items-center gap-3 rounded-xl border border-[color:var(--c-border-soft)] bg-[var(--c-surface-row)] px-3 py-2.5 transition-colors duration-200 light:border-[color:var(--c-border)]";
 
 export const personaActiveIconBox =
   "flex h-10 w-10 items-center justify-center rounded-lg border border-[color:var(--c-border-soft)] bg-[var(--c-surface-tile)] light:border-[color:var(--c-border-strong)]";

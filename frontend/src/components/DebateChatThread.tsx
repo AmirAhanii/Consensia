@@ -1,5 +1,8 @@
 import React, { useEffect, useRef } from "react";
-import { DebateMessage, DebateResult } from "../types";
+import { DebateExportBar } from "./DebateExportBar";
+import { JudgeHeuristicsBanner } from "./JudgeHeuristicsBanner";
+import { DebateMessage, DebateResult, Persona } from "../types";
+import type { DebateExportAttachmentMeta } from "../utils/debateExport";
 
 function localUserLabel(): string | null {
   try {
@@ -19,6 +22,8 @@ type Props = {
   error: string | null;
   isLoading: boolean;
   personaCount: number;
+  personas: Persona[];
+  attachmentMetaForExport: DebateExportAttachmentMeta[];
 };
 
 const AUTHOR_STYLES = [
@@ -50,6 +55,8 @@ export const DebateChatThread: React.FC<Props> = ({
   error,
   isLoading,
   personaCount,
+  personas,
+  attachmentMetaForExport,
 }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const prevRef = useRef({ loading: isLoading, rounds: 0, msgLen: 0 });
@@ -80,6 +87,12 @@ export const DebateChatThread: React.FC<Props> = ({
   const hasThread = Boolean(fallbackRounds.length);
   const safeMessages = Array.isArray(messages) ? messages : [];
   const hasDbThread = safeMessages.length > 0;
+  const showGuestJudgeBlock =
+    !hasDbThread &&
+    Boolean(result && fallbackRounds.length > 0 && personaCount > 1 && result.judge);
+  const showHeuristicsFooter =
+    Boolean(result && !isLoading && fallbackRounds.length > 0) &&
+    (hasDbThread || !showGuestJudgeBlock);
 
   return (
     <div className="mx-auto w-full max-w-3xl px-3 py-6 sm:px-4">
@@ -99,6 +112,16 @@ export const DebateChatThread: React.FC<Props> = ({
           <div className="mx-auto max-w-lg rounded-2xl border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-center text-sm text-rose-100 light:border-rose-400/50 light:bg-rose-100/80 light:text-rose-900">
             {error}
           </div>
+        )}
+
+        {result && result.rounds.length > 0 && !isLoading && (
+          <DebateExportBar
+            question={question}
+            personas={personas}
+            attachments={attachmentMetaForExport}
+            result={result}
+            messages={messages}
+          />
         )}
 
         {/* DB-backed thread (WhatsApp style): render full message log when available */}
@@ -288,12 +311,10 @@ export const DebateChatThread: React.FC<Props> = ({
           </React.Fragment>
         ))}
 
-        {!hasDbThread &&
-          result &&
-          fallbackRounds.length > 0 &&
-          personaCount > 1 &&
-          result.judge && (
-            <div className="mt-4 flex justify-center">
+        {showGuestJudgeBlock && result ? (
+          <>
+            <JudgeHeuristicsBanner result={result} />
+            <div className="mt-1 flex justify-center">
               <div className="w-full max-w-[95%] rounded-2xl border border-fuchsia-500/35 bg-gradient-to-b from-fuchsia-950/50 to-black/60 p-4 shadow-xl shadow-purple-950/30 light:border-fuchsia-400/45 light:from-[var(--c-judge-from)] light:to-[var(--c-judge-to)] light:shadow-[color:var(--c-shadow-card)]">
                 <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-fuchsia-300/90 light:text-fuchsia-800">
                   <span className="h-2 w-2 rounded-full bg-fuchsia-400" />
@@ -312,7 +333,10 @@ export const DebateChatThread: React.FC<Props> = ({
                 </details>
               </div>
             </div>
-          )}
+          </>
+        ) : null}
+
+        {showHeuristicsFooter && result ? <JudgeHeuristicsBanner result={result} /> : null}
 
         <div ref={bottomRef} className="h-2 shrink-0" aria-hidden />
       </div>
