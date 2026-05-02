@@ -6,28 +6,43 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from ..config import Settings, get_settings
+from ..models import AuthIdentity, PasswordResetCode, User
+from ..debate_quota import effective_is_admin, upgrade_user_if_listed_admin
 from ..db import get_db
-from .emailer import send_verification_email
+from .deps import get_current_user_id
+from .emailer import send_password_reset_email_if_configured, send_verification_email_if_configured
 from .google_auth import verify_google_credential
 from .repository import (
     create_email_verification_code,
     create_google_identity,
     create_local_identity,
+    create_password_reset_code,
     create_user,
+    get_active_password_reset_code,
     get_active_verification_code,
     get_local_identity,
     get_user_by_email,
     get_user_by_google_sub,
+    get_user_by_id,
+    invalidate_unused_password_reset_codes,
     invalidate_unused_verification_codes,
     mark_email_verified,
+    mark_password_reset_code_used,
 )
 from .schemas import (
+    ChangePasswordRequest,
+    DeleteAccountRequest,
+    ForgotPasswordRequest,
     GoogleLoginRequest,
     LoginRequest,
     RegisterRequest,
     ResendVerificationRequest,
+    ResetPasswordRequest,
     TokenResponse,
+    UpdateProfileRequest,
+    UserResponse,
     VerifyEmailCodeRequest,
+    VerifyPasswordResetCodeRequest,
 )
 from .security import (
     create_access_token,
@@ -38,6 +53,15 @@ from .security import (
 )
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
+
+
+def _primary_auth_provider(user) -> str:
+    identities = list(user.auth_identities or [])
+    if any(i.provider == "local" and i.password_hash for i in identities):
+        return "local"
+    if any(i.provider == "google" for i in identities):
+        return "google"
+    return "unknown"
 
 
 def utcnow() -> datetime:
@@ -75,7 +99,7 @@ async def register(
         db.commit()
 
         try:
-            send_verification_email(
+            sent = send_verification_email_if_configured(
                 settings.smtp_host,
                 settings.smtp_port,
                 settings.smtp_user,
@@ -90,9 +114,14 @@ async def register(
                 detail=f"Account exists but verification email could not be sent: {exc}",
             ) from exc
 
-        return {
-            "message": "Account already exists but is not verified. A new verification code has been sent."
-        }
+        if sent:
+            msg = "Account already exists but is not verified. A new verification code has been sent."
+        else:
+            msg = (
+                "Account exists but is not verified. SMTP is not configured — "
+                "check backend logs for your new verification code, then verify on the next page."
+            )
+        return {"message": msg}
 
     password_hash = hash_password(payload.password)
     raw_code, code_hash = new_email_verification_code()
@@ -104,6 +133,7 @@ async def register(
         email=payload.email,
         is_email_verified=False,
     )
+    upgrade_user_if_listed_admin(user, settings)
 
     create_local_identity(
         db,
@@ -121,7 +151,7 @@ async def register(
     db.commit()
 
     try:
-        send_verification_email(
+        sent = send_verification_email_if_configured(
             settings.smtp_host,
             settings.smtp_port,
             settings.smtp_user,
@@ -136,7 +166,14 @@ async def register(
             detail=f"User was created, but verification email could not be sent: {exc}",
         ) from exc
 
-    return {"message": "Registration successful. Check your email for the verification code."}
+    if sent:
+        msg = "Registration successful. Check your email for the verification code."
+    else:
+        msg = (
+            "Registration successful. SMTP is not configured — "
+            "check backend logs for your verification code, then continue to the verify page."
+        )
+    return {"message": msg}
 
 
 @router.post("/verify-email")
@@ -202,7 +239,7 @@ async def resend_verification(
     db.commit()
 
     try:
-        send_verification_email(
+        sent = send_verification_email_if_configured(
             settings.smtp_host,
             settings.smtp_port,
             settings.smtp_user,
@@ -217,7 +254,136 @@ async def resend_verification(
             detail=f"Verification email could not be sent: {exc}",
         ) from exc
 
-    return {"message": "A new verification code has been sent."}
+    if sent:
+        msg = "A new verification code has been sent."
+    else:
+        msg = (
+            "SMTP is not configured — check backend logs for your new verification code "
+            "and enter it on the verify page."
+        )
+    return {"message": msg}
+
+
+_FORGOT_PASSWORD_GENERIC_MESSAGE = (
+    "If an account with that email exists and supports password reset, "
+    "we sent a 6-digit code to that address."
+)
+
+
+def _active_password_reset_for_code(
+    db: Session,
+    *,
+    email: str,
+    code: str,
+) -> tuple[User, AuthIdentity, PasswordResetCode] | None:
+    user = get_user_by_email(db, email)
+    if not user:
+        return None
+    local_identity = get_local_identity(db, user.id)
+    if not local_identity or not local_identity.password_hash:
+        return None
+    code_hash = hash_verification_code(code)
+    reset_row = get_active_password_reset_code(db, code_hash=code_hash)
+    if not reset_row or reset_row.user_id != user.id:
+        return None
+    return user, local_identity, reset_row
+
+
+@router.post("/forgot-password")
+async def forgot_password(
+    payload: ForgotPasswordRequest,
+    db: Session = Depends(get_db),
+    settings: Settings = Depends(get_settings),
+):
+    user = get_user_by_email(db, payload.email)
+    if not user:
+        return {"message": _FORGOT_PASSWORD_GENERIC_MESSAGE}
+
+    local_identity = get_local_identity(db, user.id)
+    if not local_identity or not local_identity.password_hash:
+        return {"message": _FORGOT_PASSWORD_GENERIC_MESSAGE}
+
+    raw_code, code_hash = new_email_verification_code()
+    expires_at = utcnow() + timedelta(hours=24)
+
+    invalidate_unused_password_reset_codes(
+        db,
+        user_id=user.id,
+        invalidated_at=utcnow(),
+    )
+
+    create_password_reset_code(
+        db,
+        user_id=user.id,
+        code_hash=code_hash,
+        expires_at=expires_at,
+    )
+
+    db.commit()
+
+    try:
+        send_password_reset_email_if_configured(
+            settings.smtp_host,
+            settings.smtp_port,
+            settings.smtp_user,
+            settings.smtp_password,
+            settings.mail_from,
+            user.email,
+            raw_code,
+        )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Password reset email could not be sent: {exc}",
+        ) from exc
+
+    return {"message": _FORGOT_PASSWORD_GENERIC_MESSAGE}
+
+
+@router.post("/verify-password-reset-code")
+async def verify_password_reset_code(
+    payload: VerifyPasswordResetCodeRequest,
+    db: Session = Depends(get_db),
+):
+    resolved = _active_password_reset_for_code(
+        db,
+        email=str(payload.email),
+        code=payload.code,
+    )
+    if not resolved:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid or expired reset code",
+        )
+    return {"message": "Code verified"}
+
+
+@router.post("/reset-password")
+async def reset_password(
+    payload: ResetPasswordRequest,
+    db: Session = Depends(get_db),
+):
+    resolved = _active_password_reset_for_code(
+        db,
+        email=str(payload.email),
+        code=payload.code,
+    )
+    if not resolved:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid or expired reset code",
+        )
+    user, local_identity, reset_row = resolved
+
+    now = utcnow()
+    local_identity.password_hash = hash_password(payload.new_password)
+    user.updated_at = now
+    mark_password_reset_code_used(db, code=reset_row, used_at=now)
+    db.add(local_identity)
+    db.add(user)
+    db.commit()
+
+    return {"message": "Password reset successful. You can log in with your new password."}
 
 
 @router.post("/login", response_model=TokenResponse)
@@ -239,6 +405,11 @@ async def login(
 
     if not verify_password(payload.password, local_identity.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    upgrade_user_if_listed_admin(user, settings)
+    if user.email.strip().lower() in settings.admin_emails:
+        db.add(user)
+        db.commit()
 
     token = create_access_token(
         str(user.id),
@@ -291,6 +462,7 @@ async def google_login(
             google_sub=google_sub,
         )
 
+    upgrade_user_if_listed_admin(user, settings)
     db.commit()
 
     token = create_access_token(
@@ -299,3 +471,92 @@ async def google_login(
         settings.access_token_expire_minutes,
     )
     return TokenResponse(access_token=token)
+
+
+@router.get("/me", response_model=UserResponse)
+async def read_profile(
+    user_id: str = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+    settings: Settings = Depends(get_settings),
+):
+    user = get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return UserResponse(
+        id=user.id,
+        email=user.email,
+        full_name=user.full_name,
+        is_email_verified=user.is_email_verified,
+        auth_provider=_primary_auth_provider(user),
+        is_admin=effective_is_admin(user, settings),
+    )
+
+
+@router.patch("/me", response_model=UserResponse)
+async def update_profile(
+    payload: UpdateProfileRequest,
+    user_id: str = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+    settings: Settings = Depends(get_settings),
+):
+    user = get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    user.full_name = payload.full_name.strip()
+    user.updated_at = utcnow()
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return UserResponse(
+        id=user.id,
+        email=user.email,
+        full_name=user.full_name,
+        is_email_verified=user.is_email_verified,
+        auth_provider=_primary_auth_provider(user),
+        is_admin=effective_is_admin(user, settings),
+    )
+
+
+@router.post("/change-password")
+async def change_password(
+    payload: ChangePasswordRequest,
+    user_id: str = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    user = get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    local_identity = get_local_identity(db, user.id)
+    if not local_identity or not local_identity.password_hash:
+        raise HTTPException(
+            status_code=400,
+            detail="Password change is only available for email/password sign-in.",
+        )
+    if not verify_password(payload.current_password, local_identity.password_hash):
+        raise HTTPException(status_code=401, detail="Current password is incorrect")
+    local_identity.password_hash = hash_password(payload.new_password)
+    db.add(local_identity)
+    db.commit()
+    return {"message": "Password updated"}
+
+
+@router.post("/delete-account")
+async def delete_account(
+    payload: DeleteAccountRequest,
+    user_id: str = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    user = get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    local_identity = get_local_identity(db, user.id)
+    if not local_identity or not local_identity.password_hash:
+        raise HTTPException(
+            status_code=400,
+            detail="Account deletion with password is only supported for email/password accounts.",
+        )
+    if not verify_password(payload.password, local_identity.password_hash):
+        raise HTTPException(status_code=401, detail="Password is incorrect")
+    db.delete(user)
+    db.commit()
+    return {"message": "Account deleted"}

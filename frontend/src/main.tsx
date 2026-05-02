@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
+import { AppErrorBoundary } from "./components/AppErrorBoundary";
+import { ThemeProvider } from "./theme/ThemeContext";
 import "./index.css";
 
 const rootElement = document.getElementById("root");
@@ -11,7 +13,11 @@ if (!rootElement) {
 try {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-      <App />
+      <ThemeProvider>
+        <AppErrorBoundary>
+          <App />
+        </AppErrorBoundary>
+      </ThemeProvider>
     </React.StrictMode>
   );
 } catch (error) {

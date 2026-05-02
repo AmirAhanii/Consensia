@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
-from ..models import User, AuthIdentity, EmailVerificationCode
+from ..models import User, AuthIdentity, EmailVerificationCode, PasswordResetCode
 
 
 def get_user_by_email(db: Session, email: str) -> User | None:
@@ -177,4 +177,63 @@ def invalidate_unused_verification_codes(
             code.used_at = invalidated_at
             db.add(code)
 
+    db.flush()
+
+
+def create_password_reset_code(
+    db: Session,
+    *,
+    user_id: str,
+    code_hash: str,
+    expires_at: datetime,
+) -> PasswordResetCode:
+    row = PasswordResetCode(
+        user_id=user_id,
+        code_hash=code_hash,
+        expires_at=expires_at,
+    )
+    db.add(row)
+    db.flush()
+    return row
+
+
+def get_active_password_reset_code(
+    db: Session,
+    *,
+    code_hash: str,
+) -> PasswordResetCode | None:
+    stmt = select(PasswordResetCode).where(PasswordResetCode.code_hash == code_hash)
+    code = db.scalar(stmt)
+    if not code:
+        return None
+    if code.used_at is not None:
+        return None
+    if code.expires_at <= datetime.now(timezone.utc):
+        return None
+    return code
+
+
+def invalidate_unused_password_reset_codes(
+    db: Session,
+    *,
+    user_id: str,
+    invalidated_at: datetime,
+) -> None:
+    stmt = select(PasswordResetCode).where(PasswordResetCode.user_id == user_id)
+    codes = db.scalars(stmt).all()
+    for code in codes:
+        if code.used_at is None:
+            code.used_at = invalidated_at
+            db.add(code)
+    db.flush()
+
+
+def mark_password_reset_code_used(
+    db: Session,
+    *,
+    code: PasswordResetCode,
+    used_at: datetime,
+) -> None:
+    code.used_at = used_at
+    db.add(code)
     db.flush()

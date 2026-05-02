@@ -35,3 +35,8 @@ def new_email_verification_code() -> tuple[str, str]:
 
 def hash_verification_code(raw_code: str) -> str:
     return sha256(raw_code.strip().encode("utf-8")).hexdigest()
+
+
+def decode_access_token(token: str, secret: str) -> str:
+    payload = jwt.decode(token, secret, algorithms=[JWT_ALGORITHM])
+    return str(payload["sub"])

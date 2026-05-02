@@ -1,8 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { GradientBackground } from "../components/GradientBackground";
+import { ThemedToastContainer } from "../components/ThemedToastContainer";
 import { API_BASE_URL } from "../config";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import {
+  bodyMuted,
+  eyebrowMuted,
+  formCard,
+  formHeading,
+  formSub,
+  ghostLinkBtn,
+  heroTitleGradient,
+  inputField,
+  pageShell,
+  primaryCta,
+  promoCard,
+} from "../theme/themeClasses";
 
 type VerifyState = "idle" | "loading" | "success" | "error";
 
@@ -158,48 +172,52 @@ export default function VerifyEmailPage() {
   return (
     <>
       <GradientBackground />
-      <ToastContainer position="top-center" autoClose={4000} theme="dark" />
+      <ThemedToastContainer position="top-center" autoClose={4000} />
 
-      <div className="relative z-10 min-h-screen bg-[#0d0618] px-6 py-10 text-purple-50">
+      <div className={`relative z-10 min-h-screen px-6 py-10 ${pageShell}`}>
         <div className="mx-auto max-w-6xl">
           <Link
             to="/"
-            className="inline-flex items-center rounded-xl border border-purple-800/40 bg-black/40 px-4 py-2 text-sm text-purple-200 transition hover:border-purple-600 hover:text-white"
+            className={ghostLinkBtn}
           >
             ← Back to Homepage
           </Link>
 
           <div className="mt-10 grid gap-10 lg:grid-cols-[1.05fr_0.95fr]">
             <section className="flex flex-col justify-center">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-fuchsia-300/80">
+              <p
+                className={`text-sm font-semibold uppercase tracking-[0.2em] ${eyebrowMuted}`}
+              >
                 Email Verification
               </p>
 
-              <h1 className="mt-4 bg-gradient-to-br from-purple-100 via-purple-200 to-purple-400 bg-clip-text text-5xl font-bold tracking-tight text-transparent md:text-6xl">
+              <h1
+                className={`mt-4 bg-gradient-to-br bg-clip-text text-5xl font-bold tracking-tight text-transparent md:text-6xl ${heroTitleGradient}`}
+              >
                 Confirm your account
               </h1>
 
-              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-purple-200/85">
+              <p className={`mt-6 max-w-2xl text-lg leading-relaxed ${bodyMuted}`}>
                 Enter the verification code sent to your email to activate your
                 Consensia account and continue to login.
               </p>
 
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                <div className="rounded-2xl border border-purple-300/15 bg-gradient-to-b from-purple-900/35 to-black/30 p-5">
-                  <h3 className="text-lg font-semibold text-purple-100">
+                <div className={promoCard}>
+                  <h3 className="text-lg font-semibold text-purple-100 light:text-violet-900">
                     Secure onboarding
                   </h3>
-                  <p className="mt-2 text-sm leading-6 text-purple-200/80">
+                  <p className={`mt-2 text-sm leading-6 ${bodyMuted}`}>
                     Email verification helps confirm account ownership before
                     access.
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-purple-300/15 bg-gradient-to-b from-purple-900/35 to-black/30 p-5">
-                  <h3 className="text-lg font-semibold text-purple-100">
+                <div className={promoCard}>
+                  <h3 className="text-lg font-semibold text-purple-100 light:text-violet-900">
                     Ready for login
                   </h3>
-                  <p className="mt-2 text-sm leading-6 text-purple-200/80">
+                  <p className={`mt-2 text-sm leading-6 ${bodyMuted}`}>
                     Once verified, you will be redirected to the login page.
                   </p>
                 </div>
@@ -207,23 +225,23 @@ export default function VerifyEmailPage() {
             </section>
 
             <section
-              className={`rounded-3xl ${cardBorder} bg-black/60 p-6 shadow-xl shadow-purple-950/30 backdrop-blur`}
+              className={`${formCard} ${cardBorder}`}
             >
-              <h2 className="text-2xl font-semibold text-purple-100">
+              <h2 className={`text-2xl font-semibold ${formHeading}`}>
                 Verify Email
               </h2>
 
-              <p className="mt-2 text-sm text-purple-300/70">
+              <p className={`mt-2 text-sm ${formSub}`}>
                 Account:{" "}
-                <span className="text-purple-100">
+                <span className="text-purple-100 light:text-violet-900">
                   {email || "Unknown email"}
                 </span>
               </p>
 
-              <div className="mt-8 rounded-2xl border border-purple-300/10 bg-purple-950/20 p-5">
+              <div className="mt-8 rounded-2xl border border-[color:var(--c-border-soft)] bg-purple-950/20 p-5 light:bg-[var(--c-callout-muted)]">
                 <form onSubmit={handleVerifyCode} className="space-y-4">
                   <div>
-                    <label className="mb-2 block text-sm text-purple-300">
+                    <label className="mb-2 block text-sm text-purple-300 light:text-violet-700">
                       6-digit verification code
                     </label>
                     <input
@@ -235,14 +253,14 @@ export default function VerifyEmailPage() {
                         setVerificationCode(e.target.value.replace(/\D/g, ""))
                       }
                       placeholder="Enter code"
-                      className="w-full rounded-2xl border border-purple-900/50 bg-black/70 px-4 py-3 text-sm tracking-[0.3em] text-purple-100 outline-none transition focus:border-fuchsia-500 focus:ring-2 focus:ring-fuchsia-500/40"
+                      className={`w-full px-4 py-3 text-sm tracking-[0.3em] ${inputField}`}
                     />
                   </div>
 
                   {status === "loading" && (
                     <div className="flex items-center gap-3">
                       <div className="h-5 w-5 animate-spin rounded-full border-2 border-purple-300/30 border-t-fuchsia-400" />
-                      <p className="text-sm text-purple-200">{message}</p>
+                      <p className={`text-sm ${bodyMuted}`}>{message}</p>
                     </div>
                   )}
 
@@ -253,7 +271,7 @@ export default function VerifyEmailPage() {
                           ? "text-emerald-300"
                           : status === "error"
                             ? "text-red-300"
-                            : "text-purple-200"
+                            : "text-purple-200 light:text-violet-800"
                       }`}
                     >
                       {message}
@@ -264,7 +282,7 @@ export default function VerifyEmailPage() {
                     <button
                       type="submit"
                       disabled={isSubmitting || !email}
-                      className="inline-flex items-center rounded-xl bg-gradient-to-r from-purple-600 via-fuchsia-500 to-purple-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-900/50 transition hover:shadow-fuchsia-500/40 disabled:cursor-not-allowed disabled:opacity-60"
+                      className={`inline-flex items-center rounded-xl px-5 py-3 text-sm disabled:cursor-not-allowed ${primaryCta}`}
                     >
                       {isSubmitting ? "Verifying..." : "Verify code"}
                     </button>
@@ -273,14 +291,14 @@ export default function VerifyEmailPage() {
                       type="button"
                       onClick={handleResendVerification}
                       disabled={isResending || !email}
-                      className="inline-flex items-center rounded-xl border border-purple-800/40 bg-black/40 px-5 py-3 text-sm text-purple-200 transition hover:border-purple-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                      className={`${ghostLinkBtn} px-5 py-3 disabled:cursor-not-allowed disabled:opacity-60`}
                     >
                       {isResending ? "Sending..." : "Resend code"}
                     </button>
 
                     <Link
                       to="/register"
-                      className="inline-flex items-center rounded-xl border border-purple-800/40 bg-black/40 px-5 py-3 text-sm text-purple-200 transition hover:border-purple-600 hover:text-white"
+                      className={`${ghostLinkBtn} px-5 py-3`}
                     >
                       Back to Register
                     </Link>

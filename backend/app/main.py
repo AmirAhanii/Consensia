@@ -9,16 +9,39 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
+from .admin.router import router as admin_router
 from .auth.router import router as auth_router
+from .persona_favorites.router import router as persona_favorites_router
+from .sessions.router import router as sessions_router
 
 import pdfplumber
 from docx import Document
-from fastapi import Depends, FastAPI, HTTPException, status, UploadFile, File
+from fastapi import Depends, FastAPI, HTTPException, Request, status, UploadFile, File
+from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import Settings, get_settings, resolve_research_raw_authors_dir
-from .schemas import ConsensusRequest, ConsensusResponse, JudgeConsensus, TokenUsage
+from .schemas import ConsensusRequest, ConsensusResponse, DebateRequest, DebateResponse, JudgeConsensus, TokenUsage
 from .services.llm import LLMService, Provider
+from .auth.deps import get_optional_user_id
+from .auth.repository import get_user_by_id
+from .debate_quota import assert_debate_quota_allowed, record_successful_debate, sync_admin_flags_from_env
+from .db import get_db
+from .models import DebateMessage,DebateMessageAttachment, DebateSession, User
+from sqlalchemy.orm import Session as DBSession
+from openai import AzureOpenAI as SyncAzureOpenAI, OpenAI as SyncOpenAI
+from .services.scraping_service import search_google_scholar_by_name, scrape_google_scholar_author
+from .services.persona_pipeline import generate_persona_from_raw
+
+
+def _build_sync_openai_client(settings: Settings):
+    if settings.openai_api_version and settings.openai_base_url and settings.openai_api_key:
+        return SyncAzureOpenAI(
+            api_key=settings.openai_api_key,
+            azure_endpoint=settings.openai_base_url,
+            api_version=settings.openai_api_version,
+        )
+    return SyncOpenAI(api_key=settings.openai_api_key)
 
 
 _APP_DIR = Path(__file__).resolve().parent
@@ -28,6 +51,20 @@ _BUNDLED_RAW_AUTHORS_DIR = _APP_DIR / "bundled_raw_authors"
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    from alembic.config import Config as AlembicConfig
+    from alembic import command as alembic_command
+
+    cfg = AlembicConfig("alembic.ini")
+    try:
+        # Repo has divergent migration branches; "heads" applies every leaf revision.
+        alembic_command.upgrade(cfg, "heads")
+    except Exception as exc:
+        logger.exception(
+            "Alembic migrations failed — the API cannot run without tables (e.g. users). "
+            "Fix DATABASE_URL / Postgres, then run: alembic upgrade head"
+        )
+        raise RuntimeError("Database migrations failed") from exc
+    sync_admin_flags_from_env()
     yield
 
 
@@ -40,6 +77,9 @@ app = FastAPI(
 )
 
 app.include_router(auth_router)
+app.include_router(sessions_router)
+app.include_router(persona_favorites_router)
+app.include_router(admin_router)
 
 logger = logging.getLogger(__name__)
 
@@ -85,24 +125,20 @@ async def generate_consensus(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="At least one persona is required.",
         )
-
-    if len(payload.personas) > settings.max_personas_per_request:
+    if len(payload.personas) > settings.max_personas_per_session:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=(
-                f"Too many personas in one request. "
-                f"Max is {settings.max_personas_per_request}."
+                f"At most {settings.max_personas_per_session} personas per session "
+                "(set MAX_PERSONA_LIMIT in the API environment)."
             ),
         )
 
     try:
-        persona_answers = await asyncio.gather(
-            *(service.generate_persona_answer(persona, payload.question)
-              for persona in payload.personas)
-        )
-        if len(persona_answers) == 1:
-            # Cost optimization: in single-persona research mode, avoid an extra LLM judge call.
-            # Reuse the persona answer as consensus and provide local reasoning text.
+        if len(payload.personas) == 1:
+            persona_answers = [
+                await service.generate_persona_answer(payload.personas[0], payload.question)
+            ]
             only = persona_answers[0]
             judge_consensus = JudgeConsensus(
                 summary=only.answer,
@@ -112,8 +148,22 @@ async def generate_consensus(
                 ),
                 usage=None,
             )
-        else:
-            judge_consensus = await service.generate_judge_consensus(persona_answers, payload.question)
+            total_usage: TokenUsage | None = None
+            if only.usage:
+                total_usage = TokenUsage(
+                    prompt_tokens=only.usage.prompt_tokens,
+                    completion_tokens=only.usage.completion_tokens,
+                    total_tokens=only.usage.total_tokens,
+                )
+            return ConsensusResponse(
+                personas=persona_answers,
+                topic_relevance_qa=[],
+                reasoning_quality_qa=[],
+                judge=judge_consensus,
+                usage=total_usage,
+            )
+
+        return await service.run_consensus_multi(payload.question, payload.personas)
 
     except Exception as exc:
         raise HTTPException(
@@ -121,31 +171,348 @@ async def generate_consensus(
             detail=f"Consensus generation failed: {exc}",
         ) from exc
 
-    total_usage: TokenUsage | None = None
-    if judge_consensus.usage or any((p.usage is not None) for p in persona_answers):
-        prompt_tokens = 0
-        completion_tokens = 0
-        total_tokens = 0
-        for p in persona_answers:
-            if p.usage:
-                prompt_tokens += p.usage.prompt_tokens
-                completion_tokens += p.usage.completion_tokens
-                total_tokens += p.usage.total_tokens
-        if judge_consensus.usage:
-            prompt_tokens += judge_consensus.usage.prompt_tokens
-            completion_tokens += judge_consensus.usage.completion_tokens
-            total_tokens += judge_consensus.usage.total_tokens
-        total_usage = TokenUsage(
-            prompt_tokens=prompt_tokens,
-            completion_tokens=completion_tokens,
-            total_tokens=total_tokens,
+
+# ------------------------------------------------------------------------------------
+# DEBATE ENDPOINT
+# ------------------------------------------------------------------------------------
+@app.post(
+    "/api/debate",
+    response_model=DebateResponse,
+    tags=["debate"],
+    summary="Run a multi-round debate with persona rebuttals and judge consensus",
+)
+async def run_debate(
+    request: Request,
+    payload: DebateRequest,
+    service: LLMService = Depends(get_llm_service),
+    settings: Settings = Depends(get_settings),
+    user_id: str | None = Depends(get_optional_user_id),
+    db: DBSession = Depends(get_db),
+) -> DebateResponse:
+    if not payload.personas:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="At least one persona is required.",
+        )
+    if len(payload.personas) > settings.max_personas_per_session:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                f"At most {settings.max_personas_per_session} personas per session "
+                "(set MAX_PERSONA_LIMIT in the API environment)."
+            ),
         )
 
-    return ConsensusResponse(
-        personas=list(persona_answers),
-        judge=judge_consensus,
-        usage=total_usage,
-    )
+    user: User | None = None
+    if user_id:
+        user = get_user_by_id(db, user_id)
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid or expired session")
+
+    quota_bucket = assert_debate_quota_allowed(db, settings, user=user, request=request)
+
+    conversation_context: str | None = None
+    image_data_urls: list[str] | None = None
+    evidence_text: str | None = None
+    session: DebateSession | None = None
+    if payload.session_id:
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        session = (
+            db.query(DebateSession)
+            .filter(DebateSession.id == payload.session_id, DebateSession.user_id == user_id)
+            .first()
+        )
+        if not session:
+            raise HTTPException(status_code=404, detail="Session not found")
+
+        # Recent-window context: only user + judge messages (skip persona text to control tokens).
+        recent = (
+            db.query(DebateMessage)
+            .filter(
+                DebateMessage.session_id == payload.session_id,
+                DebateMessage.user_id == user_id,
+                DebateMessage.role.in_(["user", "judge"]),
+            )
+            .order_by(DebateMessage.created_at.desc())
+            .limit(settings.debate_recent_window_messages)
+            .all()
+        )
+        recent = list(reversed(recent))
+        lines: list[str] = []
+        if session.session_summary.strip():
+            lines.append("SESSION_MEMORY_SUMMARY:")
+            lines.append(session.session_summary.strip())
+            lines.append("")
+        if recent:
+            lines.append("RECENT_CONTEXT_WINDOW (most recent messages):")
+            for m in recent:
+                speaker = (m.author or m.role or "unknown").strip()
+                content = (m.content or "").strip()
+                if not content:
+                    continue
+                # Keep each message compact.
+                if len(content) > 1200:
+                    content = content[:1199] + "…"
+                lines.append(f"{speaker}: {content}")
+        if lines:
+            conversation_context = "\n".join(lines).strip()
+
+    # Optional file attachments as evidence (demo-friendly, bounded).
+    attachments = payload.attachments if isinstance(payload.attachments, list) else []
+    # Backwards-compat: older clients may send `attachment`.
+    if not attachments and isinstance(getattr(payload, "attachment", None), dict):
+        attachments = [getattr(payload, "attachment")]
+
+    if attachments:
+        import base64
+
+        image_urls: list[str] = []
+        doc_chunks: list[str] = []
+        total_b64_chars = 0
+
+        for att in attachments[:8]:
+            if not isinstance(att, dict):
+                continue
+            filename = str(att.get("filename") or "").strip()
+            mime_type = str(att.get("mime_type") or "").strip().lower()
+            b64 = str(att.get("base64") or "").strip()
+            if not b64:
+                continue
+
+            total_b64_chars += len(b64)
+            if total_b64_chars > 14_000_000:
+                break
+
+            if mime_type.startswith("image/"):
+                image_urls.append(f"data:{mime_type};base64,{b64}")
+                continue
+
+            if mime_type not in {"application/pdf"} and not filename.lower().endswith((".pdf", ".docx")):
+                continue
+
+            try:
+                content = base64.b64decode(b64)
+            except Exception:
+                raise HTTPException(status_code=400, detail="Invalid attachment encoding")
+
+            extracted = ""
+            if filename.lower().endswith(".pdf") or mime_type == "application/pdf":
+                try:
+                    with pdfplumber.open(io.BytesIO(content)) as pdf:
+                        for page in pdf.pages:
+                            extracted += page.extract_text() or ""
+                except Exception:
+                    raise HTTPException(status_code=400, detail=f"Failed to read PDF attachment: {filename}")
+            elif filename.lower().endswith(".docx"):
+                try:
+                    doc = Document(io.BytesIO(content))
+                    extracted = "\n".join(p.text for p in doc.paragraphs)
+                except Exception:
+                    raise HTTPException(status_code=400, detail=f"Failed to read DOCX attachment: {filename}")
+
+            extracted = extracted.strip()
+            if extracted:
+                cap = min(settings.cv_prompt_max_chars, 12000)
+                if len(extracted) > cap:
+                    extracted = extracted[:cap].rstrip() + "\n...[truncated]"
+                doc_chunks.append(f"FILE: {filename or mime_type}\n{extracted}")
+
+        if image_urls:
+            image_data_urls = image_urls
+        if doc_chunks:
+            evidence_text = "\n\n---\n\n".join(doc_chunks)[: min(settings.cv_prompt_max_chars, 20000)]
+
+    question_with_evidence = payload.question
+    if evidence_text:
+        question_with_evidence = (
+            "A document was uploaded as primary evidence.\n"
+            "Prioritize details found in the document. If it conflicts with general knowledge, prefer the document.\n\n"
+            "DOCUMENT_EVIDENCE_TEXT:\n"
+            f"{evidence_text}\n\n"
+            "USER_QUESTION:\n"
+            f"{payload.question.strip()}"
+        )
+
+    try:
+        res = await service.run_debate(
+            question_with_evidence,
+            payload.personas,
+            payload.num_rounds,
+            conversation_context=conversation_context,
+            image_data_urls=image_data_urls,
+        )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Debate generation failed: {exc}",
+        ) from exc
+
+    record_successful_debate(db, quota_bucket)
+
+    try:
+        # If session_id is provided, append to that session's message log (requires auth).
+        if payload.session_id:
+            assert session is not None
+
+            from datetime import timezone, datetime
+
+            now = datetime.now(timezone.utc)
+            user_msg = DebateMessage(
+                user_id=user_id,
+                session_id=session.id,
+                role="user",
+                author=(user.full_name.strip() if user and user.full_name else "You"),
+                content=payload.question.strip(),
+                created_at=now,
+            )   
+
+            db.add(user_msg)
+            db.flush()
+
+            for att in attachments[:8]:
+                if not isinstance(att, dict):
+                    continue
+
+                filename = str(att.get("filename") or "").strip()
+                mime_type = str(att.get("mime_type") or "").strip().lower()
+                b64 = str(att.get("base64") or "").strip()
+
+                if not filename and not mime_type:
+                    continue
+
+                data_url = None
+                if mime_type.startswith("image/") and b64:
+                    data_url = f"data:{mime_type};base64,{b64}"
+
+                db.add(
+                    DebateMessageAttachment(
+                        user_id=user_id,
+                        session_id=session.id,
+                        message_id=user_msg.id,
+                        filename=filename or "attachment",
+                        mime_type=mime_type or "application/octet-stream",
+                        data_url=data_url,
+                        created_at=now,
+                    )   
+                )
+
+            for r in res.rounds:
+                for a in r.persona_answers:
+                    db.add(
+                        DebateMessage(
+                            user_id=user_id,
+                            session_id=session.id,
+                            role="persona",
+                            author=a.persona_name,
+                            content=a.answer,
+                            round_number=r.round_number,
+                            round_label=r.label,
+                            persona_id=a.persona_id,
+                            persona_description=a.persona_description,
+                        )
+                    )
+
+            if res.judge:
+                db.add(
+                    DebateMessage(
+                        user_id=user_id,
+                        session_id=session.id,
+                        role="judge",
+                        author="Judge",
+                        content=(res.judge.summary or "").strip()
+                        + ("\n\nReasoning:\n" + res.judge.reasoning.strip() if res.judge.reasoning else ""),
+                    )
+                )
+
+            session.updated_at = now
+            session.question = payload.question
+            session.personas = json.dumps([p.model_dump() for p in payload.personas])
+            session.result = json.dumps(res.model_dump())
+            # Rolling summary update (bounded).
+            session.session_summary = await service.update_session_summary(
+                existing_summary=session.session_summary,
+                new_question=payload.question,
+                new_judge_summary=(res.judge.summary or ""),
+                max_chars=settings.debate_summary_max_chars,
+            )
+            db.commit()
+        elif quota_bucket is not None:
+            db.commit()
+
+        return res
+    except HTTPException:
+        raise
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to persist debate session: {exc}",
+        ) from exc
+
+
+# ------------------------------------------------------------------------------------
+# RESEARCHER SEARCH -> PERSONA ENDPOINT
+# ------------------------------------------------------------------------------------
+
+class _ResearcherSearchRequest(BaseModel):
+    name: str
+
+
+@app.post("/api/persona/from-researcher", tags=["persona"])
+async def persona_from_researcher_name(
+    payload: _ResearcherSearchRequest,
+    settings: Settings = Depends(get_settings),
+) -> dict:
+    """Search Google Scholar by researcher name, scrape profile, and run persona pipeline."""
+    if not settings.serpapi_api_key:
+        raise HTTPException(status_code=503, detail="SERPAPI_API_KEY is not configured.")
+    if not settings.openai_api_key:
+        raise HTTPException(status_code=503, detail="OPENAI_API_KEY is required for the persona pipeline.")
+
+    name = payload.name.strip()
+    if not name:
+        raise HTTPException(status_code=400, detail="Researcher name must not be empty.")
+
+    sync_client = _build_sync_openai_client(settings)
+
+    try:
+        author_id = await asyncio.to_thread(
+            search_google_scholar_by_name, name, settings.serpapi_api_key
+        )
+        raw_author = await asyncio.to_thread(
+            scrape_google_scholar_author,
+            author_id,
+            settings.serpapi_api_key,
+            sync_client,
+            settings.openai_model,
+        )
+        author_name = raw_author.get("name") or name
+        persona = await asyncio.to_thread(
+            generate_persona_from_raw,
+            raw_author,
+            author_name,
+            sync_client,
+            settings.openai_model,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ImportError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "SerpAPI client is missing. Rebuild the backend image or run: "
+                "`pip install google-search-results` (declared in pyproject.toml)."
+            ),
+        ) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Researcher scraping failed: {exc}") from exc
+
+    return {
+        "name": persona["name"],
+        "title": f"Software Engineering Researcher ({persona['name']})",
+        "description": persona["inference_summary"],
+    }
 
 
 # ------------------------------------------------------------------------------------

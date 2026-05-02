@@ -1,179 +1,871 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { ChevronDown } from "lucide-react";
+import { toast } from "react-toastify";
+import { authApiFetch, readResponseJson } from "../apiFetch";
+import { authHeaders, clearAuthSession, getAccessToken } from "../authHeaders";
+import { DebateChatThread } from "../components/DebateChatThread";
+import { DebateComposer } from "../components/DebateComposer";
+import { DebateUserMenu } from "../components/DebateUserMenu";
 import { GradientBackground } from "../components/GradientBackground";
-import { Header } from "../components/Header";
 import { PersonaPanel } from "../components/PersonaPanel";
-import { QuestionPanel } from "../components/QuestionPanel";
-import { ResultsPanel } from "../components/ResultsPanel";
-import { API_BASE_URL } from "../config";
-import { JudgeConsensus, Persona, PersonaResponse } from "../types";
+import { SessionSidebar, type DebateSessionItem } from "../components/SessionSidebar";
+import { ThemedToastContainer } from "../components/ThemedToastContainer";
+import {
+  API_BASE_URL,
+  MAX_DEBATERS_PER_SESSION,
+  MAX_DEBATE_ATTACHMENT_TOTAL_BYTES,
+} from "../config";
+import {
+  debateDebatersPanel,
+  debateDebatersPanelHeader,
+  debateDebatersToggleBtn,
+  debateDockStrip,
+  formHeading,
+  pageShell,
+  stickyHeader,
+} from "../theme/themeClasses";
+import type {
+  ChatAttachmentPreview,
+  DebateMessage,
+  DebateResult,
+  Persona,
+  PersonaCalibrationScore,
+} from "../types";
+import { debateResultFromStored } from "../utils/debateResultFromStored";
+import type { DebateExportAttachmentMeta } from "../utils/debateExport";
 import { nanoid } from "../utils/nanoid";
-import { ToastContainer } from "react-toastify";
 
-type RunResponse = {
-  personas: PersonaResponse[];
-  judge: JudgeConsensus;
-};
-
-type ConsensusApiPersona = {
+type ApiPersonaAnswer = {
   persona_id: string;
   persona_name: string;
   persona_description: string;
   answer: string;
 };
 
-type ConsensusApiResponse = {
-  judge: JudgeConsensus;
-  personas: ConsensusApiPersona[];
+type ApiQaRow = {
+  persona_id: string;
+  persona_name: string;
+  score: number;
+  rationale: string;
+};
+
+type ApiDebateResponse = {
+  rounds: {
+    round_number: number;
+    label: string;
+    persona_answers: ApiPersonaAnswer[];
+  }[];
+  topic_relevance_qa?: ApiQaRow[];
+  reasoning_quality_qa?: ApiQaRow[];
+  judge: { summary: string; reasoning: string };
+};
+
+type DebatersBlockProps = {
+  debatersOpen: boolean;
+  setDebatersOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoggedIn: boolean;
+  personas: Persona[];
+  maxDebaters: number;
+  onAddPersona: (persona: Omit<Persona, "id">) => void;
+  onRemovePersona: (id: string) => void;
+  onUpdatePersona: (persona: Persona) => void;
+  placement?: "below" | "above";
+  debatersLayout?: "workspace" | "dock";
 };
 
 const DEFAULT_PERSONAS: Persona[] = [
   {
     id: nanoid(),
     name: "Junior Software Engineer",
-    description:
-      "1 year experience, recently graduated, focuses on quick solutions",
+    description: "1 year experience, recently graduated, focuses on quick solutions",
     icon: "User",
   },
   {
     id: nanoid(),
     name: "Senior Software Engineer",
-    description:
-      "10 years experience, prioritizes scalability and maintainability",
+    description: "10 years experience, prioritizes scalability and maintainability",
     icon: "UserStar",
   },
 ];
 
+function mapCalibrationRows(rows: ApiQaRow[] | undefined): PersonaCalibrationScore[] {
+  if (!Array.isArray(rows)) return [];
+
+  return rows.map((row) => ({
+    personaId: row.persona_id,
+    personaName: row.persona_name,
+    score: Number.isFinite(row.score) ? Math.max(0, Math.min(9, Math.round(row.score))) : 0,
+    rationale: typeof row.rationale === "string" ? row.rationale : "",
+  }));
+}
+
+function mapApiMessage(m: any): DebateMessage {
+  return {
+    id: String(m.id),
+    role: m.role,
+    author: m.author ?? null,
+    content: String(m.content ?? ""),
+    roundNumber: m.round_number ?? null,
+    roundLabel: m.round_label ?? null,
+    personaId: m.persona_id ?? null,
+    personaDescription: m.persona_description ?? null,
+    createdAt: String(m.created_at ?? ""),
+    attachments: Array.isArray(m.attachments)
+      ? m.attachments.map((a: any) => ({
+          id: a.id ? String(a.id) : undefined,
+          filename: String(a.filename ?? "attachment"),
+          mimeType: String(a.mime_type ?? a.mimeType ?? "application/octet-stream"),
+          dataUrl: a.data_url ?? a.dataUrl ?? null,
+        }))
+      : [],
+  };
+}
+
+function sessionTitle(question: string): string {
+  const q = question.trim();
+  return q.length > 60 ? q.slice(0, 60) + "…" : q || "New Debate";
+}
+
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onerror = () => reject(new Error(`Could not read attachment: ${file.name}`));
+
+    reader.onload = () => {
+      resolve(String(reader.result || ""));
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+function DebatersBlock({
+  debatersOpen,
+  setDebatersOpen,
+  isLoggedIn,
+  personas,
+  maxDebaters,
+  onAddPersona,
+  onRemovePersona,
+  onUpdatePersona,
+  placement = "below",
+  debatersLayout = "dock",
+}: DebatersBlockProps) {
+  const panelMaxHClass =
+    debatersLayout === "workspace"
+      ? "max-h-[min(calc(100dvh-7.5rem),48rem)]"
+      : "max-h-[min(52svh,26rem)]";
+
+  return (
+    <div className="mx-auto w-full min-w-0 max-w-3xl px-3 sm:px-4">
+      <div className={`flex min-w-0 ${placement === "above" ? "flex-col-reverse" : "flex-col"}`}>
+        <div className="flex shrink-0 justify-center py-2">
+          <button
+            type="button"
+            aria-expanded={debatersOpen}
+            onClick={() => setDebatersOpen((o) => !o)}
+            className={debateDebatersToggleBtn}
+          >
+            Debaters · {personas.length}/{maxDebaters} persona{personas.length !== 1 ? "s" : ""}
+            <ChevronDown
+              className={`h-3.5 w-3.5 shrink-0 text-purple-500 transition-transform duration-300 ease-out motion-reduce:transition-none light:text-violet-600 ${
+                debatersOpen ? "rotate-180" : ""
+              }`}
+              aria-hidden
+            />
+          </button>
+        </div>
+
+        <div
+          className={`grid min-h-0 transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none ${
+            debatersOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
+        >
+          <div className="min-h-0 overflow-x-hidden overflow-y-hidden">
+            <div
+              className={`${debateDebatersPanel} flex min-h-0 flex-col motion-reduce:animate-none ${panelMaxHClass} ${
+                debatersOpen ? "animate-debaters-reveal" : ""
+              }`}
+            >
+              <div
+                className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl"
+                aria-hidden
+              >
+                <div className="absolute -left-4 top-0 h-40 w-40 rounded-full bg-purple-400/12 blur-2xl" />
+                <div className="absolute -right-8 top-1/4 h-36 w-36 -translate-y-1/2 rounded-full bg-fuchsia-500/10 blur-2xl" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(167,139,250,0.08),transparent_50%)]" />
+              </div>
+
+              <div className={`relative shrink-0 ${debateDebatersPanelHeader}`}>
+                <p className="bg-gradient-to-r from-[#F5F3FF] to-[#C7B8FF] bg-clip-text text-sm font-bold tracking-tight text-transparent light:from-violet-800 light:to-fuchsia-700">
+                  Debaters
+                </p>
+                <p className="mt-0.5 text-xs text-purple-300/70 light:text-violet-600/85">
+                  {personas.length} active (max {maxDebaters}) · presets, favorites, CV, or researcher
+                </p>
+              </div>
+
+              <div
+                className={`relative min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-4 pt-2 sm:px-5 ${
+                  debatersLayout === "workspace" ? "pb-6 sm:pb-7" : "pb-4 sm:pb-5"
+                }`}
+              >
+                <PersonaPanel
+                  embedInShell
+                  isLoggedIn={isLoggedIn}
+                  personas={personas}
+                  maxDebaters={maxDebaters}
+                  onAddPersona={onAddPersona}
+                  onRemovePersona={onRemovePersona}
+                  onUpdatePersona={onUpdatePersona}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function DebatePage() {
-  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(Boolean(getAccessToken()));
+  const [isAdmin, setIsAdmin] = useState(
+    () => typeof localStorage !== "undefined" && localStorage.getItem("consensia_is_admin") === "1"
+  );
+
+  const [personas, setPersonas] = useState<Persona[]>(DEFAULT_PERSONAS);
+  const [composerText, setComposerText] = useState("");
+  const [threadQuestion, setThreadQuestion] = useState("");
+  const [result, setResult] = useState<DebateResult | null>(null);
+  const [messages, setMessages] = useState<DebateMessage[] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [attachments, setAttachments] = useState<File[]>([]);
+
+  const [sessions, setSessions] = useState<DebateSessionItem[]>([]);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [debatersOpen, setDebatersOpen] = useState(false);
+  const [lastRunAttachmentMeta, setLastRunAttachmentMeta] = useState<DebateExportAttachmentMeta[]>([]);
+  const [lastRunAttachmentPreviews, setLastRunAttachmentPreviews] = useState<ChatAttachmentPreview[]>([]);
+
+  const attachmentTotalBytes = useMemo(
+    () => attachments.reduce((sum, f) => sum + f.size, 0),
+    [attachments]
+  );
+
+  const canRun = useMemo(
+    () =>
+      personas.length > 0 &&
+      composerText.trim().length > 0 &&
+      !isLoading &&
+      attachmentTotalBytes <= MAX_DEBATE_ATTACHMENT_TOTAL_BYTES,
+    [personas.length, composerText, isLoading, attachmentTotalBytes]
+  );
+
+  const hasActiveDebate = useMemo(
+    () => isLoading || result !== null || Boolean(error),
+    [isLoading, result, error]
+  );
 
   useEffect(() => {
     document.title = "Consensia App — Debate Workspace";
   }, []);
 
-  const [personas, setPersonas] = useState<Persona[]>(DEFAULT_PERSONAS);
-  const [question, setQuestion] = useState("");
-  const [responses, setResponses] = useState<RunResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    const sync = () => setIsLoggedIn(Boolean(getAccessToken()));
 
-  const canRun = useMemo(
-    () => personas.length > 0 && question.trim().length > 0 && !isLoading,
-    [personas.length, question, isLoading]
-  );
+    window.addEventListener("storage", sync);
+    window.addEventListener("consensia-auth-changed", sync);
+
+    return () => {
+      window.removeEventListener("storage", sync);
+      window.removeEventListener("consensia-auth-changed", sync);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setIsAdmin(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const res = await authApiFetch("/api/auth/me");
+
+        if (res.status === 401) {
+          clearAuthSession();
+          toast.info("Session expired. Please sign in again.");
+          return;
+        }
+
+        if (!res.ok) return;
+
+        const me = (await readResponseJson<{ is_admin?: boolean }>(res).catch(() => null)) as {
+          is_admin?: boolean;
+        } | null;
+
+        if (cancelled || !me) return;
+
+        const admin = Boolean(me.is_admin);
+        setIsAdmin(admin);
+
+        if (admin) {
+          localStorage.setItem("consensia_is_admin", "1");
+        } else {
+          localStorage.removeItem("consensia_is_admin");
+        }
+      } catch {
+        // keep cached isAdmin from localStorage
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    fetch(`${API_BASE_URL}/api/sessions`, { headers: authHeaders() })
+      .then(async (r) => {
+        if (r.status === 401) {
+          clearAuthSession();
+          toast.info("Session expired. Please sign in again.");
+          return [];
+        }
+
+        return r.ok ? r.json() : [];
+      })
+      .then((data) => {
+        if (Array.isArray(data)) setSessions(data);
+      })
+      .catch(() => {});
+  }, [isLoggedIn]);
 
   const handleAddPersona = (persona: Omit<Persona, "id">) => {
-    const entry: Persona = {
-      id: nanoid(),
-      name: persona.name,
-      description: persona.description,
-      icon: persona.icon,
-    };
-    setPersonas((prev) => [...prev, entry]);
+    setPersonas((prev) => {
+      if (prev.length >= MAX_DEBATERS_PER_SESSION) {
+        toast.info(`You can add up to ${MAX_DEBATERS_PER_SESSION} debaters per session.`);
+        return prev;
+      }
+
+      return [...prev, { id: nanoid(), ...persona }];
+    });
   };
 
   const handleRemovePersona = (id: string) => {
-    setPersonas((prev) => prev.filter((persona) => persona.id !== id));
+    setPersonas((prev) => prev.filter((p) => p.id !== id));
   };
 
   const handleUpdatePersona = (updated: Persona) => {
     setPersonas((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
   };
 
+  const saveSession = useCallback(
+    async (sessionId: string | null, q: string, ps: Persona[], r: DebateResult) => {
+      if (!isLoggedIn) return null;
+
+      const body = {
+        title: sessionTitle(q),
+        question: q,
+        personas: ps.map(({ id, name, description, icon, personaBasis }) => ({
+          id,
+          name,
+          description,
+          icon,
+          ...(personaBasis?.trim() ? { persona_basis: personaBasis.trim() } : {}),
+        })),
+        result: r,
+      };
+
+      if (sessionId) {
+        const res = await fetch(`${API_BASE_URL}/api/sessions/${sessionId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json", ...authHeaders() },
+          body: JSON.stringify(body),
+        });
+
+        if (res.status === 401) {
+          clearAuthSession();
+          toast.info("Session expired. Please sign in again.");
+          return null;
+        }
+
+        setSessions((prev) =>
+          prev.map((s) =>
+            s.id === sessionId
+              ? { ...s, ...body, result: r as object, updated_at: new Date().toISOString() }
+              : s
+          )
+        );
+
+        return sessionId;
+      }
+
+      const res = await fetch(`${API_BASE_URL}/api/sessions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...authHeaders() },
+        body: JSON.stringify(body),
+      });
+
+      if (res.status === 401) {
+        clearAuthSession();
+        toast.info("Session expired. Please sign in again.");
+        return null;
+      }
+
+      if (res.ok) {
+        const created: DebateSessionItem = await res.json();
+        setSessions((prev) => [created, ...prev]);
+        return created.id;
+      }
+
+      return null;
+    },
+    [isLoggedIn]
+  );
+
+  const loadMessages = useCallback(
+    async (sid: string | null) => {
+      if (!isLoggedIn || !sid) return;
+
+      const res = await fetch(`${API_BASE_URL}/api/sessions/${sid}/messages`, {
+        headers: authHeaders(),
+      });
+
+      if (!res.ok) {
+        setMessages(null);
+        return;
+      }
+
+      const rawMsgs = (await res.json().catch(() => null)) as any;
+
+      if (!Array.isArray(rawMsgs)) {
+        setMessages(null);
+        return;
+      }
+
+      setMessages(rawMsgs.map(mapApiMessage));
+    },
+    [isLoggedIn]
+  );
+
   const handleRun = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
+      const runQuestion = composerText.trim();
+
+      const currentAttachmentPreviews: ChatAttachmentPreview[] = await Promise.all(
+        attachments.slice(0, 8).map(async (file) => ({
+          filename: file.name,
+          mimeType: file.type || "application/octet-stream",
+          dataUrl: file.type.startsWith("image/") ? await fileToDataUrl(file) : undefined,
+        }))
+      );
+
+      let sid = currentSessionId;
+
+      if (isLoggedIn && !sid) {
+        const res = await fetch(`${API_BASE_URL}/api/sessions`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", ...authHeaders() },
+          body: JSON.stringify({
+            title: sessionTitle(runQuestion),
+            question: runQuestion,
+            personas: personas.map(({ id, name, description, icon, personaBasis }) => ({
+              id,
+              name,
+              description,
+              icon,
+              ...(personaBasis?.trim() ? { persona_basis: personaBasis.trim() } : {}),
+            })),
+          }),
+        });
+
+        if (res.ok) {
+          const created: DebateSessionItem = await res.json();
+          setSessions((prev) => [created, ...prev]);
+          sid = created.id;
+          setCurrentSessionId(created.id);
+        }
+      }
+
       const payload = {
-        question,
-        personas: personas.map(({ id, name, description }) => ({
-          id,
-          name,
-          description,
+        question: runQuestion,
+        ...(sid ? { session_id: sid } : {}),
+        num_rounds: 2,
+        personas: personas.map((p) => ({
+          id: p.id,
+          name: p.name,
+          description: p.description,
+          ...(p.personaBasis?.trim() ? { persona_basis: p.personaBasis.trim() } : {}),
         })),
       };
 
-      const response = await fetch(`${API_BASE_URL}/api/consensus`, {
+      if (attachments.length > 0) {
+        const totalBytes = attachments.reduce((sum, f) => sum + f.size, 0);
+
+        if (totalBytes > MAX_DEBATE_ATTACHMENT_TOTAL_BYTES) {
+          throw new Error(
+            `Attachments too large (max ${(MAX_DEBATE_ATTACHMENT_TOTAL_BYTES / (1024 * 1024)).toFixed(0)}MB total).`
+          );
+        }
+
+        const encoded = await Promise.all(
+          attachments.slice(0, 8).map(
+            (file) =>
+              new Promise<{ filename: string; mime_type: string; base64: string }>((resolve, reject) => {
+                const reader = new FileReader();
+
+                reader.onerror = () => reject(new Error(`Could not read attachment: ${file.name}`));
+
+                reader.onload = () => {
+                  const dataUrl = String(reader.result || "");
+                  const comma = dataUrl.indexOf(",");
+                  const base64 = comma >= 0 ? dataUrl.slice(comma + 1) : "";
+
+                  resolve({
+                    filename: file.name,
+                    mime_type: file.type || "application/octet-stream",
+                    base64,
+                  });
+                };
+
+                reader.readAsDataURL(file);
+              })
+          )
+        );
+
+        (payload as any).attachments = encoded;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/api/debate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(isLoggedIn ? authHeaders() : {}),
         },
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error(`Request failed: ${response.status}`);
+        const errJson = (await response.json().catch(() => null)) as {
+          detail?: unknown;
+        } | null;
+
+        const detail = errJson?.detail;
+        const msg =
+          typeof detail === "string"
+            ? detail
+            : Array.isArray(detail)
+              ? detail.map((d) => JSON.stringify(d)).join("; ")
+              : `Request failed (${response.status})`;
+
+        if (response.status === 429) {
+          if (isLoggedIn) {
+            toast.info(
+              "Prototype limit reached: you can run up to 10 debates per day on a normal account. Try again tomorrow."
+            );
+          } else {
+            toast.info(
+              "Prototype limit reached: guest mode allows up to 5 debates per day. Sign in for 10/day, or try again tomorrow."
+            );
+          }
+        }
+
+        throw new Error(msg);
       }
 
-      const raw: ConsensusApiResponse = await response.json();
+      const raw: ApiDebateResponse = await response.json();
 
-      const data: RunResponse = {
+      const data: DebateResult = {
         judge: raw.judge,
-        personas: raw.personas.map((p) => ({
-          personaId: p.persona_id,
-          personaName: p.persona_name,
-          personaDescription: p.persona_description,
-          answer: p.answer,
+        rounds: raw.rounds.map((r) => ({
+          roundNumber: r.round_number,
+          label: r.label,
+          personaAnswers: r.persona_answers.map((a) => ({
+            personaId: a.persona_id,
+            personaName: a.persona_name,
+            personaDescription: a.persona_description,
+            answer: a.answer,
+          })),
         })),
+        topicRelevanceQa: mapCalibrationRows(raw.topic_relevance_qa),
+        reasoningQualityQa: mapCalibrationRows(raw.reasoning_quality_qa),
       };
 
-      setResponses(data);
+      setResult(data);
+      setThreadQuestion(runQuestion);
+
+      if (isLoggedIn && sid) {
+        const msgRes = await fetch(`${API_BASE_URL}/api/sessions/${sid}/messages`, {
+          headers: authHeaders(),
+        });
+
+        if (msgRes.ok) {
+          const rawMsgs = (await msgRes.json().catch(() => null)) as any;
+
+          if (Array.isArray(rawMsgs)) {
+            setMessages(rawMsgs.map(mapApiMessage));
+          }
+        }
+      } else {
+        const now = new Date().toISOString();
+        const baseId = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        const runMsgs: DebateMessage[] = [];
+
+        runMsgs.push({
+          id: `${baseId}-q`,
+          role: "user",
+          author: "You",
+          content: runQuestion,
+          roundNumber: null,
+          roundLabel: null,
+          personaId: null,
+          personaDescription: null,
+          createdAt: now,
+        });
+
+        for (const round of data.rounds) {
+          for (const a of round.personaAnswers) {
+            runMsgs.push({
+              id: `${baseId}-r${round.roundNumber}-${a.personaId}`,
+              role: "persona",
+              author: a.personaName,
+              content: a.answer,
+              roundNumber: round.roundNumber,
+              roundLabel: round.label,
+              personaId: a.personaId,
+              personaDescription: a.personaDescription,
+              createdAt: now,
+            });
+          }
+        }
+
+        runMsgs.push({
+          id: `${baseId}-judge`,
+          role: "judge",
+          author: "Judge",
+          content: `${data.judge.summary}\n\nReasoning:\n${data.judge.reasoning}`,
+          roundNumber: null,
+          roundLabel: null,
+          personaId: null,
+          personaDescription: null,
+          createdAt: now,
+        });
+
+        setMessages((prev) => [...(prev ?? []), ...runMsgs]);
+      }
+
+      setLastRunAttachmentMeta(
+        attachments.map((f) => ({
+          filename: f.name,
+          mime_type: f.type || "application/octet-stream",
+        }))
+      );
+
+      setLastRunAttachmentPreviews(currentAttachmentPreviews);
+      setComposerText("");
+      setAttachments([]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
-      setResponses(null);
+      setResult(null);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const personaAnswers = responses?.personas ?? [];
-  const judgeConsensus = responses?.judge ?? null;
+  const handleSelectSession = (session: DebateSessionItem) => {
+    setCurrentSessionId(session.id);
+    setComposerText("");
+    setAttachments([]);
+    setLastRunAttachmentMeta([]);
+    setLastRunAttachmentPreviews([]);
+    setThreadQuestion(session.question || "");
+
+    const raw = session.personas as Persona[];
+
+    if (Array.isArray(raw) && raw.length > 0) {
+      const mapped = raw.map((p) => ({
+        id: typeof p.id === "string" ? p.id : nanoid(),
+        name: typeof p.name === "string" ? p.name : "",
+        description: typeof p.description === "string" ? p.description : "",
+        icon: typeof p.icon === "string" ? p.icon : "User",
+        personaBasis:
+          typeof (p as { personaBasis?: unknown }).personaBasis === "string"
+            ? (p as { personaBasis: string }).personaBasis
+            : typeof (p as { persona_basis?: unknown }).persona_basis === "string"
+              ? (p as { persona_basis: string }).persona_basis
+              : undefined,
+      }));
+
+      if (mapped.length > MAX_DEBATERS_PER_SESSION) {
+        toast.info(
+          `This session had more than ${MAX_DEBATERS_PER_SESSION} debaters; only the first ${MAX_DEBATERS_PER_SESSION} were restored.`
+        );
+      }
+
+      setPersonas(mapped.slice(0, MAX_DEBATERS_PER_SESSION));
+    } else {
+      setPersonas(DEFAULT_PERSONAS);
+    }
+
+    setResult(debateResultFromStored(session.result));
+    void loadMessages(session.id);
+    setError(null);
+  };
+
+  const handleNewSession = async () => {
+    setCurrentSessionId(null);
+    setComposerText("");
+    setThreadQuestion("");
+    setAttachments([]);
+    setLastRunAttachmentMeta([]);
+    setLastRunAttachmentPreviews([]);
+    setPersonas(DEFAULT_PERSONAS);
+    setResult(null);
+    setMessages(isLoggedIn ? null : []);
+    setError(null);
+  };
+
+  const handleDeleteSession = async (id: string) => {
+    if (!isLoggedIn) return;
+
+    setSessions((prev) => prev.filter((s) => s.id !== id));
+
+    if (currentSessionId === id) {
+      setCurrentSessionId(null);
+      setComposerText("");
+      setThreadQuestion("");
+      setPersonas(DEFAULT_PERSONAS);
+      setResult(null);
+      setLastRunAttachmentMeta([]);
+      setLastRunAttachmentPreviews([]);
+    }
+
+    fetch(`${API_BASE_URL}/api/sessions/${id}`, {
+      method: "DELETE",
+      headers: authHeaders(),
+    }).catch(() => {});
+  };
 
   return (
     <>
       <GradientBackground />
-      <ToastContainer position="top-center" autoClose={5000} theme="dark" />
+      <ThemedToastContainer position="top-center" autoClose={5000} />
 
-      <div className="relative z-10 min-h-screen text-purple-50">
-        <div className="mx-auto max-w-6xl px-6 pt-6">
-          <button
-            type="button"
-            onClick={() => navigate("/")}
-            className="rounded-xl border border-purple-800/40 bg-black/40 px-4 py-2 text-sm text-purple-200 transition hover:border-purple-600 hover:text-white"
-          >
-            ← Back to Homepage
-          </button>
-        </div>
-
-        <Header
-          onRun={handleRun}
-          canRun={canRun}
-          isLoading={isLoading}
-          personaCount={personas.length}
-          questionLength={question.length}
+      <div
+        className={`relative z-10 flex h-[100dvh] min-h-0 max-h-[100dvh] overflow-hidden ${pageShell}`}
+      >
+        <SessionSidebar
+          sessions={sessions}
+          currentSessionId={currentSessionId}
+          isLoggedIn={isLoggedIn}
+          onSelect={handleSelectSession}
+          onNew={handleNewSession}
+          onDelete={handleDeleteSession}
         />
 
-        <main className="mx-auto max-w-6xl px-6 py-10">
-          <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
-            <div className="space-y-6">
-              <QuestionPanel question={question} onChange={setQuestion} />
-              <PersonaPanel
-                personas={personas}
-                onAddPersona={handleAddPersona}
-                onRemovePersona={handleRemovePersona}
-                onUpdatePersona={handleUpdatePersona}
-              />
+        <div className="relative z-10 flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+          <header
+            className={`flex shrink-0 items-center justify-between gap-3 px-4 py-3 backdrop-blur-sm sm:px-6 ${stickyHeader}`}
+          >
+            <div className="min-w-0 flex-1" aria-hidden />
+
+            <div className="shrink-0 text-center">
+              <h1 className={`text-sm font-semibold tracking-tight sm:text-base ${formHeading}`}>
+                Consensia
+              </h1>
             </div>
 
-            <ResultsPanel
-              personas={personaAnswers}
-              judge={judgeConsensus}
-              error={error}
-              isLoading={isLoading}
-            />
-          </div>
-        </main>
+            <div className="flex min-w-0 flex-1 justify-end">
+              <DebateUserMenu isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
+            </div>
+          </header>
+
+          <main className="flex min-h-0 flex-1 flex-col">
+            {!hasActiveDebate ? (
+              <div className="flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto overscroll-contain">
+                <div className="mx-auto flex min-h-0 w-full min-w-0 max-w-3xl flex-col items-stretch gap-4 px-3 py-8 sm:px-4">
+                  <DebateComposer
+                    question={composerText}
+                    onChange={setComposerText}
+                    attachments={attachments}
+                    onAttachmentsChange={setAttachments}
+                    onRun={handleRun}
+                    canRun={canRun}
+                    isLoading={isLoading}
+                    attachmentTotalBytes={attachmentTotalBytes}
+                    maxAttachmentTotalBytes={MAX_DEBATE_ATTACHMENT_TOTAL_BYTES}
+                  />
+
+                  <DebatersBlock
+                    debatersOpen={debatersOpen}
+                    setDebatersOpen={setDebatersOpen}
+                    isLoggedIn={isLoggedIn}
+                    personas={personas}
+                    maxDebaters={MAX_DEBATERS_PER_SESSION}
+                    onAddPersona={handleAddPersona}
+                    onRemovePersona={handleRemovePersona}
+                    onUpdatePersona={handleUpdatePersona}
+                    placement="below"
+                    debatersLayout="workspace"
+                  />
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+                  <DebateChatThread
+                    question={threadQuestion}
+                    result={result}
+                    messages={messages}
+                    error={error}
+                    isLoading={isLoading}
+                    personaCount={personas.length}
+                    personas={personas}
+                    attachmentMetaForExport={lastRunAttachmentMeta}
+                    attachmentPreviews={lastRunAttachmentPreviews}
+                  />
+                </div>
+
+                <div className={debateDockStrip}>
+                  <DebateComposer
+                    question={composerText}
+                    onChange={setComposerText}
+                    attachments={attachments}
+                    onAttachmentsChange={setAttachments}
+                    onRun={handleRun}
+                    canRun={canRun}
+                    isLoading={isLoading}
+                    attachmentTotalBytes={attachmentTotalBytes}
+                    maxAttachmentTotalBytes={MAX_DEBATE_ATTACHMENT_TOTAL_BYTES}
+                  />
+
+                  <DebatersBlock
+                    debatersOpen={debatersOpen}
+                    setDebatersOpen={setDebatersOpen}
+                    isLoggedIn={isLoggedIn}
+                    personas={personas}
+                    maxDebaters={MAX_DEBATERS_PER_SESSION}
+                    onAddPersona={handleAddPersona}
+                    onRemovePersona={handleRemovePersona}
+                    onUpdatePersona={handleUpdatePersona}
+                    placement="above"
+                  />
+                </div>
+              </>
+            )}
+          </main>
+        </div>
       </div>
     </>
   );

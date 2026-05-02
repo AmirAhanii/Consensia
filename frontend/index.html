@@ -1,12 +1,24 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script>
+      try {
+        if (localStorage.getItem("consensia_theme") === "light") {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      } catch (e) {}
+    </script>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <!-- Same mark as HomePage LogoMark; inlined so Netlify SPA rewrites never block the tab icon. -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjQzRCNUZEIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzhCNUNGNiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHBhdGgKICAgIGQ9Ik04IDE4IEwyOCAzMiBMOCA0NiIKICAgIGZpbGw9Im5vbmUiCiAgICBzdHJva2U9InVybCgjZykiCiAgICBzdHJva2Utd2lkdGg9IjYiCiAgICBzdHJva2UtbGluZWNhcD0icm91bmQiCiAgICBzdHJva2UtbGluZWpvaW49InJvdW5kIgogIC8+CiAgPHBhdGgKICAgIGQ9Ik01NiAxOCBMMzYgMzIgTDU2IDQ2IgogICAgZmlsbD0ibm9uZSIKICAgIHN0cm9rZT0idXJsKCNnKSIKICAgIHN0cm9rZS13aWR0aD0iNiIKICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgIHN0cm9rZS1saW5lam9pbj0icm91bmQiCiAgLz4KICA8Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSIzLjYiIGZpbGw9InVybCgjZykiLz4KPC9zdmc+Cg=="
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Consensia</title>
   </head>
-  <body class="bg-slate-950 text-slate-100">
+  <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

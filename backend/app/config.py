@@ -10,6 +10,13 @@ env_path = backend_dir / ".env"
 load_dotenv(dotenv_path=env_path)
 
 
+def _admin_emails_from_env() -> frozenset[str]:
+    raw = (os.getenv("ADMIN_EMAILS") or "").strip()
+    if not raw:
+        return frozenset()
+    return frozenset(part.strip().lower() for part in raw.split(",") if part.strip())
+
+
 def resolve_research_raw_authors_dir() -> Path:
     override = (os.getenv("RESEARCH_RAW_AUTHORS_DIR") or "").strip()
     if override:
@@ -32,6 +39,9 @@ class Settings(BaseModel):
     judge_model: str = Field(default_factory=lambda: os.getenv("JUDGE_MODEL", "gpt-4o-mini").strip())
     gemini_api_key: str | None = Field(
         default_factory=lambda: (os.getenv("GEMINI_API_KEY") or "").strip() or None
+    )
+    serpapi_api_key: str | None = Field(
+        default_factory=lambda: (os.getenv("SERPAPI_API_KEY") or "").strip() or None
     )
     gemini_model: str = Field(default_factory=lambda: os.getenv("GEMINI_MODEL", "gemini-1.5-flash-latest"))
     cors_allow_origins: list[str] = Field(
@@ -57,9 +67,6 @@ class Settings(BaseModel):
         default_factory=lambda: os.getenv("MAIL_FROM", "").strip()
     )
 
-    max_personas_per_request: int = Field(
-        default_factory=lambda: int(os.getenv("MAX_PERSONAS_PER_REQUEST", "4"))
-    )
     max_output_tokens_persona: int = Field(
         default_factory=lambda: int(os.getenv("MAX_OUTPUT_TOKENS_PERSONA", "180"))
     )
@@ -81,6 +88,13 @@ class Settings(BaseModel):
     research_prompt_max_output_tokens: int = Field(
         default_factory=lambda: int(os.getenv("RESEARCH_PROMPT_MAX_OUTPUT_TOKENS", "320"))
     )
+    max_personas_per_session: int = Field(
+        default_factory=lambda: max(
+            1,
+            min(50, int(os.getenv("MAX_PERSONA_LIMIT", "5").strip() or "5")),
+        ),
+        description="Max personas per debate/consensus request (from MAX_PERSONA_LIMIT env, clamped 1–50).",
+    )
     jwt_secret: str = Field(
     default_factory=lambda: os.getenv("JWT_SECRET", "").strip()
     )
@@ -89,6 +103,38 @@ class Settings(BaseModel):
     )
     google_client_id: str | None = Field(
     default_factory=lambda: (os.getenv("GOOGLE_CLIENT_ID") or "").strip() or None
+    )
+    admin_emails: frozenset[str] = Field(
+        default_factory=_admin_emails_from_env,
+        description="Comma-separated ADMIN_EMAILS; those users are promoted to is_admin on startup and login.",
+    )
+    user_daily_debate_limit: int = Field(
+        default_factory=lambda: max(
+            1,
+            int((os.getenv("USER_DAILY_DEBATE_LIMIT") or "10").strip() or "10"),
+        ),
+        description="Max /api/debate runs per UTC day for signed-in non-admin users.",
+    )
+    anon_daily_debate_limit: int = Field(
+        default_factory=lambda: max(
+            1,
+            int((os.getenv("ANON_DAILY_DEBATE_LIMIT") or "5").strip() or "5"),
+        ),
+        description="Max /api/debate runs per UTC day for guests (no auth).",
+    )
+    debate_recent_window_messages: int = Field(
+        default_factory=lambda: max(
+            4,
+            min(60, int((os.getenv("DEBATE_RECENT_WINDOW_MESSAGES") or "14").strip() or "14")),
+        ),
+        description="How many recent messages (user/judge) to include as conversational context when session_id is used.",
+    )
+    debate_summary_max_chars: int = Field(
+        default_factory=lambda: max(
+            200,
+            min(20000, int((os.getenv("DEBATE_SUMMARY_MAX_CHARS") or "3500").strip() or "3500")),
+        ),
+        description="Max characters for the rolling session summary stored on debate_sessions.session_summary.",
     )
 
 @lru_cache
