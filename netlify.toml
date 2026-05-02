@@ -9,8 +9,4 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# SPA: client-side routes (/app, /profile, …)
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# SPA rewrites live in frontend/public/_redirects (per-route only) so /favicon.svg and /assets/* are never swallowed.
