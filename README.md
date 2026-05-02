@@ -101,6 +101,12 @@ docker compose exec backend alembic upgrade heads
 
 If you want to provide real API keys, create `backend/.env` locally (and do not commit it), or pass environment variables in `docker-compose.yml`.
 
+## Free public URL (`consensia.netlify.app`, etc.)
+
+You do not need a paid domain. See **[docs/free-public-url.md](docs/free-public-url.md)** for Netlify / Vercel / Cloudflare Pages + how to point the UI at a public HTTPS API (`VITE_API_BASE_URL` + CORS).
+
+This repo includes **`netlify.toml`** so Netlify can build from the `frontend/` folder with `VITE_BASE_PATH=/` (good for `https://consensia.netlify.app` if that site name is available).
+
 ## GitHub Pages (same site as `*.github.io`)
 
 The frontend is set up for **project pages** (`https://<user>.github.io/<repo>/`) or **user/org pages** (repo named `<user>.github.io`, base path `/`).

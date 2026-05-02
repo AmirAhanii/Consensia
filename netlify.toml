@@ -1,0 +1,16 @@
+# Free public URL example: https://consensia.netlify.app (pick an available site name in Netlify UI)
+# Connect this GitHub repo → Netlify → base directory "frontend", or rely on these settings.
+
+# Publish path is from repo root (avoids UI/base-directory confusion that causes Netlify 404s).
+[build]
+  command = "cd frontend && npm ci && VITE_BASE_PATH=/ npm run build:pages"
+  publish = "frontend/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA: client-side routes (/app, /profile, …)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
