@@ -81,17 +81,22 @@ export default function RegisterPage() {
     try {
       setIsSubmitting(true);
 
-      const response = await apiFetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      // First hit after Render sleep can spend a long time in startup/migrations before the handler runs.
+      const response = await apiFetch(
+        "/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            full_name: fullName.trim(),
+            email: email.trim(),
+            password,
+          }),
         },
-        body: JSON.stringify({
-          full_name: fullName.trim(),
-          email: email.trim(),
-          password,
-        }),
-      });
+        240_000
+      );
 
       const data = (await readResponseJson<ApiErrorResponse>(response).catch(
         () => null

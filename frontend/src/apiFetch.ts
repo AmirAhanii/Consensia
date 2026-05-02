@@ -1,8 +1,8 @@
 import { authHeaders } from "./authHeaders";
 import { API_BASE_URL } from "./config";
 
-// Render free tier cold start + DB/migrations often exceed 25s on first request after sleep.
-const DEFAULT_TIMEOUT_MS = 90_000;
+// Render free tier: cold start + migrations on first request can exceed 60s.
+const DEFAULT_TIMEOUT_MS = 180_000;
 
 function resolveApiUrl(path: string): string {
   const p = path.startsWith("/") ? path : `/${path}`;

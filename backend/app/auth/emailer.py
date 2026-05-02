@@ -1,9 +1,20 @@
 import logging
+import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 logger = logging.getLogger(__name__)
+
+# Without this, a bad SMTP_HOST (e.g. localhost copied to Render) blocks until the OS TCP
+# timeout (~minutes), and the browser aborts first (e.g. 90s).
+def _smtp_socket_timeout_sec() -> float:
+    raw = (os.getenv("SMTP_TIMEOUT_SECONDS") or "20").strip()
+    try:
+        n = float(raw)
+    except ValueError:
+        return 20.0
+    return max(5.0, min(120.0, n))
 
 
 def smtp_fully_configured(
@@ -39,7 +50,8 @@ def send_verification_email(
 
     msg.attach(MIMEText(html, "html"))
 
-    with smtplib.SMTP(smtp_host, smtp_port) as server:
+    timeout = _smtp_socket_timeout_sec()
+    with smtplib.SMTP(smtp_host, smtp_port, timeout=timeout) as server:
         server.starttls()
         server.login(smtp_user, smtp_password)
         server.sendmail(smtp_user, [to_email], msg.as_string())
@@ -69,7 +81,8 @@ def send_password_reset_email(
 
     msg.attach(MIMEText(html, "html"))
 
-    with smtplib.SMTP(smtp_host, smtp_port) as server:
+    timeout = _smtp_socket_timeout_sec()
+    with smtplib.SMTP(smtp_host, smtp_port, timeout=timeout) as server:
         server.starttls()
         server.login(smtp_user, smtp_password)
         server.sendmail(smtp_user, [to_email], msg.as_string())
@@ -85,31 +98,36 @@ def send_verification_email_if_configured(
     verification_code: str,
 ) -> bool:
     """
-    Send the verification email when SMTP is configured.
+    Send the verification email when SMTP is fully configured.
 
-    Returns True if an email was sent, False if SMTP env is incomplete (local dev).
-    In the False case, the code is logged at WARNING so you can still verify via /verify-email.
+    Returns True if an email was sent.
 
-    Raises on SMTP misconfiguration that only fails at send time (connection/auth errors).
+    Returns False if SMTP env is incomplete, or if sending fails (wrong host, auth, timeout).
+    In those cases the verification code is logged at WARNING so you can still use /verify-email.
     """
     if not smtp_fully_configured(smtp_host, smtp_user, smtp_password, mail_from):
         logger.warning(
-            "SMTP not configured (set SMTP_HOST, SMTP_USER, SMTP_PASSWORD, MAIL_FROM in backend/.env). "
+            "SMTP not configured (set SMTP_HOST, SMTP_USER, SMTP_PASSWORD, MAIL_FROM). "
             "Verification code for %s: %s",
             to_email,
             verification_code,
         )
         return False
-    send_verification_email(
-        smtp_host,
-        smtp_port,
-        smtp_user,
-        smtp_password,
-        mail_from,
-        to_email,
-        verification_code,
-    )
-    return True
+    try:
+        send_verification_email(
+            smtp_host,
+            smtp_port,
+            smtp_user,
+            smtp_password,
+            mail_from,
+            to_email,
+            verification_code,
+        )
+        return True
+    except Exception:
+        logger.exception("SMTP verification send failed for %s", to_email)
+        logger.warning("Verification code for %s (after SMTP failure): %s", to_email, verification_code)
+        return False
 
 
 def send_password_reset_email_if_configured(
@@ -122,8 +140,8 @@ def send_password_reset_email_if_configured(
     reset_code: str,
 ) -> bool:
     """
-    Send password reset code when SMTP is configured.
-    Returns True if sent; if SMTP incomplete, logs code at WARNING and returns False.
+    Send password reset code when SMTP is fully configured.
+    Returns True if sent. If SMTP is incomplete or sending fails, logs the code at WARNING and returns False.
     """
     if not smtp_fully_configured(smtp_host, smtp_user, smtp_password, mail_from):
         logger.warning(
@@ -132,13 +150,18 @@ def send_password_reset_email_if_configured(
             reset_code,
         )
         return False
-    send_password_reset_email(
-        smtp_host,
-        smtp_port,
-        smtp_user,
-        smtp_password,
-        mail_from,
-        to_email,
-        reset_code,
-    )
-    return True
+    try:
+        send_password_reset_email(
+            smtp_host,
+            smtp_port,
+            smtp_user,
+            smtp_password,
+            mail_from,
+            to_email,
+            reset_code,
+        )
+        return True
+    except Exception:
+        logger.exception("SMTP password reset send failed for %s", to_email)
+        logger.warning("Password reset code for %s (after SMTP failure): %s", to_email, reset_code)
+        return False

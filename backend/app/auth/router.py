@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from ..config import Settings, get_settings
@@ -55,6 +56,57 @@ from .security import (
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 
+def _bg_send_verification_email(
+    smtp_host: str,
+    smtp_port: int,
+    smtp_user: str,
+    smtp_password: str,
+    mail_from: str,
+    to_email: str,
+    raw_code: str,
+) -> None:
+    """Runs after HTTP response so the client is not blocked on SMTP (slow on Render cold paths)."""
+    send_verification_email_if_configured(
+        smtp_host,
+        smtp_port,
+        smtp_user,
+        smtp_password,
+        mail_from,
+        to_email,
+        raw_code,
+    )
+
+
+def _bg_send_password_reset_email(
+    smtp_host: str,
+    smtp_port: int,
+    smtp_user: str,
+    smtp_password: str,
+    mail_from: str,
+    to_email: str,
+    raw_code: str,
+) -> None:
+    send_password_reset_email_if_configured(
+        smtp_host,
+        smtp_port,
+        smtp_user,
+        smtp_password,
+        mail_from,
+        to_email,
+        raw_code,
+    )
+
+
+def _user_has_google_identity(db: Session, user_id: str) -> bool:
+    row = db.execute(
+        select(AuthIdentity.id).where(
+            AuthIdentity.user_id == user_id,
+            AuthIdentity.provider == "google",
+        ).limit(1)
+    ).scalar_one_or_none()
+    return row is not None
+
+
 def _primary_auth_provider(user) -> str:
     identities = list(user.auth_identities or [])
     if any(i.provider == "local" and i.password_hash for i in identities):
@@ -71,6 +123,7 @@ def utcnow() -> datetime:
 @router.post("/register")
 async def register(
     payload: RegisterRequest,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     settings: Settings = Depends(get_settings),
 ):
@@ -98,30 +151,22 @@ async def register(
 
         db.commit()
 
-        try:
-            sent = send_verification_email_if_configured(
-                settings.smtp_host,
-                settings.smtp_port,
-                settings.smtp_user,
-                settings.smtp_password,
-                settings.mail_from,
-                existing.email,
-                raw_code,
+        background_tasks.add_task(
+            _bg_send_verification_email,
+            settings.smtp_host,
+            settings.smtp_port,
+            settings.smtp_user,
+            settings.smtp_password,
+            settings.mail_from,
+            existing.email,
+            raw_code,
+        )
+        return {
+            "message": (
+                "Account already exists but is not verified. A verification email is being sent—"
+                "check your inbox (and spam) shortly. If nothing arrives, check the API server logs for the code."
             )
-        except Exception as exc:
-            raise HTTPException(
-                status_code=500,
-                detail=f"Account exists but verification email could not be sent: {exc}",
-            ) from exc
-
-        if sent:
-            msg = "Account already exists but is not verified. A new verification code has been sent."
-        else:
-            msg = (
-                "Account exists but is not verified. SMTP is not configured — "
-                "check backend logs for your new verification code, then verify on the next page."
-            )
-        return {"message": msg}
+        }
 
     password_hash = hash_password(payload.password)
     raw_code, code_hash = new_email_verification_code()
@@ -150,30 +195,22 @@ async def register(
 
     db.commit()
 
-    try:
-        sent = send_verification_email_if_configured(
-            settings.smtp_host,
-            settings.smtp_port,
-            settings.smtp_user,
-            settings.smtp_password,
-            settings.mail_from,
-            user.email,
-            raw_code,
+    background_tasks.add_task(
+        _bg_send_verification_email,
+        settings.smtp_host,
+        settings.smtp_port,
+        settings.smtp_user,
+        settings.smtp_password,
+        settings.mail_from,
+        user.email,
+        raw_code,
+    )
+    return {
+        "message": (
+            "Registration successful. A verification email is being sent—check your inbox (and spam) shortly. "
+            "If it does not arrive, check the API server logs for the verification code, then continue to the verify page."
         )
-    except Exception as exc:
-        raise HTTPException(
-            status_code=500,
-            detail=f"User was created, but verification email could not be sent: {exc}",
-        ) from exc
-
-    if sent:
-        msg = "Registration successful. Check your email for the verification code."
-    else:
-        msg = (
-            "Registration successful. SMTP is not configured — "
-            "check backend logs for your verification code, then continue to the verify page."
-        )
-    return {"message": msg}
+    }
 
 
 @router.post("/verify-email")
@@ -209,6 +246,7 @@ async def verify_email(
 @router.post("/resend-verification")
 async def resend_verification(
     payload: ResendVerificationRequest,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     settings: Settings = Depends(get_settings),
 ):
@@ -238,30 +276,22 @@ async def resend_verification(
 
     db.commit()
 
-    try:
-        sent = send_verification_email_if_configured(
-            settings.smtp_host,
-            settings.smtp_port,
-            settings.smtp_user,
-            settings.smtp_password,
-            settings.mail_from,
-            user.email,
-            raw_code,
+    background_tasks.add_task(
+        _bg_send_verification_email,
+        settings.smtp_host,
+        settings.smtp_port,
+        settings.smtp_user,
+        settings.smtp_password,
+        settings.mail_from,
+        user.email,
+        raw_code,
+    )
+    return {
+        "message": (
+            "A new verification email is being sent—check your inbox shortly. "
+            "If it does not arrive, check the API server logs for the verification code."
         )
-    except Exception as exc:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Verification email could not be sent: {exc}",
-        ) from exc
-
-    if sent:
-        msg = "A new verification code has been sent."
-    else:
-        msg = (
-            "SMTP is not configured — check backend logs for your new verification code "
-            "and enter it on the verify page."
-        )
-    return {"message": msg}
+    }
 
 
 _FORGOT_PASSWORD_GENERIC_MESSAGE = (
@@ -292,6 +322,7 @@ def _active_password_reset_for_code(
 @router.post("/forgot-password")
 async def forgot_password(
     payload: ForgotPasswordRequest,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     settings: Settings = Depends(get_settings),
 ):
@@ -321,21 +352,16 @@ async def forgot_password(
 
     db.commit()
 
-    try:
-        send_password_reset_email_if_configured(
-            settings.smtp_host,
-            settings.smtp_port,
-            settings.smtp_user,
-            settings.smtp_password,
-            settings.mail_from,
-            user.email,
-            raw_code,
-        )
-    except Exception as exc:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Password reset email could not be sent: {exc}",
-        ) from exc
+    background_tasks.add_task(
+        _bg_send_password_reset_email,
+        settings.smtp_host,
+        settings.smtp_port,
+        settings.smtp_user,
+        settings.smtp_password,
+        settings.mail_from,
+        user.email,
+        raw_code,
+    )
 
     return {"message": _FORGOT_PASSWORD_GENERIC_MESSAGE}
 
@@ -394,17 +420,31 @@ async def login(
 ):
     user = get_user_by_email(db, payload.email)
     if not user:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(
+            status_code=401,
+            detail="No account exists for this email address.",
+        )
 
     local_identity = get_local_identity(db, user.id)
     if not local_identity or not local_identity.password_hash:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        if _user_has_google_identity(db, user.id):
+            raise HTTPException(
+                status_code=401,
+                detail='This account uses Google sign-in. Use "Continue with Google" instead of a password.',
+            )
+        raise HTTPException(
+            status_code=401,
+            detail="No password is set for this account. Try “Forgot password” or register again.",
+        )
 
     if not user.is_email_verified:
         raise HTTPException(status_code=403, detail="Please verify your email first")
 
     if not verify_password(payload.password, local_identity.password_hash):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(
+            status_code=401,
+            detail="The password does not match this email address.",
+        )
 
     upgrade_user_if_listed_admin(user, settings)
     if user.email.strip().lower() in settings.admin_emails:

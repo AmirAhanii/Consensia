@@ -30,9 +30,27 @@ type MeResponse = {
 };
 
 type ApiErrorResponse = {
-  detail?: string;
+  detail?: unknown;
   message?: string;
 };
+
+function formatApiDetail(detail: unknown): string {
+  if (detail == null || detail === "") return "";
+  if (typeof detail === "string") return detail;
+  if (Array.isArray(detail)) {
+    return detail
+      .map((item) =>
+        typeof item === "object" &&
+        item !== null &&
+        "msg" in item &&
+        typeof (item as { msg: unknown }).msg === "string"
+          ? (item as { msg: string }).msg
+          : JSON.stringify(item)
+      )
+      .join(". ");
+  }
+  return String(detail);
+}
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -72,9 +90,10 @@ export default function LoginPage() {
       >(response).catch(() => null)) as LoginResponse | ApiErrorResponse | null;
 
       if (!response.ok) {
+        const err = data as ApiErrorResponse | null;
         throw new Error(
-          (data as ApiErrorResponse | null)?.detail ||
-            (data as ApiErrorResponse | null)?.message ||
+          formatApiDetail(err?.detail) ||
+            err?.message ||
             `Login failed (${response.status})`
         );
       }

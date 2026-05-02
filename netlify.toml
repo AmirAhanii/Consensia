@@ -9,4 +9,10 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# SPA rewrite: frontend/public/_redirects (/* → index.html). Favicon is inlined in index.html.
+# SPA: deep links like /register must serve index.html (static files in /assets still win first).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Also ships in frontend/public/_redirects — keep both so a bad Netlify UI “base dir” doesn’t drop SPA rules.
