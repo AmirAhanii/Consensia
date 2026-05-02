@@ -7,9 +7,20 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker, Session
 
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql+psycopg://consensia:consensia_password@db:5432/consensia",
+def normalize_postgres_url(url: str) -> str:
+    """Render and Heroku often use postgres:// or postgresql:// without a driver; we use psycopg3 only."""
+    if url.startswith("postgres://"):
+        return "postgresql+psycopg://" + url[len("postgres://"):]
+    if url.startswith("postgresql://"):
+        return "postgresql+psycopg://" + url[len("postgresql://"):]
+    return url
+
+
+_raw_db_url = os.getenv("DATABASE_URL", "").strip()
+DATABASE_URL = (
+    normalize_postgres_url(_raw_db_url)
+    if _raw_db_url
+    else "postgresql+psycopg://consensia:consensia_password@db:5432/consensia"
 )
 
 

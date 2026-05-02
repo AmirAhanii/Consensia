@@ -5,6 +5,7 @@ import io
 import json
 import logging
 import re
+import traceback
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
@@ -59,6 +60,8 @@ async def lifespan(_: FastAPI):
         # Repo has divergent migration branches; "heads" applies every leaf revision.
         alembic_command.upgrade(cfg, "heads")
     except Exception as exc:
+        # Render log streams do not always show app loggers; stderr always appears in deploy logs.
+        traceback.print_exc()
         logger.exception(
             "Alembic migrations failed — the API cannot run without tables (e.g. users). "
             "Fix DATABASE_URL / Postgres, then run: alembic upgrade head"

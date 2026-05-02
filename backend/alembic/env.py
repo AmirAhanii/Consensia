@@ -16,16 +16,16 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-from app.db import Base
+from app.db import Base, normalize_postgres_url
 from app import models  # noqa: F401
 
 target_metadata = Base.metadata
 
-database_url = os.getenv("DATABASE_URL")
+database_url = (os.getenv("DATABASE_URL") or "").strip()
 if not database_url:
     raise RuntimeError("DATABASE_URL is not set")
 
-config.set_main_option("sqlalchemy.url", database_url)
+config.set_main_option("sqlalchemy.url", normalize_postgres_url(database_url))
 
 
 def run_migrations_offline() -> None:
