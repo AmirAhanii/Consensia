@@ -14,6 +14,15 @@ export type DebateExportInput = {
   messages?: DebateMessage[] | null;
 };
 
+type ExportAttachmentLike = {
+  id?: string;
+  filename?: string;
+  mime_type?: string;
+  mimeType?: string;
+  data_url?: string | null;
+  dataUrl?: string | null;
+};
+
 function fence(text: string): string {
   const t = text.replace(/\r\n/g, "\n");
   const fenceChar = "`";
@@ -24,6 +33,31 @@ function fence(text: string): string {
 
 function mdEscapeInline(s: string): string {
   return s.replace(/\|/g, "\\|").replace(/\s+/g, " ").trim();
+}
+
+function attachmentFilename(a: ExportAttachmentLike): string {
+  return String(a.filename || "attachment");
+}
+
+function attachmentMimeType(a: ExportAttachmentLike): string {
+  return String(a.mimeType || a.mime_type || "application/octet-stream");
+}
+
+function attachmentDataUrl(a: ExportAttachmentLike): string | null {
+  const url = a.dataUrl ?? a.data_url ?? null;
+  if (typeof url !== "string") return null;
+  if (!url.startsWith("data:image/")) return null;
+  return url;
+}
+
+function messageAttachments(m: DebateMessage): ExportAttachmentLike[] {
+  const raw = (m as DebateMessage & { attachments?: ExportAttachmentLike[] }).attachments;
+  return Array.isArray(raw) ? raw : [];
+}
+
+function storedAttachments(messages?: DebateMessage[] | null): ExportAttachmentLike[] {
+  const safeMessages = Array.isArray(messages) ? messages : [];
+  return safeMessages.flatMap((m) => messageAttachments(m));
 }
 
 function buildCalibrationMd(title: string, rows: { personaName: string; score: number; rationale: string }[]) {
@@ -37,6 +71,10 @@ function buildCalibrationMd(title: string, rows: { personaName: string; score: n
 
 export function buildDebateMarkdown(input: DebateExportInput): string {
   const { exportedAtIso, question, personas, attachments, result, messages } = input;
+  const safeMessages = Array.isArray(messages) ? messages : [];
+  const stored = storedAttachments(safeMessages);
+  const uploadedFiles = attachments.length > 0 ? attachments : stored;
+
   const lines: string[] = [];
   lines.push(`# Consensia debate export`);
   lines.push("");
@@ -50,13 +88,13 @@ export function buildDebateMarkdown(input: DebateExportInput): string {
 
   lines.push(`## Uploaded files`);
   lines.push("");
-  if (attachments.length === 0) {
+  if (uploadedFiles.length === 0) {
     lines.push(`_No files were attached to this run._`);
   } else {
     lines.push(`| File | MIME type |`);
     lines.push(`| --- | --- |`);
-    for (const a of attachments) {
-      lines.push(`| ${mdEscapeInline(a.filename)} | ${mdEscapeInline(a.mime_type)} |`);
+    for (const a of uploadedFiles) {
+      lines.push(`| ${mdEscapeInline(attachmentFilename(a))} | ${mdEscapeInline(attachmentMimeType(a))} |`);
     }
   }
   lines.push("");
@@ -127,16 +165,26 @@ export function buildDebateMarkdown(input: DebateExportInput): string {
   lines.push(fence(result.judge.reasoning));
   lines.push("");
 
-  const safeMessages = Array.isArray(messages) ? messages : [];
   if (safeMessages.length > 0) {
     lines.push(`## Thread transcript (stored messages)`);
     lines.push("");
     for (const m of safeMessages) {
       const who = m.author || m.role;
+      const files = messageAttachments(m);
+
       lines.push(`### ${m.role}: ${who}`);
       lines.push("");
       if (m.roundLabel) lines.push(`_Round: ${m.roundLabel}_`);
       lines.push(fence(m.content));
+
+      if (files.length > 0) {
+        lines.push("");
+        lines.push(`**Attachments:**`);
+        for (const file of files) {
+          lines.push(`- ${attachmentFilename(file)} (${attachmentMimeType(file)})`);
+        }
+      }
+
       lines.push("");
     }
   }
@@ -180,8 +228,49 @@ function calibrationTableHtml(
   return `<h3>${escHtml(title)}</h3><table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:11px">${head}<tbody>${body}</tbody></table>`;
 }
 
+function attachmentTableRowsHtml(files: ExportAttachmentLike[]): string {
+  return files
+    .map(
+      (a) =>
+        `<tr><td>${escHtml(attachmentFilename(a))}</td><td>${escHtml(attachmentMimeType(a))}</td></tr>`,
+    )
+    .join("");
+}
+
+function attachmentGalleryHtml(files: ExportAttachmentLike[]): string {
+  if (!files.length) return "";
+
+  const items = files
+    .map((file) => {
+      const filename = attachmentFilename(file);
+      const mimeType = attachmentMimeType(file);
+      const dataUrl = attachmentDataUrl(file);
+
+      if (dataUrl) {
+        return `
+          <figure class="attachment-card">
+            <img src="${escHtml(dataUrl)}" alt="${escHtml(filename)}" />
+            <figcaption>${escHtml(filename)}</figcaption>
+          </figure>`;
+      }
+
+      return `
+        <div class="attachment-file-chip">
+          <strong>${escHtml(filename)}</strong>
+          <span>${escHtml(mimeType)}</span>
+        </div>`;
+    })
+    .join("");
+
+  return `<div class="attachments-grid">${items}</div>`;
+}
+
 export function buildDebatePrintDocument(input: DebateExportInput): string {
   const { exportedAtIso, question, personas, attachments, result, messages } = input;
+  const safeMessages = Array.isArray(messages) ? messages : [];
+  const stored = storedAttachments(safeMessages);
+  const uploadedFiles = attachments.length > 0 ? attachments : stored;
+
   const chunks: string[] = [];
   chunks.push(`<h1>Consensia debate export</h1>`);
   chunks.push(`<p class="meta">${escHtml(`Generated: ${exportedAtIso}`)}</p>`);
@@ -189,19 +278,20 @@ export function buildDebatePrintDocument(input: DebateExportInput): string {
   chunks.push(`<h2>User question</h2><pre>${escHtml(question.trim() || "(empty)")}</pre>`);
 
   chunks.push(`<h2>Uploaded files</h2>`);
-  if (attachments.length === 0) {
+  if (uploadedFiles.length === 0) {
     chunks.push(`<p class="meta">No files attached to this run.</p>`);
   } else {
     chunks.push(
       `<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:11px"><thead><tr><th>File</th><th>MIME</th></tr></thead><tbody>` +
-        attachments
-          .map(
-            (a) =>
-              `<tr><td>${escHtml(a.filename)}</td><td>${escHtml(a.mime_type)}</td></tr>`,
-          )
-          .join("") +
+        attachmentTableRowsHtml(uploadedFiles) +
         `</tbody></table>`,
     );
+
+    const imageFiles = uploadedFiles.filter((file) => Boolean(attachmentDataUrl(file)));
+    if (imageFiles.length > 0) {
+      chunks.push(`<h3>Attached image previews</h3>`);
+      chunks.push(attachmentGalleryHtml(imageFiles));
+    }
   }
 
   chunks.push(`<h2>Personas</h2>`);
@@ -224,6 +314,7 @@ export function buildDebatePrintDocument(input: DebateExportInput): string {
       ),
     );
   }
+
   if (result.reasoningQualityQa?.length) {
     chunks.push(
       calibrationTableHtml(
@@ -251,13 +342,20 @@ export function buildDebatePrintDocument(input: DebateExportInput): string {
   chunks.push(`<h3>Summary</h3><pre>${escHtml(result.judge.summary)}</pre>`);
   chunks.push(`<h3>Reasoning</h3><pre>${escHtml(result.judge.reasoning)}</pre>`);
 
-  const safeMessages = Array.isArray(messages) ? messages : [];
   if (safeMessages.length > 0) {
     chunks.push(`<h2>Thread transcript</h2>`);
+
     for (const m of safeMessages) {
       const who = m.author || m.role;
+      const files = messageAttachments(m);
+
       chunks.push(
-        `<h4>${escHtml(`${m.role}: ${who}`)}</h4>${m.roundLabel ? `<p class="meta">${escHtml(m.roundLabel)}</p>` : ""}<pre>${escHtml(m.content)}</pre>`,
+        `<section class="message-block">
+          <h4>${escHtml(`${m.role}: ${who}`)}</h4>
+          ${m.roundLabel ? `<p class="meta">${escHtml(m.roundLabel)}</p>` : ""}
+          <pre>${escHtml(m.content)}</pre>
+          ${attachmentGalleryHtml(files)}
+        </section>`,
       );
     }
   }
@@ -276,10 +374,23 @@ export function buildDebatePrintDocument(input: DebateExportInput): string {
     h3 { font-size: 1rem; margin: 14px 0 6px; }
     h4 { font-size: 0.95rem; margin: 10px 0 4px; }
     pre { white-space: pre-wrap; background: #f6f6f8; border: 1px solid #e2e2ea; border-radius: 8px; padding: 10px 12px; font-size: 11px; line-height: 1.45; }
+    table { margin: 8px 0 12px; }
+    th, td { vertical-align: top; }
     .meta { color: #555; font-size: 12px; }
+    .message-block { break-inside: avoid; margin: 0 0 14px; }
+    .attachments-grid { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 14px; }
+    .attachment-card { margin: 0; width: 220px; break-inside: avoid; }
+    .attachment-card img { display: block; max-width: 220px; max-height: 220px; object-fit: contain; border: 1px solid #e2e2ea; border-radius: 10px; background: #f6f6f8; }
+    .attachment-card figcaption { margin-top: 4px; color: #555; font-size: 10px; line-height: 1.3; word-break: break-word; }
+    .attachment-file-chip { border: 1px solid #e2e2ea; border-radius: 10px; background: #f6f6f8; padding: 8px 10px; font-size: 11px; max-width: 260px; break-inside: avoid; }
+    .attachment-file-chip strong { display: block; word-break: break-word; }
+    .attachment-file-chip span { color: #555; display: block; margin-top: 2px; }
     @media print {
       body { padding: 0; }
-      pre { break-inside: avoid; }
+      pre, table, .attachment-card, .attachment-file-chip, .message-block { break-inside: avoid; }
+      .attachments-grid { gap: 8px; }
+      .attachment-card { width: 190px; }
+      .attachment-card img { max-width: 190px; max-height: 190px; }
     }
   </style>
 </head>
@@ -287,6 +398,32 @@ export function buildDebatePrintDocument(input: DebateExportInput): string {
 ${bodyHtml}
 </body>
 </html>`;
+}
+
+function waitForFrameImages(win: Window, timeoutMs = 1500): Promise<void> {
+  const images = Array.from(win.document.images);
+  if (images.length === 0) return Promise.resolve();
+
+  const loaded = Promise.all(
+    images.map(
+      (img) =>
+        new Promise<void>((resolve) => {
+          if (img.complete) {
+            resolve();
+            return;
+          }
+
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+        }),
+    ),
+  ).then(() => undefined);
+
+  const timeout = new Promise<void>((resolve) => {
+    window.setTimeout(resolve, timeoutMs);
+  });
+
+  return Promise.race([loaded, timeout]);
 }
 
 function printHtmlWithoutPopup(html: string): boolean {
@@ -332,9 +469,11 @@ function printHtmlWithoutPopup(html: string): boolean {
       return;
     }
 
-    win.focus();
-    win.print();
-    cleanup();
+    void waitForFrameImages(win).finally(() => {
+      win.focus();
+      win.print();
+      cleanup();
+    });
   };
 
   iframe.onload = printFrame;
