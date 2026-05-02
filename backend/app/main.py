@@ -5,6 +5,7 @@ import io
 import json
 import logging
 import re
+import sys
 import traceback
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -46,8 +47,11 @@ def _build_sync_openai_client(settings: Settings):
 
 
 _APP_DIR = Path(__file__).resolve().parent
+_BACKEND_ROOT = _APP_DIR.parent
 # Shipped snapshots (always present with the code; survives empty Docker data volume mounts).
 _BUNDLED_RAW_AUTHORS_DIR = _APP_DIR / "bundled_raw_authors"
+
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -55,19 +59,24 @@ async def lifespan(_: FastAPI):
     from alembic.config import Config as AlembicConfig
     from alembic import command as alembic_command
 
-    cfg = AlembicConfig("alembic.ini")
     try:
+        ini_path = _BACKEND_ROOT / "alembic.ini"
+        if not ini_path.is_file():
+            raise FileNotFoundError(f"alembic.ini not found at {ini_path} (cwd={Path.cwd()})")
+        cfg = AlembicConfig(str(ini_path))
         # Repo has divergent migration branches; "heads" applies every leaf revision.
         alembic_command.upgrade(cfg, "heads")
+        sync_admin_flags_from_env()
     except Exception as exc:
-        # Render log streams do not always show app loggers; stderr always appears in deploy logs.
-        traceback.print_exc()
+        # Render often only shows stderr; loggers may be muted after Alembic fileConfig.
+        sys.stderr.write(f"\n=== Consensia startup error: {type(exc).__name__}: {exc}\n")
+        traceback.print_exc(file=sys.stderr)
+        sys.stderr.flush()
         logger.exception(
             "Alembic migrations failed — the API cannot run without tables (e.g. users). "
             "Fix DATABASE_URL / Postgres, then run: alembic upgrade head"
         )
         raise RuntimeError("Database migrations failed") from exc
-    sync_admin_flags_from_env()
     yield
 
 
@@ -83,8 +92,6 @@ app.include_router(auth_router)
 app.include_router(sessions_router)
 app.include_router(persona_favorites_router)
 app.include_router(admin_router)
-
-logger = logging.getLogger(__name__)
 
 
 def create_cors(app_: FastAPI, settings: Settings) -> None:
