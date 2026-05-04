@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { GradientBackground } from "../components/GradientBackground";
-import { publicAsset } from "../publicAsset";
+import { publicAssetUrl } from "../publicAsset";
 import {
   bodyMuted,
   bodyMuted2,
@@ -37,6 +37,8 @@ const projectReports = [
     "Analysis and Requirements Report",
     "assets/T2526_Analysis_and_Requirements_Report.docx.pdf",
   ],
+  ["Detailed Design Report", "assets/T2526_Detailed_Design_Report.pdf"],
+  ["Final Report", "assets/T2526_Final_Report.pdf"],
 ] as const;
 
 const minuteReports = [
@@ -47,6 +49,14 @@ const minuteReports = [
   [
     "Meeting Minute 02",
     "assets/T2526_MeetingMinutesReport_02_24112025_v1.doc",
+  ],
+  [
+    "Meeting Minute 03",
+    "assets/T2526_MeetingMinutesReport_03_11032026_v1.pdf",
+  ],
+  [
+    "Meeting Minute 04",
+    "assets/T2526_MeetingMinutesReport_04_29042026.pdf",
   ],
 ] as const;
 
@@ -131,7 +141,7 @@ export default function Homepage() {
               {(
                 [
                   ["Overview", "#overview"],
-                  ["Approach", "#prototype"],
+                  ["Approach", "#approach"],
                   ["Reports", "#reports"],
                   ["Team", "#team"],
                 ] as const
@@ -154,7 +164,7 @@ export default function Homepage() {
               <p
                 className={`text-sm font-semibold uppercase tracking-[0.2em] ${eyebrowMuted}`}
               >
-                Research prototype
+                CS492 · Bilkent University
               </p>
               <h1
                 className={`mt-4 bg-gradient-to-br bg-clip-text text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight tracking-tight text-transparent ${heroTitleGradient}`}
@@ -164,9 +174,10 @@ export default function Homepage() {
               <p
                 className={`mx-auto mt-5 max-w-2xl text-lg leading-relaxed sm:text-xl ${bodyMuted}`}
               >
-                Multi-agent reasoning and evaluation for software engineering.
+                Run structured, multi-persona debates on technical questions, attach evidence, and
+                get a judge-written consensus you can inspect—not a single black-box answer.
                 <br />
-                <em className={bodyMuted2}>Because truth deserves more than one mind.</em>
+                <em className={bodyMuted2}>Built for transparent trade-off thinking in software teams.</em>
               </p>
               <div className="mx-auto mt-12 w-full max-w-sm space-y-3.5 sm:max-w-md">
                 <div className="flex gap-3.5">
@@ -188,14 +199,14 @@ export default function Homepage() {
           </section>
 
           <section
-            id="prototype"
+            id="approach"
             className={`border-t px-4 py-16 sm:px-6 sm:py-20 ${sectionRule}`}
           >
             <div className="mx-auto max-w-6xl">
               <p
                 className={`text-sm font-semibold uppercase tracking-[0.2em] ${eyebrowMuted}`}
               >
-                Prototype
+                How it works
               </p>
               <h2
                 className={`mt-2 bg-gradient-to-r bg-clip-text text-3xl font-bold tracking-tight text-transparent md:text-4xl ${sectionTitleGradient}`}
@@ -206,54 +217,61 @@ export default function Homepage() {
                 className={`mt-2 h-0.5 w-14 rounded-full bg-gradient-to-r ${dividerAccent}`}
               />
               <p className={`mt-6 max-w-3xl text-lg leading-relaxed ${bodyMuted}`}>
-                Our prototype allows users to create multiple AI personas with different
-                software-engineering and business roles — such as{" "}
-                <strong className="text-purple-100 light:text-violet-900">CTO</strong>,{" "}
-                <strong className="text-purple-100 light:text-violet-900">Software Architect</strong>,{" "}
-                <strong className="text-purple-100 light:text-violet-900">Senior Developer</strong>,{" "}
-                <strong className="text-purple-100 light:text-violet-900">QA</strong>,{" "}
-                <strong className="text-purple-100 light:text-violet-900">SRE</strong>,{" "}
-                <strong className="text-purple-100 light:text-violet-900">Security Engineer</strong>, as well as{" "}
-                <strong className="text-purple-100 light:text-violet-900">Product Manager</strong>,{" "}
-                <strong className="text-purple-100 light:text-violet-900">Finance/CFO</strong>, and{" "}
-                <strong className="text-purple-100 light:text-violet-900">Operations/Management</strong>. Each agent
-                answers a technical or strategic question; a{" "}
-                <strong className="text-purple-100 light:text-violet-900">Judge LLM</strong> analyzes all outputs and
-                scores them for{" "}
-                <em className="text-fuchsia-200/90 light:text-fuchsia-800">
-                  consistency, fairness, and reasoning clarity
-                </em>
-                . The judge’s consensus is then validated against human-tagged data.
+                Serious software choices—architecture, implementation, testing, security, scalability, usability,
+                cost—usually mean <strong className="text-purple-100 light:text-violet-900">trade-offs</strong>, not a
+                single “right” answer. In real teams, people with different roles argue it out, but those conversations
+                are <strong className="text-purple-100 light:text-violet-900">slow</strong>, ad hoc, and hard to replay in
+                a structured way. A lone chatbot reply can hide assumptions and bury alternatives. Consensia is built to
+                make AI-assisted decisions more{" "}
+                <strong className="text-purple-100 light:text-violet-900">transparent and inspectable</strong>: you see
+                competing lines of reasoning before accepting a recommendation.
+              </p>
+              <p className={`mt-5 max-w-3xl text-lg leading-relaxed ${bodyMuted}`}>
+                In practice, you assemble a <strong className="text-purple-100 light:text-violet-900">council</strong> of
+                personas—defaults you can edit, profiles from a <strong className="text-purple-100 light:text-violet-900">CV</strong>, or grounded{" "}
+                <strong className="text-purple-100 light:text-violet-900">researcher-style</strong> personas from
+                publication data. Each persona answers in parallel; you can run{" "}
+                <strong className="text-purple-100 light:text-violet-900">multi-round</strong> debates so later rounds
+                see the prior transcript. A <strong className="text-purple-100 light:text-violet-900">Judge</strong> model
+                produces a consensus with explicit summary and reasoning.{" "}
+                <strong className="text-purple-100 light:text-violet-900">Two-pass calibration</strong> scores topic
+                relevance and argument quality so the judge weights stronger, on-topic contributions. Attach{" "}
+                <strong className="text-purple-100 light:text-violet-900">PDFs, DOCX, or images</strong> as evidence;
+                signed-in users get <strong className="text-purple-100 light:text-violet-900">saved sessions</strong> with
+                history and a rolling context window for follow-ups.
               </p>
               <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                 <div className={cardSurface}>
                   <h3 className={`text-lg font-semibold ${formHeading}`}>
-                    System concept
+                    Debate &amp; consensus
                   </h3>
                   <p className={`mt-3 text-sm leading-relaxed sm:text-base ${bodyMuted}`}>
-                    Multi-agent discussion leading to a final, explainable verdict generated by
-                    the Judge LLM, combining text reasoning with evidence from tools.
+                    Parallel persona calls per round, optional multi-round rebuttals, then a judge synthesis with
+                    summary and reasoning—so you can compare viewpoints instead of trusting one opaque answer.
                   </p>
                 </div>
                 <div className={cardSurface}>
                   <h3 className={`text-lg font-semibold ${formHeading}`}>
-                    Stakeholders
+                    Personas &amp; evidence
                   </h3>
                   <p className={`mt-3 text-sm leading-relaxed sm:text-base ${bodyMuted}`}>
-                    Technical roles (CTO, Architect, Dev, QA, SRE, Security) balanced with
-                    business roles (Product, Finance/CFO, Ops/Management) to reflect real
-                    enterprise trade-offs.
+                    Manual personas and curated defaults, CV-driven generation, researcher-backed profiles, favorites,
+                    and file attachments so answers stay tied to the material you provide.
                   </p>
                 </div>
                 <div className={cardSurface}>
                   <h3 className={`text-lg font-semibold ${formHeading}`}>
-                    Architecture
+                    Platform &amp; delivery
                   </h3>
                   <p className={`mt-3 text-sm leading-relaxed sm:text-base ${bodyMuted}`}>
-                    Event-driven orchestration for scalability and real-time updates. Frontend in{" "}
-                    <strong className="text-purple-100 light:text-violet-900">React</strong>, backend with{" "}
-                    <strong className="text-purple-100 light:text-violet-900">Python</strong>, automation via{" "}
-                    <strong className="text-purple-100 light:text-violet-900">n8n</strong>.
+                    <strong className="text-purple-100 light:text-violet-900">React</strong>,{" "}
+                    <strong className="text-purple-100 light:text-violet-900">TypeScript</strong>, and{" "}
+                    <strong className="text-purple-100 light:text-violet-900">Vite</strong> on the frontend;{" "}
+                    <strong className="text-purple-100 light:text-violet-900">FastAPI</strong> and{" "}
+                    <strong className="text-purple-100 light:text-violet-900">PostgreSQL</strong> on the backend;
+                    configurable LLM providers; <strong className="text-purple-100 light:text-violet-900">Docker Compose</strong>{" "}
+                    for a consistent dev stack. Accounts, email verification, daily quotas, and an admin stats view round
+                    out the product surface.
                   </p>
                 </div>
               </div>
@@ -296,7 +314,7 @@ export default function Homepage() {
                     {projectReports.map(([label, path]) => (
                       <a
                         key={path}
-                        href={publicAsset(path)}
+                        href={publicAssetUrl(path)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={reportRow}
@@ -325,7 +343,7 @@ export default function Homepage() {
                     {minuteReports.map(([label, path]) => (
                       <a
                         key={path}
-                        href={publicAsset(path)}
+                        href={publicAssetUrl(path)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={reportRow}
@@ -379,16 +397,7 @@ export default function Homepage() {
                   </h3>
                   <div className="mt-4 border-b border-purple-300/10 pb-5 light:border-violet-200/70">
                     <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-fuchsia-300/80 light:text-fuchsia-800">
-                      Supervisors
-                    </h4>
-                    <ul className={`space-y-1 ${bodyMuted}`}>
-                      <li>Mert Bıçakçı</li>
-                      <li>İlker Burak Kurt</li>
-                    </ul>
-                  </div>
-                  <div className="mb-6 border-b border-purple-300/10 pb-5 light:border-violet-200/70">
-                    <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-fuchsia-300/80 light:text-fuchsia-800">
-                      Advisor
+                      Supervisor
                     </h4>
                     <ul>
                       <li className={bodyMuted}>
@@ -415,8 +424,9 @@ export default function Homepage() {
                     Project roadmap
                   </h3>
                   <p className={`mt-3 text-sm leading-relaxed sm:text-base ${bodyMuted}`}>
-                    Research → UI design → Features → LLM self-judging automation → Prototype →
-                    Analysis &amp; statistics → Evaluation → MVP → Publication
+                    Requirements and architecture → core debate and judge flow → persona sources (CV, researcher)
+                    and attachments → auth, sessions, quotas, and admin → integration testing and deployment hardening
+                    → optional follow-ons such as streaming responses and richer inter-persona debate.
                   </p>
                 </div>
               </div>

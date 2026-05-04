@@ -66,6 +66,7 @@ services:
       VITE_DEV_PROXY_TARGET: "http://backend:8000"
       VITE_OPEN: "false"
     volumes:
+      - ./frontend/public:/app/frontend/public
       - ./frontend/src:/app/frontend/src
       - ./frontend/index.html:/app/frontend/index.html
       - ./frontend/src/index.css:/app/frontend/src/index.css

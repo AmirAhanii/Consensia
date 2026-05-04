@@ -21,5 +21,8 @@ backend/egg-info/
 # index.css
 frontend/src/index.css
 
-# public files
-frontend/public
+# Public: track favicon + assets (course PDFs). Other loose files under public/ stay untracked.
+frontend/public/*
+!frontend/public/favicon.svg
+!frontend/public/assets/
+!frontend/public/assets/**
